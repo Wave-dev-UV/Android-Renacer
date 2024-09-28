@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "400377355661",
+    "project_id": "gestion-821ad",
+    "storage_bucket": "gestion-821ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:400377355661:android:3e40d54d863e21ef89f1c4",
+        "android_client_info": {
+          "package_name": "com.example.gestrenacer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALi0HWGSuS4_VKqS0_Jawm5GcxZ9TLMxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
