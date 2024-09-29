@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/agregarUsuariosFragment">
+
+    <fragment
+        android:id="@+id/agregarUsuariosFragment"
+        android:name="com.example.gestrenacer.fragment.AgregarUsuariosFragment"
+        android:label="fragment_agregar_usuarios"
+        tools:layout="@layout/fragment_agregar_usuarios" />
+</navigation>
