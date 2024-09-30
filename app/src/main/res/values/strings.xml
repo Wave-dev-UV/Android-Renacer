@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">GestRenacer</string>
+    <string name="bottomBarText1">Principal</string>
+    <string name="bottomBarText2">Reportes</string>
+    <string name="bottomBarText3">Pendientes</string>
+    <string name="txtFloatBtnAnadirFeligres">Añadir un feligrés.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tooltipBarraBusqueda">Buscar una persona.</string>
+    <string name="lblFiltro">Filtrar</string>
+    <string name="lblResultados">Resultados</string>
 </resources>
