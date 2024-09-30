@@ -8,4 +8,7 @@
     <string name="tooltipBarraBusqueda">Buscar una persona.</string>
     <string name="lblFiltro">Filtrar</string>
     <string name="lblResultados">Resultados</string>
+    <string name="lblRolListarFragment">Rol: </string>
+    <string name="lblTelListarFragment">Teléfono: </string>
+    <string name="lblLiderListarFragment">¿Es líder?: </string>
 </resources>
