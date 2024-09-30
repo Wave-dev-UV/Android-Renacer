@@ -11,4 +11,14 @@
     <string name="lblRolListarFragment">Rol: </string>
     <string name="lblTelListarFragment">Teléfono: </string>
     <string name="lblLiderListarFragment">¿Es líder?: </string>
+    <string name="lblFiltrar">Filtrar por:</string>
+    <string name="lblOrdenar">Ordenar por:</string>
+    <string name="lblFiltroAlfabeticoAscen">A-Z ascendente.</string>
+    <string name="lblFiltroAlfabeticoDescen">A-Z descendente.</string>
+    <string name="lblFiltroEdadAscen">Edad ascendente.</string>
+    <string name="lblFiltroEdadDescen">Edad descendente.</string>
+    <string name="lblEdadFiltro">Edad.</string>
+    <string name="lblMin">A partir de:</string>
+    <string name="lblMax">Hasta:</string>
+    <string name="lblBtnAplicarFiltro">Aplicar filtros</string>
 </resources>
