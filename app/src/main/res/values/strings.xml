@@ -32,4 +32,25 @@
     <string name="crear_usuario">Crear Usuario</string>
     <string name="el_usuario_es_un_lider">¿El usuario es un lider?</string>
     <string name="el_usuario_puede_acceder_a_la_aplicaci_n">¿El usuario puede acceder a la aplicación?</string>
+    <string name="bottomBarText1">Principal</string>
+    <string name="bottomBarText2">Reportes</string>
+    <string name="bottomBarText3">Pendientes</string>
+    <string name="txtFloatBtnAnadirFeligres">Añadir un feligrés.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tooltipBarraBusqueda">Buscar una persona.</string>
+    <string name="lblFiltro">Filtrar</string>
+    <string name="lblResultados">Resultados</string>
+    <string name="lblRolListarFragment">Rol: </string>
+    <string name="lblTelListarFragment">Teléfono: </string>
+    <string name="lblLiderListarFragment">¿Es líder?: </string>
+    <string name="lblFiltrar">Organizar resultados.</string>
+    <string name="lblOrdenar">Ordenar por:</string>
+    <string name="lblFiltroAlfabeticoAscen">A-Z ascendente.</string>
+    <string name="lblFiltroAlfabeticoDescen">A-Z descendente.</string>
+    <string name="lblFiltroEdadAscen">Edad ascendente.</string>
+    <string name="lblFiltroEdadDescen">Edad descendente.</string>
+    <string name="lblEdadFiltro">Filtrar por edad.</string>
+    <string name="lblMin">A partir de:</string>
+    <string name="lblMax">Hasta:</string>
+    <string name="lblBtnAplicarFiltro">Aplicar</string>
 </resources>
