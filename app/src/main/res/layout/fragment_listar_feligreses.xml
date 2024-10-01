@@ -102,6 +102,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:indeterminateTint="@color/onSelectedColorBotBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -120,6 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/onSelectedColorBotBar"
+            android:theme="@style/BottomBarStyle"
             app:menu="@menu/bottom_navigation_menu"
             app:itemIconTint="@color/white"
             app:itemTextColor="@color/white"/>
