@@ -12,11 +12,9 @@ data class Feligres(
     var telfonoContactoEmergencia: String?,
     var parentescoContactoEmergencia: String?,
     var direccion: String?,
-    var rol: String?,
-    var contrasena: String?
+    var rol: String?
 ): Serializable {
     constructor(): this(
-        null,
         null,
         null,
         null,

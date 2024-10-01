@@ -27,6 +27,7 @@ class FeligresViewModel @Inject constructor(
             try {
                 _listaFeligreses.value = feligresRepositorio.getFeligreses()
                 _progresState.value = false
+                Log.d("here","aca")
             } catch (e: Exception) {
                 Log.d("Error carga feligreses", e.toString())
                 _progresState.value = false
