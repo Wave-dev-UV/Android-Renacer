@@ -2,6 +2,16 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="user"
+            type="com.example.gestrenacer.models.User" />
+        <variable
+            name="viewModel"
+            type="com.example.gestrenacer.viewmodel.AppViewModel" />
+    </data>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -34,7 +44,7 @@
                     tools:ignore="TextContrastCheck" />
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/btnVolver"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="15dp"
@@ -49,16 +59,11 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="27dp">
-
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                    android:paddingHorizontal="27dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -106,6 +111,8 @@
                         android:layout_marginTop="9dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextNombre"
+                        android:text="@={user.nombre}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/inserte_su_nombre"
@@ -119,6 +126,8 @@
                         android:layout_marginTop="20dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextApellido"
+                        android:text="@={user.apellido}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/inserte_su_apellido"
@@ -132,6 +141,8 @@
                         android:layout_marginTop="20dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextId"
+                        android:text="@={user.id}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/digite_su_n_mero_de_id"
@@ -145,6 +156,8 @@
                         android:layout_marginTop="20dp"/>
 
                     <AutoCompleteTextView
+                        android:id="@+id/autoCompleteTipoId"
+                        android:text="@={user.tipoId}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/seleccione_su_tipo_de_documento"
@@ -159,6 +172,8 @@
                         android:layout_marginTop="20dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextCelular"
+                        android:text="@={user.celular}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/digite_su_n_mero_de_celular"
@@ -172,6 +187,8 @@
                         android:layout_marginTop="20dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextDireccion"
+                        android:text="@={user.direccion}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/inserte_su_direcci_n"
@@ -185,17 +202,12 @@
                         android:layout_marginTop="20dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextEps"
+                        android:text="@={user.eps}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/inserte_su_eps"
                         android:textColorHint="@color/secondary" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -243,6 +255,8 @@
                         android:layout_marginTop="9dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextNombreContacto"
+                        android:text="@={user.nombreContacto}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/inserte_el_nombre_del_contacto"
@@ -256,6 +270,8 @@
                         android:layout_marginTop="20dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextCelularContacto"
+                        android:text="@={user.celularContacto}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/digite_el_celular_de_su_contacto"
@@ -269,6 +285,8 @@
                         android:layout_marginTop="20dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextParentescoContacto"
+                        android:text="@={user.parentescoContacto}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/parentesco_con_su_contacto"
@@ -282,17 +300,12 @@
                         android:layout_marginTop="20dp"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextDireccionContacto"
+                        android:text="@={user.direccionContacto}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/direcci_n_de_su_contacto"
                         android:textColorHint="@color/secondary" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -345,7 +358,8 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switch1"
+                            android:id="@+id/switchEsLider"
+                            android:checked="@={user.esLider}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/el_usuario_es_un_lider"
@@ -354,12 +368,6 @@
                             app:thumbTint="@color/white" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -412,7 +420,8 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switch2"
+                            android:id="@+id/switchTieneAcceso"
+                            android:checked="@={user.tieneAcceso}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/el_usuario_puede_acceder_a_la_aplicaci_n"
@@ -422,20 +431,21 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </LinearLayout>
+                <Button
+                    android:id="@+id/buttonEnviar"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="40dp"
+                    android:backgroundTint="@color/azulPrincipal"
+                    android:onClick="@{() -> viewModel.crearUsuario(user)}"
+                    android:text="@string/crear_usuario"
+                    tools:textSize="17sp" />
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="40dp"
-                android:backgroundTint="@color/azulPrincipal"
-                android:text="@string/crear_usuario"
-                tools:textSize="17sp" />
+
 
         </LinearLayout>
     </ScrollView>
