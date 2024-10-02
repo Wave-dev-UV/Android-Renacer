@@ -49,7 +49,8 @@ class AgregarUsuariosFragment : Fragment() {
         val listTxt = listOf(
             binding.editTextNombre, binding.editTextApellido, binding.editTextId, binding.editTextCelular,
             binding.editTextDireccion, binding.editTextEps, binding.editTextNombreContacto,
-            binding.editTextCelularContacto, binding.editTextParentescoContacto, binding.editTextDireccionContacto)
+            binding.editTextCelularContacto, binding.editTextParentescoContacto, binding.editTextDireccionContacto,
+            binding.autoCompleteTipoId)
 
         for (i in listTxt){
             i.addTextChangedListener {
