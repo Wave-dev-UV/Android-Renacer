@@ -142,6 +142,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextId"
+                        android:inputType="number"
                         android:text="@={user.id}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
@@ -155,14 +156,27 @@
                         android:textSize="16sp"
                         android:layout_marginTop="20dp"/>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/selectPrioridad"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="350dp"
+                    android:layout_height="60dp"
+                    android:textColorHint="@color/secondary"
+                    app:boxStrokeColor="@color/azulPrincipal"
+                    app:endIconTint="@color/azulPrincipal"
+                    app:hintTextColor="@color/azulPrincipal"
+                    app:startIconTint="@color/azulPrincipal">
+
                     <AutoCompleteTextView
                         android:id="@+id/autoCompleteTipoId"
-                        android:text="@={user.tipoId}"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:hint="@string/seleccione_su_tipo_de_documento"
-                        android:textColorHint="@color/secondary"
-                        android:inputType="none"/>
+                        android:importantForAccessibility="yes"
+                        android:inputType="none"
+                        android:text="@={user.tipoId}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -173,6 +187,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextCelular"
+                        android:inputType="number"
                         android:text="@={user.celular}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
@@ -271,6 +286,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextCelularContacto"
+                        android:inputType="number"
                         android:text="@={user.celularContacto}"
                         android:layout_width="350dp"
                         android:layout_height="48dp"
@@ -433,13 +449,13 @@
 
                 <Button
                     android:id="@+id/buttonEnviar"
+                    android:enabled="false"
                     android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="40dp"
                     android:backgroundTint="@color/azulPrincipal"
-                    android:onClick="@{() -> viewModel.crearUsuario(user)}"
                     android:text="@string/crear_usuario"
                     tools:textSize="17sp" />
 
