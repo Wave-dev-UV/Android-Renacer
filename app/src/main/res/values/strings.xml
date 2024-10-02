@@ -53,4 +53,9 @@
     <string name="lblMin">A partir de:</string>
     <string name="lblMax">Hasta:</string>
     <string name="lblBtnAplicarFiltro">Aplicar</string>
+    <string-array name="listaTipoDocumento">
+        <item>Cedula</item>
+        <item>Tajerta de Identidad</item>
+        <item>Pasaporte</item>
+    </string-array>
 </resources>

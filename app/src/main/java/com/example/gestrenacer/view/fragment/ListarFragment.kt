@@ -104,7 +104,8 @@ class ListarFragment : Fragment() {
     private fun manejadorBtnAnadir(){
         binding.btnAnadirFeligres.setOnClickListener{
             Log.d("BtnAnadir","Clic en el botón de añadir")
-            //findNavController()
+            val bundle = Bundle()
+            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment, bundle)
         }
     }
 }
