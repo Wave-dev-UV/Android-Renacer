@@ -7,10 +7,10 @@
     <data>
         <variable
             name="user"
-            type="com.example.gestrenacer.models.User" />
+            type="com.example.gestrenacer.models.Feligres" />
         <variable
             name="viewModel"
-            type="com.example.gestrenacer.viewmodel.AppViewModel" />
+            type="com.example.gestrenacer.viewmodel.FeligresViewModel" />
     </data>
 
 
