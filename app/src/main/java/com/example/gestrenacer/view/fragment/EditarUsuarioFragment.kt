@@ -6,6 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.EditText
+import androidx.core.widget.addTextChangedListener
+import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentEditarUsuarioBinding
 
@@ -29,6 +33,53 @@ class EditarUsuarioFragment : Fragment() {
     private fun controlador(){
         manejarTipoId()
         manejarEstadoAtención()
+        activarBoton()
+        manejadorBtnVolver()
+    }
+
+    private fun activarBoton() {
+
+        val listTxt = listOf(
+            binding.editTextNombre,
+            binding.editTextApellido,
+            binding.editTextId,
+            binding.editTextCelular,
+            binding.editTextDireccion,
+            binding.editTextEps,
+            binding.editTextNombreContacto,
+            binding.editTextCelularContacto,
+            binding.editTextParentescoContacto,
+            binding.editTextDireccionContacto,
+            binding.autoCompleteTipoId
+        )
+
+
+        for (i in listTxt) {
+            i.addTextChangedListener {
+                validarCampos(listTxt)
+            }
+        }
+
+        // Verifica si todos los campos están llenos
+        validarCampos(listTxt)
+    }
+
+    private fun validarCampos(listTxt: List<View>) {
+        val isFull = listTxt.all {
+            when (it) {
+                is AutoCompleteTextView -> it.text.toString().isNotEmpty()
+                is EditText -> it.text.toString().isNotEmpty()
+                else -> false
+            }
+        }
+
+        binding.buttonEditar.isEnabled = isFull
+    }
+
+    private fun manejadorBtnVolver(){
+        binding.imageButton.setOnClickListener{
+            findNavController().popBackStack()
+        }
     }
 
     private fun manejarTipoId() {
