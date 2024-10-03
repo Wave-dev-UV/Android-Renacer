@@ -1,4 +1,4 @@
-package com.example.gestrenacer.fragment
+package com.example.gestrenacer.view.fragment
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
@@ -12,14 +12,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentAgregarUsuariosBinding
 import com.example.gestrenacer.models.User
-import com.example.gestrenacer.view.dialog.DialogUtils
-import com.example.gestrenacer.viewmodel.AppViewModel
+import com.example.gestrenacer.view.modal.DialogUtils
+import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AgregarUsuariosFragment : Fragment() {
     private lateinit var binding: FragmentAgregarUsuariosBinding
-    private val appViewModel: AppViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
     private val user = User()
 
     override fun onCreateView(
@@ -33,7 +33,7 @@ class AgregarUsuariosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = appViewModel
+        binding.viewModel = userViewModel
         binding.user = user
         controler()
     }
@@ -84,7 +84,7 @@ class AgregarUsuariosFragment : Fragment() {
         binding.buttonEnviar.setOnClickListener {
             DialogUtils.dialogoConfirmacion(requireContext()){
                 val user = binding.user ?: User()
-                appViewModel.crearUsuario(user)
+                userViewModel.crearUsuario(user)
                 findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment,requireArguments())
             }
 

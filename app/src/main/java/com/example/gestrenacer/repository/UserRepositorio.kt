@@ -1,20 +1,19 @@
 package com.example.gestrenacer.repository
 
 import android.util.Log
-import com.example.gestrenacer.models.Feligres
 import com.example.gestrenacer.models.User
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class FeligresRepositorio @Inject constructor() {
+class UserRepositorio @Inject constructor() {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
 
-    suspend fun getFeligreses(): List<Feligres>{
-        //Pendiente definir el nombre de la tabla
-        val snapshot = db.collection("feligreses").get().await()
-        return snapshot.map { x -> x.toObject(Feligres::class.java) }
+    suspend fun getUsers(): List<User>{
+        val snapshot = usersCollection.get().await()
+        //Log.d("derp",snapshot.map { x -> x.toObject(User::class.java) }.toString())
+        return snapshot.map { x -> x.toObject(User::class.java) }
     }
 
     fun saveUser(user: User){
