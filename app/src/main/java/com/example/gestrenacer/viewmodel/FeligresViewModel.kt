@@ -18,4 +18,10 @@ class FeligresViewModel @Inject constructor(private val repository: FeligresRepo
         }
     }
 
+    fun editarUsuario(feligres: Feligres){
+        viewModelScope.launch {
+            repository.updateUser(feligres)
+        }
+    }
+
 }

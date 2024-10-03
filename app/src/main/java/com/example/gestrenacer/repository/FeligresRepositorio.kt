@@ -25,4 +25,32 @@ class FeligresRepositorio @Inject constructor() {
                 Log.w("TAG", "Error adding document", e)
             }
     }
+
+
+    suspend fun updateUser(feligres: Feligres) {
+        feligres.firestoreId?.let { id ->
+
+            val dataToSave = hashMapOf<String, Any?>(
+                "nombre" to feligres.nombre,
+                "apellido" to feligres.apellido,
+                "id" to feligres.id,
+                "tipoId" to feligres.tipoId,
+                "celular" to feligres.celular,
+                "direccion" to feligres.direccion,
+                "eps" to feligres.eps,
+                "nombreContacto" to feligres.nombreContacto,
+                "celularContacto" to feligres.celularContacto,
+                "parentescoContacto" to feligres.parentescoContacto,
+                "direccionContacto" to feligres.direccionContacto,
+                "esLider" to feligres.esLider,
+                "tieneAcceso" to feligres.tieneAcceso,
+                "estadoAtencion" to feligres.estadoAtencion
+
+            )
+
+
+            usersCollection.document(id).set(dataToSave).await()
+        }
+    }
+
 }

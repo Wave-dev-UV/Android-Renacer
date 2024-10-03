@@ -36,12 +36,42 @@ class EditarUsuarioFragment : Fragment() {
         controlador()
     }
 
+    private lateinit var firestoreId: String
+
     private fun controlador(){
         manejarTipoId()
         manejarEstadoAtención()
         activarBoton()
         manejadorBtnVolver()
+        manejadorBtnEditar()
+        inicializarFeligres()
     }
+
+    private fun inicializarFeligres() {
+        val receivedBundle = arguments
+
+        if (receivedBundle != null) {
+            bundleFeligres = receivedBundle.getSerializable("dataFeligres") as Feligres
+
+            binding.editTextNombre.setText(bundleFeligres.nombre)
+            binding.editTextApellido.setText(bundleFeligres.apellido)
+            binding.editTextId.setText(bundleFeligres.id)
+            binding.editTextCelular.setText(bundleFeligres.celular)
+            binding.editTextDireccion.setText(bundleFeligres.direccion)
+            binding.editTextEps.setText(bundleFeligres.eps)
+            binding.editTextNombreContacto.setText(bundleFeligres.nombreContacto)
+            binding.editTextCelularContacto.setText(bundleFeligres.celularContacto)
+            binding.editTextParentescoContacto.setText(bundleFeligres.parentescoContacto)
+            binding.editTextDireccionContacto.setText(bundleFeligres.direccionContacto)
+            binding.autoCompleteTipoId.setText(bundleFeligres.tipoId, false)
+            binding.switch1.isChecked = bundleFeligres.esLider
+            binding.switch2.isChecked = bundleFeligres.tieneAcceso
+            binding.autoCompleteEstadoAtencion.setText(bundleFeligres.estadoAtencion, false)
+
+            firestoreId = bundleFeligres.firestoreId
+        }
+    }
+
 
     private fun activarBoton() {
 
@@ -139,7 +169,36 @@ class EditarUsuarioFragment : Fragment() {
         }
     }
 
+    private fun manejadorBtnEditar() {
+        binding.buttonEditar.setOnClickListener {
+            DialogUtils.dialogoEditConfirmacion(requireContext()) {
+                updateFeligres()
+            }
+        }
+    }
 
+    private fun updateFeligres() {
+        val feligresActualizado = Feligres(
+            nombre = binding.editTextNombre.text.toString(),
+            apellido = binding.editTextApellido.text.toString(),
+            id = binding.editTextId.text.toString(),
+            tipoId = binding.autoCompleteTipoId.text.toString(),
+            celular = binding.editTextCelular.text.toString(),
+            direccion = binding.editTextDireccion.text.toString(),
+            eps = binding.editTextEps.text.toString(),
+            nombreContacto = binding.editTextNombreContacto.text.toString(),
+            celularContacto = binding.editTextCelularContacto.text.toString(),
+            parentescoContacto = binding.editTextParentescoContacto.text.toString(),
+            direccionContacto = binding.editTextDireccionContacto.text.toString(),
+            esLider = binding.switch1.isChecked,
+            tieneAcceso = binding.switch2.isChecked,
+            estadoAtencion = binding.autoCompleteEstadoAtencion.text.toString(),
+            firestoreId = firestoreId
+
+        )
+
+        FeligresViewModel.editarUsuario(feligresActualizado)
+    }
 
 
 }
