@@ -33,37 +33,8 @@ class EditarUsuarioFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Simular un objeto Feligres
-        val pruebaFeligres = Feligres(
-            nombre = "Juan",
-            apellido = "Pérez",
-            id = "123456",
-            firestoreId = "firestoreId123",
-            tipoId = "Cédula",
-            celular = "123456789",
-            direccion = "Calle Falsa 123",
-            eps = "EPS Salud",
-            nombreContacto = "Maria",
-            celularContacto = "987654321",
-            parentescoContacto = "Hermana",
-            direccionContacto = "Calle Verdadera 456",
-            esLider = true,
-            tieneAcceso = false,
-            estadoAtencion = "En Proceso"
-        )
-
-        // Simular el Bundle
-        val bundle = Bundle().apply {
-            putSerializable("dataFeligres", pruebaFeligres)
-        }
-        arguments = bundle
-
-        // Llama a la función que inicializa los campos
         controlador()
     }
-
-
 
 
     private lateinit var firestoreId: String

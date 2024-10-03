@@ -386,6 +386,8 @@
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switch1"
+                            style="@style/Widget.App.Switch"
+                            android:checked="@={user.esLider}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/el_usuario_es_un_lider"
@@ -527,6 +529,8 @@
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switch2"
+                            style="@style/Widget.App.Switch"
+                            android:checked="@={user.tieneAcceso}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/el_usuario_puede_acceder_a_la_aplicaci_n"
