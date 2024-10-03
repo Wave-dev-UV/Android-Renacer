@@ -5,56 +5,83 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import com.example.gestrenacer.R
+import com.example.gestrenacer.databinding.FragmentEditarUsuarioBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [EditarUsuarioFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class EditarUsuarioFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentEditarUsuarioBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_editar_usuario, container, false)
+        binding = FragmentEditarUsuarioBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EditarUsuarioFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EditarUsuarioFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        controlador()
     }
+
+    private fun controlador(){
+        manejarTipoId()
+        manejarEstadoAtención()
+    }
+
+    private fun manejarTipoId() {
+        val tiposDocumento = arrayOf("Cédula", "Tarjeta de Identidad", "Pasaporte")
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tiposDocumento)
+        binding.autoCompleteTipoId.setAdapter(adapter)
+
+        var isDropdownVisible = false
+
+
+        binding.autoCompleteTipoId.setOnClickListener {
+            if (isDropdownVisible) {
+                binding.autoCompleteTipoId.dismissDropDown()  // Ocultar el dropdown
+            } else {
+                binding.autoCompleteTipoId.showDropDown()  // Mostrar el dropdown
+            }
+            isDropdownVisible = !isDropdownVisible
+        }
+
+
+        binding.autoCompleteTipoId.setOnItemClickListener { _, _, position, _ ->
+            val selectedItem = tiposDocumento[position]
+
+            isDropdownVisible = false  // Reiniciar cuando se selecciona un ítem
+        }
+    }
+
+
+    private fun manejarEstadoAtención() {
+        val tiposDocumento = arrayOf("Por Llamar", "En Proceso", "Llamado")
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tiposDocumento)
+        binding.autoCompleteEstadoAtencion.setAdapter(adapter)
+
+        var isDropdownVisible = false
+
+
+        binding.autoCompleteEstadoAtencion.setOnClickListener {
+            if (isDropdownVisible) {
+                binding.autoCompleteEstadoAtencion.dismissDropDown()  // Ocultar el dropdown
+            } else {
+                binding.autoCompleteEstadoAtencion.showDropDown()  // Mostrar el dropdown
+            }
+            isDropdownVisible = !isDropdownVisible
+        }
+
+
+        binding.autoCompleteTipoId.setOnItemClickListener { _, _, position, _ ->
+            val selectedItem = tiposDocumento[position]
+
+            isDropdownVisible = false  // Reiniciar cuando se selecciona un ítem
+        }
+    }
+
+
+
 }

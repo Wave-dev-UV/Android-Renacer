@@ -36,6 +36,13 @@ class MainActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(frameLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+
+            // Para asegurarte de que el teclado funcione correctamente
+            val isKeyboardVisible = systemBars.bottom != 0
+            if (isKeyboardVisible) {
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+            }
+
             insets
         }
     }

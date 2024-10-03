@@ -15,9 +15,10 @@ data class Feligres(
     var parentescoContacto: String,
     var direccionContacto: String,
     var esLider: Boolean,
-    var tieneAcceso: Boolean
+    var tieneAcceso: Boolean,
+    var estadoAtencion: String
 ): Serializable {
     constructor(): this("", "", "", "", "", "",
         "", "", "", "", "",
-        false, false)
+        false, false, "")
 }
