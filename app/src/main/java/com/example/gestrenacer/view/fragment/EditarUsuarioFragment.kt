@@ -33,18 +33,48 @@ class EditarUsuarioFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Simular un objeto Feligres
+        val pruebaFeligres = Feligres(
+            nombre = "Juan",
+            apellido = "Pérez",
+            id = "123456",
+            firestoreId = "firestoreId123",
+            tipoId = "Cédula",
+            celular = "123456789",
+            direccion = "Calle Falsa 123",
+            eps = "EPS Salud",
+            nombreContacto = "Maria",
+            celularContacto = "987654321",
+            parentescoContacto = "Hermana",
+            direccionContacto = "Calle Verdadera 456",
+            esLider = true,
+            tieneAcceso = false,
+            estadoAtencion = "En Proceso"
+        )
+
+        // Simular el Bundle
+        val bundle = Bundle().apply {
+            putSerializable("dataFeligres", pruebaFeligres)
+        }
+        arguments = bundle
+
+        // Llama a la función que inicializa los campos
         controlador()
     }
+
+
+
 
     private lateinit var firestoreId: String
 
     private fun controlador(){
+        inicializarFeligres()
         manejarTipoId()
-        manejarEstadoAtención()
+        manejarEstadoAtencion()
         activarBoton()
         manejadorBtnVolver()
         manejadorBtnEditar()
-        inicializarFeligres()
     }
 
     private fun inicializarFeligres() {
@@ -63,10 +93,12 @@ class EditarUsuarioFragment : Fragment() {
             binding.editTextCelularContacto.setText(bundleFeligres.celularContacto)
             binding.editTextParentescoContacto.setText(bundleFeligres.parentescoContacto)
             binding.editTextDireccionContacto.setText(bundleFeligres.direccionContacto)
-            binding.autoCompleteTipoId.setText(bundleFeligres.tipoId, false)
+
+
+            binding.autoCompleteTipoId.setText(bundleFeligres.tipoId)
             binding.switch1.isChecked = bundleFeligres.esLider
             binding.switch2.isChecked = bundleFeligres.tieneAcceso
-            binding.autoCompleteEstadoAtencion.setText(bundleFeligres.estadoAtencion, false)
+            binding.autoCompleteEstadoAtencion.setText(bundleFeligres.estadoAtencion)
 
             firestoreId = bundleFeligres.firestoreId
         }
@@ -144,7 +176,7 @@ class EditarUsuarioFragment : Fragment() {
     }
 
 
-    private fun manejarEstadoAtención() {
+    private fun manejarEstadoAtencion() {
         val tiposDocumento = arrayOf("Por Llamar", "En Proceso", "Llamado")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tiposDocumento)
         binding.autoCompleteEstadoAtencion.setAdapter(adapter)
