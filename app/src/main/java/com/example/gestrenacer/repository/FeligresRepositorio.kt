@@ -10,22 +10,6 @@ class FeligresRepositorio @Inject constructor() {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
 
-    suspend fun getFeligreses(): List<Feligres>{
-        //Pendiente definir el nombre de la tabla
-        val snapshot = db.collection("feligreses").get().await()
-        return snapshot.map { x -> x.toObject(Feligres::class.java) }
-    }
-
-    fun saveUser(feligres: Feligres){
-        usersCollection.add(feligres)
-            .addOnSuccessListener { documentReference ->
-                Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w("TAG", "Error adding document", e)
-            }
-    }
-
 
     suspend fun updateUser(feligres: Feligres) {
         feligres.firestoreId?.let { id ->
@@ -45,12 +29,17 @@ class FeligresRepositorio @Inject constructor() {
                 "esLider" to feligres.esLider,
                 "tieneAcceso" to feligres.tieneAcceso,
                 "estadoAtencion" to feligres.estadoAtencion
-
             )
 
+            try {
 
-            usersCollection.document(id).set(dataToSave).await()
-        }
+                usersCollection.document(id).set(dataToSave).await()
+                // Log para indicar que la actualización fue exitosa
+                Log.d("FeligresRepositorio", "Documento actualizado con éxito: $id")
+            } catch (e: Exception) {
+
+                Log.e("FeligresRepositorio", "Error al actualizar el documento: ${e.message}")
+            }
+        } ?: Log.w("FeligresRepositorio", "Firestore ID es nulo")
     }
-
 }

@@ -12,12 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class FeligresViewModel @Inject constructor(private val repository: FeligresRepositorio): ViewModel() {
 
-    fun crearUsuario(feligres: Feligres){
-        viewModelScope.launch {
-            repository.saveUser(feligres)
-        }
-    }
-
     fun editarUsuario(feligres: Feligres){
         viewModelScope.launch {
             repository.updateUser(feligres)
