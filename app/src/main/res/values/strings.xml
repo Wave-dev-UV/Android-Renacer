@@ -1,3 +1,61 @@
 <resources>
     <string name="app_name">GestRenacer</string>
+    <string name="tituloAñadirUsuario">CREAR NUEVO USUARIO</string>
+    <string name="label_nombre">Nombre(s):</string>
+    <string name="inserte_su_nombre">Inserte su nombre</string>
+    <string name="apellido_s">Apellido(s):</string>
+    <string name="inserte_su_apellido">Inserte su apellido</string>
+    <string name="n_mero_de_identificaci_n">Número de identificación</string>
+    <string name="digite_su_n_mero_de_id">digite su número de ID</string>
+    <string name="tipo_de_documento">Tipo de documento:</string>
+    <string name="n_mero_de_celular">Celular</string>
+    <string name="digite_su_n_mero_de_celular">Digite su número de celular</string>
+    <string name="direcci_n">Dirección</string>
+    <string name="inserte_su_direcci_n">Inserte su dirección</string>
+    <string name="eps">EPS</string>
+    <string name="inserte_su_eps">Inserte su EPS</string>
+    <string name="seleccione_su_tipo_de_documento">Seleccione su tipo de documento</string>
+    <string name="datos_personales">Datos Personales</string>
+    <string name="nombre_completo">Nombre completo:</string>
+    <string name="digite_el_celular_de_su_contacto">Digite el celular de su contacto</string>
+    <string name="parentesco">Parentesco</string>
+    <string name="direccion_emergencia">Dirección</string>
+    <string name="direcci_n_de_su_contacto">Dirección de su contacto</string>
+    <string name="cargo_en_la_iglesia">Cargo en la iglesia</string>
+    <string name="es_lider">¿Es lider?</string>
+    <string name="inserte_el_nombre_del_contacto">Inserte el nombre del contacto</string>
+    <string name="parentesco_con_su_contacto">Parentesco con su contacto</string>
+    <string name="contacto_de_emergencia">Contacto de emergencia</string>
+    <string name="boton_para_retroceder">boton para ir a la ventana anterior</string>
+    <string name="permisos_en_la_aplicaci_n">Permisos en la aplicación</string>
+    <string name="puede_acceder_a_la_aplicaci_n">¿Puede acceder a la aplicación?</string>
+    <string name="crear_usuario">Crear Usuario</string>
+    <string name="el_usuario_es_un_lider">¿El usuario es un lider?</string>
+    <string name="el_usuario_puede_acceder_a_la_aplicaci_n">¿El usuario puede acceder a la aplicación?</string>
+    <string name="bottomBarText1">Principal</string>
+    <string name="bottomBarText2">Reportes</string>
+    <string name="bottomBarText3">Pendientes</string>
+    <string name="txtFloatBtnAnadirFeligres">Añadir un feligrés.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tooltipBarraBusqueda">Buscar una persona.</string>
+    <string name="lblFiltro">Filtrar</string>
+    <string name="lblResultados">Resultados</string>
+    <string name="lblRolListarFragment">Rol: </string>
+    <string name="lblTelListarFragment">Teléfono: </string>
+    <string name="lblLiderListarFragment">¿Es líder?: </string>
+    <string name="lblFiltrar">Organizar resultados.</string>
+    <string name="lblOrdenar">Ordenar por:</string>
+    <string name="lblFiltroAlfabeticoAscen">A-Z ascendente.</string>
+    <string name="lblFiltroAlfabeticoDescen">A-Z descendente.</string>
+    <string name="lblFiltroEdadAscen">Edad ascendente.</string>
+    <string name="lblFiltroEdadDescen">Edad descendente.</string>
+    <string name="lblEdadFiltro">Filtrar por edad.</string>
+    <string name="lblMin">A partir de:</string>
+    <string name="lblMax">Hasta:</string>
+    <string name="lblBtnAplicarFiltro">Aplicar</string>
+    <string-array name="listaTipoDocumento">
+        <item>Cedula</item>
+        <item>Tajerta de Identidad</item>
+        <item>Pasaporte</item>
+    </string-array>
 </resources>

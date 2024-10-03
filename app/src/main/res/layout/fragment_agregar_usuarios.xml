@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="user"
+            type="com.example.gestrenacer.models.User" />
+        <variable
+            name="viewModel"
+            type="com.example.gestrenacer.viewmodel.AppViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/azulPrincipal"
+                android:orientation="horizontal"
+                android:paddingVertical="10dp">
+
+
+                <TextView
+                    android:id="@+id/tvTituloCrear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tituloAñadirUsuario"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TextContrastCheck" />
+
+                <ImageButton
+                    android:id="@+id/btnVolver"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="15dp"
+                    android:backgroundTint="#00FFFFFF"
+                    android:contentDescription="@string/boton_para_retroceder"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ImageContrastCheck" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    android:paddingHorizontal="27dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp">
+                        <TextView
+                            android:id="@+id/tvSeparadorDatos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/datos_personales"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/tvSeparadorDatos"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginEnd="7dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:background="@color/secondary"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            app:layout_constraintStart_toEndOf="@id/tvSeparadorDatos"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginStart="7dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:background="@color/secondary"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_nombre"
+                        android:textSize="16sp"
+                        android:layout_marginTop="9dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextNombre"
+                        android:text="@={user.nombre}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/inserte_su_nombre"
+                        android:textColorHint="@color/secondary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/apellido_s"
+                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextApellido"
+                        android:text="@={user.apellido}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/inserte_su_apellido"
+                        android:textColorHint="@color/secondary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/n_mero_de_identificaci_n"
+                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextId"
+                        android:inputType="number"
+                        android:text="@={user.id}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/digite_su_n_mero_de_id"
+                        android:textColorHint="@color/secondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tipo_de_documento"
+                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/selectPrioridad"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="350dp"
+                    android:layout_height="60dp"
+                    android:textColorHint="@color/secondary"
+                    app:boxStrokeColor="@color/azulPrincipal"
+                    app:endIconTint="@color/azulPrincipal"
+                    app:hintTextColor="@color/azulPrincipal"
+                    app:startIconTint="@color/azulPrincipal">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/autoCompleteTipoId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/seleccione_su_tipo_de_documento"
+                        android:importantForAccessibility="yes"
+                        android:inputType="none"
+                        android:text="@={user.tipoId}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/n_mero_de_celular"
+                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextCelular"
+                        android:inputType="number"
+                        android:text="@={user.celular}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/digite_su_n_mero_de_celular"
+                        android:textColorHint="@color/secondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/direcci_n"
+                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextDireccion"
+                        android:text="@={user.direccion}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/inserte_su_direcci_n"
+                        android:textColorHint="@color/secondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/eps"
+                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextEps"
+                        android:text="@={user.eps}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/inserte_su_eps"
+                        android:textColorHint="@color/secondary" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp">
+
+                        <TextView
+                            android:id="@+id/tvSepararEmergencia"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/contacto_de_emergencia"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/tvSepararEmergencia"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginEnd="7dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:background="@color/secondary"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            app:layout_constraintStart_toEndOf="@id/tvSepararEmergencia"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginStart="7dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:background="@color/secondary"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nombre_completo"
+                        android:textSize="16sp"
+                        android:layout_marginTop="9dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextNombreContacto"
+                        android:text="@={user.nombreContacto}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/inserte_el_nombre_del_contacto"
+                        android:textColorHint="@color/secondary"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/n_mero_de_celular"
+                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextCelularContacto"
+                        android:inputType="number"
+                        android:text="@={user.celularContacto}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/digite_el_celular_de_su_contacto"
+                        android:textColorHint="@color/secondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/parentesco"
+                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextParentescoContacto"
+                        android:text="@={user.parentescoContacto}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/parentesco_con_su_contacto"
+                        android:textColorHint="@color/secondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/direccion_emergencia"
+                        android:textSize="16sp"
+                        android:layout_marginTop="20dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextDireccionContacto"
+                        android:text="@={user.direccionContacto}"
+                        android:layout_width="350dp"
+                        android:layout_height="48dp"
+                        android:hint="@string/direcci_n_de_su_contacto"
+                        android:textColorHint="@color/secondary" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp">
+                        <TextView
+                            android:id="@+id/tvSepararCargo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cargo_en_la_iglesia"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/tvSepararCargo"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginEnd="7dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:background="@color/secondary"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            app:layout_constraintStart_toEndOf="@id/tvSepararCargo"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginStart="7dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:background="@color/secondary"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/es_lider"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchEsLider"
+                            style="@style/Widget.App.Switch"
+                            android:checked="@={user.esLider}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/el_usuario_es_un_lider"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:thumbTint="@color/white" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp">
+                        <TextView
+                            android:id="@+id/tvSepararPermisos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/permisos_en_la_aplicaci_n"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/tvSepararPermisos"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginEnd="7dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:background="@color/secondary"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            app:layout_constraintStart_toEndOf="@id/tvSepararPermisos"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginStart="7dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:background="@color/secondary"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/puede_acceder_a_la_aplicaci_n"
+                            android:textSize="17sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchTieneAcceso"
+                            style="@style/Widget.App.Switch"
+                            android:checked="@={user.tieneAcceso}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/el_usuario_puede_acceder_a_la_aplicaci_n"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:thumbTint="@color/white" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Button
+                    android:id="@+id/buttonEnviar"
+                    android:enabled="false"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="40dp"
+                    android:backgroundTint="@color/azulPrincipal"
+                    android:text="@string/crear_usuario"
+                    tools:textSize="17sp" />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</layout>
