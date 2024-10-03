@@ -9,13 +9,19 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentEditarUsuarioBinding
+import com.example.gestrenacer.models.Feligres
+import com.example.gestrenacer.view.dialog.DialogUtils
+import com.example.gestrenacer.viewmodel.FeligresViewModel
 
 class EditarUsuarioFragment : Fragment() {
 
     private lateinit var binding: FragmentEditarUsuarioBinding
+    private val FeligresViewModel: FeligresViewModel by viewModels()
+    private  lateinit var bundleFeligres: Feligres
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -132,6 +138,7 @@ class EditarUsuarioFragment : Fragment() {
             isDropdownVisible = false  // Reiniciar cuando se selecciona un ítem
         }
     }
+
 
 
 
