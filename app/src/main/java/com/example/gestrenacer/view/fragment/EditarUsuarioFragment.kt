@@ -84,7 +84,7 @@ class EditarUsuarioFragment : Fragment() {
         if (receivedBundle != null) {
             bundleFeligres = receivedBundle.getSerializable("dataFeligres") as Feligres
 
-            // Asignar texto a los campos normales
+
             binding.editTextNombre.setText(bundleFeligres.nombre)
             binding.editTextApellido.setText(bundleFeligres.apellido)
             binding.editTextId.setText(bundleFeligres.id)
@@ -159,6 +159,27 @@ class EditarUsuarioFragment : Fragment() {
         }
     }
 
+
+    private fun inicializarAdaptadores(){
+
+        val adapterDocumento = ArrayAdapter.createFromResource(
+            this.requireContext(),
+            R.array.listaTipoDocumento,
+            android.R.layout.simple_dropdown_item_1line
+        )
+        binding.autoCompleteEstadoAtencion.setAdapter(adapterDocumento)
+
+
+
+        val adapterAtencion = ArrayAdapter.createFromResource(
+            this.requireContext(),
+            R.array.listaEstadoAtencion,
+            android.R.layout.simple_dropdown_item_1line
+        )
+        binding.autoCompleteTipoId.setAdapter(adapterAtencion)
+
+    }
+
     private fun manejarTipoId() {
 
 
@@ -176,22 +197,11 @@ class EditarUsuarioFragment : Fragment() {
 
 
         binding.autoCompleteTipoId.setOnItemClickListener { _, _, position, _ ->
-            //val selectedItem = tiposDocumento[position]
+
+            val selectedItem = binding.autoCompleteTipoId.adapter.getItem(position).toString()
 
             isDropdownVisible = false  // Reiniciar cuando se selecciona un ítem
         }
-    }
-
-    private fun inicializarAdaptadores(){
-        val tiposDocumento = arrayOf("Por Llamar", "En Proceso", "Llamado")
-        val adapterDocumento = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, tiposDocumento)
-        binding.autoCompleteEstadoAtencion.setAdapter(adapterDocumento)
-
-
-        val estadoAtencion = arrayOf("Cédula", "Tarjeta de Identidad", "Pasaporte")
-        val adapterAtencion = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, estadoAtencion)
-        binding.autoCompleteTipoId.setAdapter(adapterAtencion)
-
     }
 
     private fun manejarEstadoAtencion() {
@@ -210,7 +220,8 @@ class EditarUsuarioFragment : Fragment() {
 
 
         binding.autoCompleteTipoId.setOnItemClickListener { _, _, position, _ ->
-            //val selectedItem = tiposDocumento[position]
+
+            val selectedItem = binding.autoCompleteTipoId.adapter.getItem(position).toString()
 
             isDropdownVisible = false  // Reiniciar cuando se selecciona un ítem
         }
