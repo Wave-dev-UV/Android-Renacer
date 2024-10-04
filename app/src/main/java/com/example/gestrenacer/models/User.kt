@@ -2,11 +2,10 @@ package com.example.gestrenacer.models
 
 import java.io.Serializable
 
-data class Feligres(
+data class User(
     var nombre: String,
     var apellido: String,
-    var id: String, // Documento de identidad
-    var firestoreId: String, // ID de Firestore  (solo para manejo interno)
+    var id: String,
     var tipoId: String,
     var celular: String,
     var direccion: String,
@@ -15,9 +14,12 @@ data class Feligres(
     var celularContacto: String,
     var parentescoContacto: String,
     var direccionContacto: String,
+    var estadoAtencion: String,
+    var firestoreID: String,
     var esLider: Boolean,
     var tieneAcceso: Boolean,
-    var estadoAtencion: String
-) : Serializable {
-    constructor() : this("", "", "", "", "", "", "", "", "", "", "", "", false, false, "")
+): Serializable {
+    constructor(): this("", "", "", "", "", "",
+        "", "", "", "", "",
+        "","",false, false)
 }

@@ -13,19 +13,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentEditarUsuarioBinding
-import com.example.gestrenacer.models.Feligres
+import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.dialog.DialogUtils
-import com.example.gestrenacer.viewmodel.FeligresViewModel
+import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+
 
 
 @AndroidEntryPoint
 class EditarUsuarioFragment : Fragment() {
 
-    private val feligresViewModel: FeligresViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var binding: FragmentEditarUsuarioBinding
-    private  lateinit var bundleFeligres: Feligres
+    private  lateinit var bundleUser: User
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,33 +55,33 @@ class EditarUsuarioFragment : Fragment() {
         val receivedBundle = arguments
 
         if (receivedBundle != null) {
-            bundleFeligres = receivedBundle.getSerializable("dataFeligres") as Feligres
+            bundleUser = receivedBundle.getSerializable("dataFeligres") as User
 
 
-            binding.editTextNombre.setText(bundleFeligres.nombre)
-            binding.editTextApellido.setText(bundleFeligres.apellido)
-            binding.editTextId.setText(bundleFeligres.id)
-            binding.editTextCelular.setText(bundleFeligres.celular)
-            binding.editTextDireccion.setText(bundleFeligres.direccion)
-            binding.editTextEps.setText(bundleFeligres.eps)
-            binding.editTextNombreContacto.setText(bundleFeligres.nombreContacto)
-            binding.editTextCelularContacto.setText(bundleFeligres.celularContacto)
-            binding.editTextParentescoContacto.setText(bundleFeligres.parentescoContacto)
-            binding.editTextDireccionContacto.setText(bundleFeligres.direccionContacto)
+            binding.editTextNombre.setText(bundleUser.nombre)
+            binding.editTextApellido.setText(bundleUser.apellido)
+            binding.editTextId.setText(bundleUser.id)
+            binding.editTextCelular.setText(bundleUser.celular)
+            binding.editTextDireccion.setText(bundleUser.direccion)
+            binding.editTextEps.setText(bundleUser.eps)
+            binding.editTextNombreContacto.setText(bundleUser.nombreContacto)
+            binding.editTextCelularContacto.setText(bundleUser.celularContacto)
+            binding.editTextParentescoContacto.setText(bundleUser.parentescoContacto)
+            binding.editTextDireccionContacto.setText(bundleUser.direccionContacto)
 
             // Forzar delay para asegurarse de que los adaptadores estén completamente listos
             binding.autoCompleteTipoId.post {
-                binding.autoCompleteTipoId.setText(bundleFeligres.tipoId, false)
+                binding.autoCompleteTipoId.setText(bundleUser.tipoId, false)
             }
 
-            binding.switch1.isChecked = bundleFeligres.esLider
-            binding.switch2.isChecked = bundleFeligres.tieneAcceso
+            binding.switch1.isChecked = bundleUser.esLider
+            binding.switch2.isChecked = bundleUser.tieneAcceso
 
             binding.autoCompleteEstadoAtencion.post {
-                binding.autoCompleteEstadoAtencion.setText(bundleFeligres.estadoAtencion, false)
+                binding.autoCompleteEstadoAtencion.setText(bundleUser.estadoAtencion, false)
             }
 
-            firestoreId = bundleFeligres.firestoreId
+            firestoreId = bundleUser.firestoreID
         }
     }
 
@@ -164,7 +164,7 @@ class EditarUsuarioFragment : Fragment() {
     }
 
     private fun updateFeligres() {
-        val feligresActualizado = Feligres(
+        val feligresActualizado = User(
             nombre = binding.editTextNombre.text.toString(),
             apellido = binding.editTextApellido.text.toString(),
             id = binding.editTextId.text.toString(),
@@ -179,11 +179,11 @@ class EditarUsuarioFragment : Fragment() {
             esLider = binding.switch1.isChecked,
             tieneAcceso = binding.switch2.isChecked,
             estadoAtencion = binding.autoCompleteEstadoAtencion.text.toString(),
-            firestoreId = firestoreId
+            firestoreID = firestoreId
 
         )
 
-        feligresViewModel.editarUsuario(feligresActualizado)
+        userViewModel.editarUsuario(feligresActualizado)
     }
 
 
