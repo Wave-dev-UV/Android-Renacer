@@ -16,11 +16,15 @@ import com.example.gestrenacer.databinding.FragmentEditarUsuarioBinding
 import com.example.gestrenacer.models.Feligres
 import com.example.gestrenacer.view.dialog.DialogUtils
 import com.example.gestrenacer.viewmodel.FeligresViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class EditarUsuarioFragment : Fragment() {
 
+    private val feligresViewModel: FeligresViewModel by viewModels()
     private lateinit var binding: FragmentEditarUsuarioBinding
-    private val FeligresViewModel: FeligresViewModel by viewModels()
     private  lateinit var bundleFeligres: Feligres
 
     override fun onCreateView(
@@ -42,8 +46,6 @@ class EditarUsuarioFragment : Fragment() {
     private fun controlador(){
         inicializarAdaptadores()
         inicializarFeligres()
-        manejarTipoId()
-        manejarEstadoAtencion()
         activarBoton()
         manejadorBtnVolver()
         manejadorBtnEditar()
@@ -151,52 +153,7 @@ class EditarUsuarioFragment : Fragment() {
 
     }
 
-    private fun manejarTipoId() {
 
-
-        var isDropdownVisible = false
-
-
-        binding.autoCompleteTipoId.setOnClickListener {
-            if (isDropdownVisible) {
-                binding.autoCompleteTipoId.dismissDropDown()  // Ocultar el dropdown
-            } else {
-                binding.autoCompleteTipoId.showDropDown()  // Mostrar el dropdown
-            }
-            isDropdownVisible = !isDropdownVisible
-        }
-
-
-        binding.autoCompleteTipoId.setOnItemClickListener { _, _, position, _ ->
-
-            val selectedItem = binding.autoCompleteTipoId.adapter.getItem(position).toString()
-
-            isDropdownVisible = false  // Reiniciar cuando se selecciona un ítem
-        }
-    }
-
-    private fun manejarEstadoAtencion() {
-
-        var isDropdownVisible = false
-
-
-        binding.autoCompleteEstadoAtencion.setOnClickListener {
-            if (isDropdownVisible) {
-                binding.autoCompleteEstadoAtencion.dismissDropDown()  // Ocultar el dropdown
-            } else {
-                binding.autoCompleteEstadoAtencion.showDropDown()  // Mostrar el dropdown
-            }
-            isDropdownVisible = !isDropdownVisible
-        }
-
-
-        binding.autoCompleteTipoId.setOnItemClickListener { _, _, position, _ ->
-
-            val selectedItem = binding.autoCompleteTipoId.adapter.getItem(position).toString()
-
-            isDropdownVisible = false  // Reiniciar cuando se selecciona un ítem
-        }
-    }
 
     private fun manejadorBtnEditar() {
         binding.buttonEditar.setOnClickListener {
@@ -226,7 +183,7 @@ class EditarUsuarioFragment : Fragment() {
 
         )
 
-        FeligresViewModel.editarUsuario(feligresActualizado)
+        feligresViewModel.editarUsuario(feligresActualizado)
     }
 
 

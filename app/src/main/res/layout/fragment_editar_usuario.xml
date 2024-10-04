@@ -3,17 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-
-    <data>
-        <variable
-            name="user"
-            type="com.example.gestrenacer.models.Feligres" />
-        <variable
-            name="viewModel"
-            type="com.example.gestrenacer.viewmodel.FeligresViewModel" />
-    </data>
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -179,7 +168,7 @@
                             android:hint="@string/seleccione_su_tipo_de_documento"
                             android:importantForAccessibility="yes"
                             android:inputType="none"
-                            android:text="@={user.tipoId}" />
+                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
@@ -466,7 +455,7 @@
                             android:hint="@string/selecc_atencion"
                             android:importantForAccessibility="yes"
                             android:inputType="none"
-                            android:text="@={user.tipoId}" />
+                            />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
