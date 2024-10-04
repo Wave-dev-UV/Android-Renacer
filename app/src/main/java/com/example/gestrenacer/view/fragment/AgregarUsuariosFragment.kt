@@ -84,6 +84,7 @@ class AgregarUsuariosFragment : Fragment() {
         binding.buttonEnviar.setOnClickListener {
             DialogUtils.dialogoConfirmacion(requireContext()){
                 val user = binding.user ?: User()
+                user.estadoAtencion = "Por Llamar"
                 userViewModel.crearUsuario(user)
                 findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment,requireArguments())
             }

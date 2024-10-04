@@ -12,8 +12,11 @@ class UserRepositorio @Inject constructor() {
 
     suspend fun getUsers(): List<User>{
         val snapshot = usersCollection.get().await()
-        //Log.d("derp",snapshot.map { x -> x.toObject(User::class.java) }.toString())
-        return snapshot.map { x -> x.toObject(User::class.java) }
+        return snapshot.map { x ->
+            val obj = x.toObject(User::class.java)
+            obj.firestoreID = x.id
+            obj
+        }
     }
 
     fun saveUser(user: User){
