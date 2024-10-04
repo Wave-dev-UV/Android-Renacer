@@ -138,7 +138,7 @@ class EditarUsuarioFragment : Fragment() {
             R.array.listaTipoDocumento,
             android.R.layout.simple_dropdown_item_1line
         )
-        binding.autoCompleteEstadoAtencion.setAdapter(adapterDocumento)
+        binding.autoCompleteTipoId.setAdapter(adapterDocumento)
 
 
 
@@ -147,7 +147,7 @@ class EditarUsuarioFragment : Fragment() {
             R.array.listaEstadoAtencion,
             android.R.layout.simple_dropdown_item_1line
         )
-        binding.autoCompleteTipoId.setAdapter(adapterAtencion)
+        binding.autoCompleteEstadoAtencion.setAdapter(adapterAtencion)
 
     }
 
