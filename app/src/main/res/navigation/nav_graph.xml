@@ -3,12 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/editarUsuarioFragment">
-
+    app:startDestination="@id/listarFragment">
     <fragment
         android:id="@+id/editarUsuarioFragment"
         android:name="com.example.gestrenacer.view.fragment.EditarUsuarioFragment"
         android:label="EditarUsuarioFragment"
         tools:layout="@layout/fragment_editar_usuario" />
-
+    <fragment
+        android:id="@+id/agregarUsuariosFragment"
+        android:name="com.example.gestrenacer.fragment.AgregarUsuariosFragment"
+        android:label="fragment_agregar_usuarios"
+        tools:layout="@layout/fragment_agregar_usuarios" >
+        <action
+            android:id="@+id/action_agregarUsuariosFragment_to_listarFragment"
+            app:destination="@id/listarFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listarFragment"
+        android:name="com.example.gestrenacer.view.fragment.ListarFragment"
+        android:label="ListarFragment"
+        tools:layout="@layout/fragment_listar_feligreses">
+        <action
+            android:id="@+id/action_listarFragment_to_agregarUsuariosFragment"
+            app:destination="@id/agregarUsuariosFragment" />
+    </fragment>
 </navigation>

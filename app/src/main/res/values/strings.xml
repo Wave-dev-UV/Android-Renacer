@@ -53,19 +53,16 @@
     <string name="lblMin">A partir de:</string>
     <string name="lblMax">Hasta:</string>
     <string name="lblBtnAplicarFiltro">Aplicar</string>
-
+    <string-array name="listaTipoDocumento">
+        <item>Cedula</item>
+        <item>Tajerta de Identidad</item>
+        <item>Pasaporte</item>
+    </string-array>
     <string name="tituloEditarUsuario">EDITAR USUARIO</string>
     <string name="editar_usuario">Editar Usuario</string>
     <string name="subtituloEstadoDeAtencion">Estado de atención</string>>
     <string name="estado_de_atencion">Cambiar estado de atención</string>>
     <string name="selecc_atencion">Cambie el estado de atención</string>>
-
-    <string-array name="listaTipoDocumento">
-        <item>Cédula</item>
-        <item>Tajerta de Identidad</item>
-        <item>Pasaporte</item>
-    </string-array>
-
     <string-array name="listaEstadoAtencion">
         <item>Por Llamar</item>
         <item>En Proceso</item>
