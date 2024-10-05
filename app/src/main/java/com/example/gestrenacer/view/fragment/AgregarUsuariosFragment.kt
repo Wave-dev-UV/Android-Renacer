@@ -13,13 +13,13 @@ import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentAgregarUsuariosBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.dialog.DialogUtils
-import com.example.gestrenacer.viewmodel.AppViewModel
+import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AgregarUsuariosFragment : Fragment() {
     private lateinit var binding: FragmentAgregarUsuariosBinding
-    private val appViewModel: AppViewModel by viewModels()
+    private val appViewModel: UserViewModel by viewModels()
     private val user = User()
 
     override fun onCreateView(
@@ -33,8 +33,8 @@ class AgregarUsuariosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = appViewModel
         binding.user = user
+        binding.viewModel = appViewModel
         controler()
     }
 

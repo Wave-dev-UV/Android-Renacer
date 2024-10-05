@@ -15,13 +15,13 @@ import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.view.adapter.FeligresAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
-import com.example.gestrenacer.viewmodel.FeligresViewModel
+import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
-    private val feligresViewModel: FeligresViewModel by viewModels()
+    private val feligresViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
