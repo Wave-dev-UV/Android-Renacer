@@ -5,6 +5,11 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/listarFragment">
     <fragment
+        android:id="@+id/editarUsuarioFragment"
+        android:name="com.example.gestrenacer.view.fragment.EditarUsuarioFragment"
+        android:label="EditarUsuarioFragment"
+        tools:layout="@layout/fragment_editar_usuario" />
+    <fragment
         android:id="@+id/agregarUsuariosFragment"
         android:name="com.example.gestrenacer.fragment.AgregarUsuariosFragment"
         android:label="fragment_agregar_usuarios"

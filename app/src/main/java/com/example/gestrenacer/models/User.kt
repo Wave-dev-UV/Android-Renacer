@@ -14,10 +14,12 @@ data class User(
     var celularContacto: String,
     var parentescoContacto: String,
     var direccionContacto: String,
+    var estadoAtencion: String,
+    var firestoreID: String,
     var esLider: Boolean,
-    var tieneAcceso: Boolean
+    var tieneAcceso: Boolean,
 ): Serializable {
     constructor(): this("", "", "", "", "", "",
         "", "", "", "", "",
-        false, false)
+        "","",false, false)
 }
