@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
-    id("com.google.gms.google-services") // Asegúrate de que esto esté al final
+    id("com.google.gms.google-services")
     id("com.google.dagger.hilt.android")
 }
 
@@ -48,9 +48,9 @@ android {
 
 dependencies {
     implementation(libs.androidx.annotation)
-    implementation(platform("com.google.firebase:firebase-bom:33.1.0")) // Firebase BOM
-    implementation("com.google.firebase:firebase-auth-ktx") // Firebase Auth
-    implementation("com.google.firebase:firebase-firestore-ktx") // Firestore
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
