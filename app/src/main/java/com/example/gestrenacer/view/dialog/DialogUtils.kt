@@ -7,11 +7,12 @@ class DialogUtils {
     companion object{
         fun dialogoConfirmacion(
             context: Context,
+            mensaje: String,
             onYes: ()-> Unit,
         ){
             val builder = AlertDialog.Builder(context)
             builder.setTitle("Confirmación")
-                .setMessage("¿Estás seguro que deseas crear el usuario?")
+                .setMessage(mensaje)
                 .setPositiveButton("Sí"){dialog, _ ->
                     onYes()
                     dialog.dismiss()

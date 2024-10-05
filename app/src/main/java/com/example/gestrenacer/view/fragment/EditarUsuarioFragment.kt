@@ -157,7 +157,8 @@ class EditarUsuarioFragment : Fragment() {
 
     private fun manejadorBtnEditar() {
         binding.buttonEditar.setOnClickListener {
-            DialogUtils.dialogoEditConfirmacion(requireContext()) {
+            DialogUtils.dialogoConfirmacion(requireContext(),
+            "¿Está seguro que desea editar el usuario?") {
                 updateFeligres()
             }
         }
