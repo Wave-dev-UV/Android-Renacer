@@ -1,0 +1,93 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="18dp">
+
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="203dp"
+            android:layout_height="202dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/logo_renacer" />
+
+
+        <EditText
+            android:id="@+id/phoneNumberInput"
+            android:layout_width="270dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="30dp"
+            android:hint="Número de Teléfono"
+            android:inputType="phone"
+            android:background="@drawable/edittext_background"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/darker_gray" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/generateCodeButton"
+            android:layout_width="270dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="30dp"
+            android:text="Enviar Código"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_background"
+            android:gravity="center" />
+
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="270dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@android:color/darker_gray" />
+
+
+        <LinearLayout
+            android:layout_width="270dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/button_google_background">
+
+            <ImageView
+                android:id="@+id/googleLogo"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_google_logo"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Iniciar sesión con Google"
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/forgotPasswordText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="¿Has olvidado la contraseña?"
+            android:textSize="12sp"
+            android:textColor="#757575"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:lineHeight="22sp"
+            android:textStyle="normal" />
+    </LinearLayout>
+</ScrollView>
