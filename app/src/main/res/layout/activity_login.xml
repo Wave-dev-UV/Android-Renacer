@@ -10,7 +10,7 @@
         android:gravity="center_horizontal"
         android:padding="18dp">
 
-        <!-- Logo de la aplicación -->
+
         <ImageView
             android:id="@+id/logoImageView"
             android:layout_width="203dp"
@@ -18,7 +18,7 @@
             android:layout_marginTop="50dp"
             android:src="@drawable/logo_renacer" />
 
-        <!-- Campo de número de teléfono -->
+
         <EditText
             android:id="@+id/phoneNumberInput"
             android:layout_width="270dp"
@@ -33,7 +33,7 @@
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray" />
 
-        <!-- Botón para generar el código de verificación -->
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/generateCodeButton"
             android:layout_width="270dp"
@@ -44,7 +44,7 @@
             android:background="@drawable/button_background"
             android:gravity="center" />
 
-        <!-- Separador visual -->
+
         <View
             android:id="@+id/separator"
             android:layout_width="270dp"
@@ -52,7 +52,7 @@
             android:layout_marginTop="30dp"
             android:background="@android:color/darker_gray" />
 
-        <!-- Botón para iniciar sesión con Google -->
+
         <LinearLayout
             android:layout_width="270dp"
             android:layout_height="50dp"
@@ -76,7 +76,7 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <!-- Texto de "Olvidaste tu contraseña" (opcional si no se usa) -->
+
         <TextView
             android:id="@+id/forgotPasswordText"
             android:layout_width="wrap_content"

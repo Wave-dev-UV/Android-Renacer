@@ -18,7 +18,7 @@ class VerifyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verify_sms)
 
-
+//
         auth = FirebaseAuth.getInstance()
         storedVerificationId = intent.getStringExtra("storedVerificationId") ?: ""
 
