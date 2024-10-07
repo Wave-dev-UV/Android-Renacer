@@ -144,7 +144,12 @@ class EditarUsuarioFragment : Fragment() {
         )
         binding.autoCompleteTipoId.setAdapter(adapterDocumento)
 
-
+        val adapterEdit = ArrayAdapter.createFromResource(
+            this.requireContext(),
+            R.array.listaRoles,
+            android.R.layout.simple_dropdown_item_1line
+        )
+        binding.autoCompleteRole.setAdapter(adapterEdit)
 
         val adapterAtencion = ArrayAdapter.createFromResource(
             this.requireContext(),
