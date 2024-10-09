@@ -3,7 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/listarFragment">
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/editarUsuarioFragment"
+        android:name="com.example.gestrenacer.view.fragment.EditarUsuarioFragment"
+        android:label="EditarUsuarioFragment"
+        tools:layout="@layout/fragment_editar_usuario" />
+
     <fragment
         android:id="@+id/agregarUsuariosFragment"
         android:name="com.example.gestrenacer.view.fragment.AgregarUsuariosFragment"
@@ -13,6 +20,7 @@
             android:id="@+id/action_agregarUsuariosFragment_to_listarFragment"
             app:destination="@id/listarFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/listarFragment"
         android:name="com.example.gestrenacer.view.fragment.ListarFragment"
@@ -22,4 +30,32 @@
             android:id="@+id/action_listarFragment_to_agregarUsuariosFragment"
             app:destination="@id/agregarUsuariosFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.gestrenacer.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_verifyFragment"
+            app:destination="@id/verifyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/verifyFragment"
+        android:name="com.example.gestrenacer.VerifyFragment"
+        android:label="VerifyFragment"
+        tools:layout="@layout/fragment_verify_sms">
+        <argument
+            android:name="storedVerificationId"
+            app:argType="string" />
+        <argument
+            android:name="phoneNumber"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_verifyFragment_to_listarFragment"
+            app:destination="@id/listarFragment" />
+    </fragment>
+
 </navigation>

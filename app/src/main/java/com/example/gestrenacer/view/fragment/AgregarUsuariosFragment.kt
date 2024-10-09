@@ -82,7 +82,8 @@ class AgregarUsuariosFragment : Fragment() {
 
     private fun manejadorBtnEnviar(){
         binding.buttonEnviar.setOnClickListener {
-            DialogUtils.dialogoConfirmacion(requireContext()){
+            DialogUtils.dialogoConfirmacion(requireContext(),
+                "¿Está seguro que desea añadir al usuario?"){
                 val user = binding.user ?: User()
                 user.estadoAtencion = "Por Llamar"
                 userViewModel.crearUsuario(user)

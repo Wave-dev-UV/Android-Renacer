@@ -19,7 +19,7 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
-    fun saveUser(user: User){
+    suspend fun saveUser(user: User){
         usersCollection.add(user)
             .addOnSuccessListener { documentReference ->
                 Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
@@ -27,5 +27,19 @@ class UserRepositorio @Inject constructor() {
             .addOnFailureListener { e ->
                 Log.w("TAG", "Error adding document", e)
             }
+    }
+
+    suspend fun updateUser(feligres: User) {
+        feligres.firestoreID?.let { id ->
+            try {
+
+                usersCollection.document(id).set(feligres).await()
+
+
+                Log.d("FeligresRepositorio", "Documento actualizado con éxito: $id")
+            } catch (e: Exception) {
+                Log.e("FeligresRepositorio", "Error al actualizar el documento: ${e.message}")
+            }
+        } ?: Log.w("FeligresRepositorio", "Firestore ID es nulo")
     }
 }

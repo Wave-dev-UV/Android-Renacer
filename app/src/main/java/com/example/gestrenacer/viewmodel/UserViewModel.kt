@@ -37,4 +37,10 @@ class UserViewModel @Inject constructor(
             repository.saveUser(user)
         }
     }
+
+    fun editarUsuario(user: User){
+        viewModelScope.launch {
+            repository.updateUser(user)
+        }
+    }
 }
