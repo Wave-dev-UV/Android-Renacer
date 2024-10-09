@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/agregarUsuariosFragment"
-        android:name="com.example.gestrenacer.fragment.AgregarUsuariosFragment"
+        android:name="com.example.gestrenacer.view.fragment.AgregarUsuariosFragment"
         android:label="fragment_agregar_usuarios"
         tools:layout="@layout/fragment_agregar_usuarios" >
         <action

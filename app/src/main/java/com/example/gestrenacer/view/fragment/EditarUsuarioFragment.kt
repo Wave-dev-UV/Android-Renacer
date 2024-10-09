@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentEditarUsuarioBinding
 import com.example.gestrenacer.models.User
-import com.example.gestrenacer.view.dialog.DialogUtils
+import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
