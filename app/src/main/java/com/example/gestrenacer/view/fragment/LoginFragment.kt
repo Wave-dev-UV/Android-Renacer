@@ -55,9 +55,10 @@ class LoginFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {
                     val document = documents.first()
-                    val tieneAcceso = document.getBoolean("tieneAcceso") ?: false
 
-                    if (tieneAcceso) {
+                    val rol = document.getString("rol") ?: "Feligrés"// Obtener el rol, con valor predeterminado "Feligres"
+
+                    if (rol != "Feligrés") {
                         sendVerificationCode(phoneNumber)
                     } else {
                         Toast.makeText(requireContext(), "El usuario no tiene acceso", Toast.LENGTH_LONG).show()
