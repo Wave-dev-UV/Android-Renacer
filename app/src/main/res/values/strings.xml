@@ -63,6 +63,12 @@
     <string name="subtituloEstadoDeAtencion">Estado de atención</string>>
     <string name="estado_de_atencion">Cambiar estado de atención</string>>
     <string name="selecc_atencion">Cambie el estado de atención</string>>
+    <string-array name="listaRoles">
+        <item>Feligrés</item>
+        <item>Administrador</item>
+        <item>Gestor</item>
+        <item>Visualizador</item>
+    </string-array>
     <string-array name="listaEstadoAtencion">
         <item>Por Llamar</item>
         <item>En Proceso</item>

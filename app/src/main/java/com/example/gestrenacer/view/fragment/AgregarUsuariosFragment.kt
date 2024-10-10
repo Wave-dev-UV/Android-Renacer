@@ -41,6 +41,7 @@ class AgregarUsuariosFragment : Fragment() {
     private fun controler() {
         activarBoton()
         confSelTipoId()
+        confSelRol()
         manejadorBtnVolver()
         manejadorBtnEnviar()
     }
@@ -72,6 +73,15 @@ class AgregarUsuariosFragment : Fragment() {
         )
 
         binding.autoCompleteTipoId.setAdapter(adapter)
+    }
+
+    private fun confSelRol(){
+        val adapter = ArrayAdapter.createFromResource(
+            this.requireContext(),
+            R.array.listaRoles,
+            android.R.layout.simple_dropdown_item_1line
+        )
+        binding.autoCompleteRole.setAdapter(adapter)
     }
 
     private fun manejadorBtnVolver(){

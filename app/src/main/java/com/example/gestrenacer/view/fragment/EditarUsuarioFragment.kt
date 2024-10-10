@@ -75,7 +75,9 @@ class EditarUsuarioFragment : Fragment() {
             }
 
             binding.switch1.isChecked = bundleUser.esLider
-            binding.switch2.isChecked = bundleUser.tieneAcceso
+            binding.autoCompleteRole.post {
+                binding.autoCompleteRole.setText(bundleUser.rol, false)
+            }
 
             binding.autoCompleteEstadoAtencion.post {
                 binding.autoCompleteEstadoAtencion.setText(bundleUser.estadoAtencion, false)
@@ -100,7 +102,7 @@ class EditarUsuarioFragment : Fragment() {
             binding.editTextCelularContacto,
             binding.editTextParentescoContacto,
             binding.editTextDireccionContacto,
-            binding.autoCompleteTipoId
+            binding.autoCompleteRole
         )
 
 
@@ -142,7 +144,12 @@ class EditarUsuarioFragment : Fragment() {
         )
         binding.autoCompleteTipoId.setAdapter(adapterDocumento)
 
-
+        val adapterEdit = ArrayAdapter.createFromResource(
+            this.requireContext(),
+            R.array.listaRoles,
+            android.R.layout.simple_dropdown_item_1line
+        )
+        binding.autoCompleteRole.setAdapter(adapterEdit)
 
         val adapterAtencion = ArrayAdapter.createFromResource(
             this.requireContext(),
@@ -178,7 +185,7 @@ class EditarUsuarioFragment : Fragment() {
             parentescoContacto = binding.editTextParentescoContacto.text.toString(),
             direccionContacto = binding.editTextDireccionContacto.text.toString(),
             esLider = binding.switch1.isChecked,
-            tieneAcceso = binding.switch2.isChecked,
+            rol = binding.autoCompleteRole.text.toString(),
             estadoAtencion = binding.autoCompleteEstadoAtencion.text.toString(),
             firestoreID = firestoreId
 

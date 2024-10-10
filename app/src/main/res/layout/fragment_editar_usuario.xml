@@ -502,30 +502,27 @@
                             android:background="@color/secondary"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/selectRole"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="350dp"
+                        android:layout_height="60dp"
+                        android:textColorHint="@color/secondary"
+                        app:boxStrokeColor="@color/azulPrincipal"
+                        app:endIconTint="@color/azulPrincipal"
+                        app:hintTextColor="@color/azulPrincipal"
+                        app:startIconTint="@color/azulPrincipal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteRole"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/puede_acceder_a_la_aplicaci_n"
-                            android:textSize="17sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switch2"
-                            style="@style/Widget.App.Switch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/el_usuario_puede_acceder_a_la_aplicaci_n"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:thumbTint="@color/white" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                            android:hint="Selecciones rol a asignar"
+                            android:importantForAccessibility="yes"
+                            android:inputType="none"
+                            android:text="Feligrés"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
