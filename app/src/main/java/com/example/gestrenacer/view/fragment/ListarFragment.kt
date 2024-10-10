@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
-import com.example.gestrenacer.view.adapter.FeligresAdapter
+import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
-    private val feligresViewModel: UserViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +34,7 @@ class ListarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        feligresViewModel.getFeligreses()
+        userViewModel.getFeligreses()
         iniciarComponentes()
     }
 
@@ -48,10 +48,10 @@ class ListarFragment : Fragment() {
     }
 
     private fun observerListFeligreses(){
-        feligresViewModel.listaFeligreses.observe(viewLifecycleOwner){
+        userViewModel.listaUsers.observe(viewLifecycleOwner){
             val recyclerView = binding.listaFeligreses
             recyclerView.layoutManager = LinearLayoutManager(context)
-            val adapter = FeligresAdapter(it, findNavController())
+            val adapter = UserAdapter(it, findNavController())
             recyclerView.adapter = adapter
 
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
@@ -63,7 +63,7 @@ class ListarFragment : Fragment() {
     }
 
     private fun observerProgress(){
-        feligresViewModel.progresState.observe(viewLifecycleOwner) {
+        userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
         }
     }

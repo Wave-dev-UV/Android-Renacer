@@ -1,4 +1,4 @@
-package com.example.gestrenacer.view.dialog
+package com.example.gestrenacer.view.modal
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
