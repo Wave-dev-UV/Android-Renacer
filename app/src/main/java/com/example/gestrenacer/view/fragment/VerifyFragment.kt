@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.gestrenacer.models.User
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -60,10 +61,14 @@ class VerifyFragment : Fragment() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
+                    val user = arguments?.getString("rol")
+                    val bundle = Bundle()
+
+                    bundle.putString("rol",user)
                     Toast.makeText(requireContext(), "Verificación exitosa", Toast.LENGTH_SHORT).show()
 
 
-                    findNavController().navigate(R.id.action_verifyFragment_to_listarFragment)
+                    findNavController().navigate(R.id.action_verifyFragment_to_listarFragment,bundle)
 
                 } else {
                     Toast.makeText(requireContext(), "Error en la verificación", Toast.LENGTH_SHORT).show()

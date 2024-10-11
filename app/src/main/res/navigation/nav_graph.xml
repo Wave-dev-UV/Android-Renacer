@@ -9,7 +9,11 @@
         android:id="@+id/editarUsuarioFragment"
         android:name="com.example.gestrenacer.view.fragment.EditarUsuarioFragment"
         android:label="EditarUsuarioFragment"
-        tools:layout="@layout/fragment_editar_usuario" />
+        tools:layout="@layout/fragment_editar_usuario" >
+        <action
+            android:id="@+id/action_editarUsuarioFragment_to_listarFragment"
+            app:destination="@id/listarFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/agregarUsuariosFragment"
@@ -29,6 +33,9 @@
         <action
             android:id="@+id/action_listarFragment_to_agregarUsuariosFragment"
             app:destination="@id/agregarUsuariosFragment" />
+        <action
+            android:id="@+id/action_listarFragment_to_editarUsuarioFragment"
+            app:destination="@id/editarUsuarioFragment" />
     </fragment>
 
     <fragment

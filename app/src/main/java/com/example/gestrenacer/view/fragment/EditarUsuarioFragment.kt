@@ -1,6 +1,7 @@
 package com.example.gestrenacer.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -44,11 +45,27 @@ class EditarUsuarioFragment : Fragment() {
     private lateinit var firestoreId: String
 
     private fun controlador(){
+        anadirRol()
+        observerRol()
         inicializarAdaptadores()
         inicializarFeligres()
         activarBoton()
         manejadorBtnVolver()
         manejadorBtnEditar()
+    }
+
+    private fun anadirRol(){
+        val data = arguments?.getString("rol")
+        Log.d("rol",data.toString())
+        userViewModel.colocarRol(data)
+    }
+
+    private fun observerRol(){
+        userViewModel.rol.observe(viewLifecycleOwner){
+            if (it == "Administrador"){
+                binding.contRol.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun inicializarFeligres() {
@@ -192,6 +209,8 @@ class EditarUsuarioFragment : Fragment() {
         )
 
         userViewModel.editarUsuario(feligresActualizado)
+
+        findNavController().navigate(R.id.action_editarUsuarioFragment_to_listarFragment,requireArguments())
     }
 
 

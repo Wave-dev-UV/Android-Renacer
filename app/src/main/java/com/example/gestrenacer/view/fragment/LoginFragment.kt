@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.gestrenacer.models.User
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -59,7 +60,7 @@ class LoginFragment : Fragment() {
                     val rol = document.getString("rol") ?: "Feligrés"// Obtener el rol, con valor predeterminado "Feligres"
 
                     if (rol != "Feligrés") {
-                        sendVerificationCode(phoneNumber)
+                        sendVerificationCode(phoneNumber, document.toObject(User::class.java).rol)
                     } else {
                         Toast.makeText(requireContext(), "El usuario no tiene acceso", Toast.LENGTH_LONG).show()
                     }
@@ -72,7 +73,7 @@ class LoginFragment : Fragment() {
             }
     }
 
-    private fun sendVerificationCode(phoneNumber: String) {
+    private fun sendVerificationCode(phoneNumber: String, rol: String) {
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber("+57$phoneNumber")
             .setTimeout(60L, TimeUnit.SECONDS)
@@ -91,6 +92,7 @@ class LoginFragment : Fragment() {
                     val bundle = Bundle().apply {
                         putString("storedVerificationId", verificationId)
                         putString("phoneNumber", phoneNumber)
+                        putString("rol", rol)
                     }
                     findNavController().navigate(R.id.action_loginFragment_to_verifyFragment, bundle)
                 }
