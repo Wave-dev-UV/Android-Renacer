@@ -51,6 +51,7 @@ class LoginFragment : Fragment() {
             val bundle = Bundle().apply {
                 putString("verificationId", verificationId)
                 putString("phoneNumber", binding.phoneNumberInput.text.toString())
+                putString("rol", authViewModel.rol.value)
             }
             findNavController().navigate(R.id.action_loginFragment_to_verifyFragment, bundle)
         })

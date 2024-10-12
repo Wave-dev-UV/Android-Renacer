@@ -33,6 +33,9 @@ class AuthViewModel @Inject constructor(
     private val _progress = MutableLiveData<Boolean>()
     val progress: LiveData<Boolean> = _progress
 
+    private val _rol = MutableLiveData("Feligrés")
+    val rol: LiveData<String> = _rol
+
 
     fun checkUserAccess(phoneNumber: String, activity: Activity) {
         _progress.value = true
@@ -41,6 +44,7 @@ class AuthViewModel @Inject constructor(
 
             if (userRole != null) {
                 sendVerificationCode(phoneNumber, activity)
+                _rol.value = userRole
             } else {
                 _accessGranted.value = false
                 _error.value = "El usuario no tiene acceso o no está registrado"
