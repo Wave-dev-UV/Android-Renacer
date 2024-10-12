@@ -27,4 +27,10 @@
         <item name="colorSurfaceContainerHighest">@color/secondary</item>
     </style>
 
+    <style name="CheckboxStyle" parent="Base.Theme.GestRenacer">
+        <item name="colorOnSurface">@color/onSelectedColorBotBar</item>
+        <item name="colorPrimary">@color/onSelectedColorBotBar</item>
+        <item name="colorSurface">@color/onSelectedColorBotBar</item>
+    </style>
+
 </resources>
