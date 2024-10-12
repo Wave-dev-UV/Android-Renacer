@@ -1,5 +1,6 @@
 package com.example.gestrenacer.viewmodel
 
+import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,13 +34,13 @@ class AuthViewModel @Inject constructor(
     val progress: LiveData<Boolean> = _progress
 
 
-    fun checkUserAccess(phoneNumber: String) {
+    fun checkUserAccess(phoneNumber: String, activity: Activity) {
         _progress.value = true
         viewModelScope.launch {
             val userRole = userRepositorio.getUserByPhone(phoneNumber)
 
             if (userRole != null) {
-                sendVerificationCode(phoneNumber)
+                sendVerificationCode(phoneNumber, activity)
             } else {
                 _accessGranted.value = false
                 _error.value = "El usuario no tiene acceso o no está registrado"
@@ -49,7 +50,7 @@ class AuthViewModel @Inject constructor(
     }
 
 
-    private fun sendVerificationCode(phoneNumber: String) {
+    private fun sendVerificationCode(phoneNumber: String, activity: Activity) {
         val fullPhoneNumber = "+57$phoneNumber"
 
         userRepositorio.sendVerificationCode(fullPhoneNumber, object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -66,7 +67,7 @@ class AuthViewModel @Inject constructor(
                 _verificationId.value = verificationId
                 _progress.value = false
             }
-        })
+        }, activity)
     }
 
     fun signInWithCredential(credential: PhoneAuthCredential) {

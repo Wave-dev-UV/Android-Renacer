@@ -34,7 +34,7 @@ class LoginFragment : Fragment() {
         binding.generateCodeButton.setOnClickListener {
             val phoneNumber = binding.phoneNumberInput.text.toString().trim()
             if (phoneNumber.isNotEmpty()) {
-                authViewModel.checkUserAccess(phoneNumber)
+                authViewModel.checkUserAccess(phoneNumber, requireActivity())
             } else {
                 Toast.makeText(requireContext(), "Introduce un número de teléfono", Toast.LENGTH_SHORT).show()
             }

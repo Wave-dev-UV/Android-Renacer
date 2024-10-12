@@ -1,5 +1,6 @@
 package com.example.gestrenacer.repository
 
+import android.app.Activity
 import android.util.Log
 import com.example.gestrenacer.models.User
 import com.google.firebase.FirebaseException
@@ -76,11 +77,13 @@ class UserRepositorio @Inject constructor() {
 
     fun sendVerificationCode(
         phoneNumber: String,
-        callback: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+        callback: PhoneAuthProvider.OnVerificationStateChangedCallbacks,
+        activity: Activity
     ) {
         val options = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(activity)
             .setCallbacks(callback)
             .build()
 
