@@ -14,11 +14,12 @@
 
     <EditText
         android:id="@+id/verificationCodeInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Código SMS"
-        android:inputType="number"
-        android:padding="10dp" />
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+        android:maxLength="6"
+    android:hint="Código SMS"
+    android:inputType="number"
+    android:padding="10dp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/verifyButton"
@@ -28,7 +29,8 @@
         android:text="Verificar Código"
         android:textColor="@android:color/white"
         android:background="@drawable/button_background"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textAllCaps="false" />
 
     <!-- Indicador de carga -->
     <ProgressBar

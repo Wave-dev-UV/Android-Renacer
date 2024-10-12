@@ -20,6 +20,9 @@ class UserViewModel @Inject constructor(
     private val _progresState = MutableLiveData(false)
     val progresState: LiveData<Boolean> = _progresState
 
+    private val _rol = MutableLiveData("Feligrés")
+    val rol: LiveData<String> = _rol
+
     fun getFeligreses(){
         viewModelScope.launch {
             _progresState.value = true
@@ -42,5 +45,9 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             repository.updateUser(user)
         }
+    }
+
+    fun colocarRol(rol: String?){
+        _rol.value = rol
     }
 }

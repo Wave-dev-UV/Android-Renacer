@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
+import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
@@ -39,19 +40,26 @@ class ListarFragment : Fragment() {
     }
 
     private fun iniciarComponentes(){
+        anadirRol()
         observerListFeligreses()
         observerProgress()
+        observerRol()
         manejadorBtnAnadir()
         manejadorBtnMensaje()
         manejadorBottomBar()
         manejadorBtnFiltro()
     }
 
+    private fun anadirRol(){
+        val data = arguments?.getString("rol")
+        userViewModel.colocarRol(data)
+    }
+
     private fun observerListFeligreses(){
         userViewModel.listaUsers.observe(viewLifecycleOwner){
             val recyclerView = binding.listaFeligreses
             recyclerView.layoutManager = LinearLayoutManager(context)
-            val adapter = UserAdapter(it, findNavController())
+            val adapter = UserAdapter(it, findNavController(), userViewModel.rol.value)
             recyclerView.adapter = adapter
 
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
@@ -65,6 +73,19 @@ class ListarFragment : Fragment() {
     private fun observerProgress(){
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
+        }
+    }
+
+    private fun observerRol(){
+        userViewModel.rol.observe(viewLifecycleOwner) {
+            val data = arguments?.getString("rol")
+            if (data in listOf("Administrador", "Gestor")){
+                binding.btnAnadirFeligres.visibility = View.VISIBLE
+            }
+            if (data == "Administrador"){
+                binding.btnEnviarSms.visibility = View.VISIBLE
+                binding.contBottomNav.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -103,9 +124,9 @@ class ListarFragment : Fragment() {
 
     private fun manejadorBtnAnadir(){
         binding.btnAnadirFeligres.setOnClickListener{
-            Log.d("BtnAnadir","Clic en el botón de añadir")
             val bundle = Bundle()
-            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment, bundle)
+            bundle.putString("rol",userViewModel.rol.value)
+            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment,bundle)
         }
     }
 }
