@@ -41,6 +41,13 @@
             android:background="@drawable/button_background"
             android:gravity="center" />
 
+        <!-- Indicador de carga -->
+        <ProgressBar
+            android:id="@+id/loadingIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <View
             android:id="@+id/separator"
             android:layout_width="270dp"
@@ -48,40 +55,5 @@
             android:layout_marginTop="30dp"
             android:background="@android:color/darker_gray" />
 
-        <LinearLayout
-            android:layout_width="270dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@drawable/button_google_background">
-
-            <ImageView
-                android:id="@+id/googleLogo"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_google_logo"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Iniciar sesión con Google"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/forgotPasswordText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="¿Has olvidado la contraseña?"
-            android:textSize="12sp"
-            android:textColor="#757575"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:lineHeight="22sp"
-            android:textStyle="normal" />
     </LinearLayout>
 </ScrollView>

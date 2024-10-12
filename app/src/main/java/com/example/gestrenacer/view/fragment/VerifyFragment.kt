@@ -4,75 +4,66 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.example.gestrenacer.models.User
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
+import com.example.gestrenacer.databinding.FragmentVerifySmsBinding
+import com.example.gestrenacer.viewmodel.AuthViewModel
 import com.google.firebase.auth.PhoneAuthProvider
-import java.util.concurrent.TimeUnit
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class VerifyFragment : Fragment() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var verificationCodeInput: EditText
-    private lateinit var verifyButton: Button
-    private lateinit var storedVerificationId: String
-    private lateinit var phoneNumber: String
+    private var _binding: FragmentVerifySmsBinding? = null
+    private val binding get() = _binding!!
+    private val authViewModel: AuthViewModel by viewModels()
+
+    private lateinit var verificationId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_verify_sms, container, false)
+        _binding = FragmentVerifySmsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        auth = FirebaseAuth.getInstance()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // Obtener argumentos pasados desde el LoginFragment
-        storedVerificationId = arguments?.getString("storedVerificationId") ?: ""
-        phoneNumber = arguments?.getString("phoneNumber") ?: ""
 
-        verificationCodeInput = view.findViewById(R.id.verificationCodeInput)
-        verifyButton = view.findViewById(R.id.verifyButton)
+        verificationId = arguments?.getString("verificationId") ?: ""
 
-        verifyButton.setOnClickListener {
-            val verificationCode = verificationCodeInput.text.toString().trim()
-            if (verificationCode.isNotEmpty()) {
-                verifyCode(verificationCode)
+        binding.verifyButton.setOnClickListener {
+            val code = binding.verificationCodeInput.text.toString().trim()
+            if (code.isNotEmpty()) {
+                authViewModel.signInWithCredential(PhoneAuthProvider.getCredential(verificationId, code))
             } else {
                 Toast.makeText(requireContext(), "Introduce el código de verificación", Toast.LENGTH_SHORT).show()
             }
         }
 
-        return view
-    }
+        authViewModel.authResult.observe(viewLifecycleOwner, Observer { isSuccess ->
+            if (isSuccess) {
+                Toast.makeText(requireContext(), "Verificación exitosa", Toast.LENGTH_SHORT).show()
 
-    private fun verifyCode(code: String) {
-        val credential = PhoneAuthProvider.getCredential(storedVerificationId, code)
-        signInWithPhoneAuthCredential(credential)
-    }
-
-    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    val user = arguments?.getString("rol")
-                    val bundle = Bundle()
-
-                    bundle.putString("rol",user)
-                    Toast.makeText(requireContext(), "Verificación exitosa", Toast.LENGTH_SHORT).show()
-
-
-                    findNavController().navigate(R.id.action_verifyFragment_to_listarFragment,bundle)
-
-                } else {
-                    Toast.makeText(requireContext(), "Error en la verificación", Toast.LENGTH_SHORT).show()
-                }
+                findNavController().navigate(R.id.action_verifyFragment_to_listarFragment)
+            } else {
+                Toast.makeText(requireContext(), "Error en la verificación", Toast.LENGTH_SHORT).show()
             }
+        })
+
+
+        authViewModel.progress.observe(viewLifecycleOwner, Observer { isLoading ->
+            binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
