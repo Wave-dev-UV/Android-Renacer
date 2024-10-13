@@ -8,6 +8,7 @@ import com.example.gestrenacer.models.User
 import com.example.gestrenacer.repository.UserRepositorio
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,11 +24,11 @@ class UserViewModel @Inject constructor(
     private val _rol = MutableLiveData("Feligrés")
     val rol: LiveData<String> = _rol
 
-    fun getFeligreses(){
+    fun getFeligreses(filtros: List<List<String>>, fechaInicial: Date, fechaFinal: Date){
         viewModelScope.launch {
             _progresState.value = true
             try {
-                _listaUsers.value = repository.getUsers()
+                _listaUsers.value = repository.getUsers(filtros,fechaInicial,fechaFinal)
                 _progresState.value = false
             } catch (e: Exception) {
                 _progresState.value = false
@@ -49,5 +50,9 @@ class UserViewModel @Inject constructor(
 
     fun colocarRol(rol: String?){
         _rol.value = rol
+    }
+
+    fun cerrarSesion(){
+        repository.cerrarSesion()
     }
 }

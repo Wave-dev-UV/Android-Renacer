@@ -9,7 +9,9 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -20,8 +22,17 @@ class UserRepositorio @Inject constructor() {
     private val usersCollection = db.collection("users")
 
 
-    suspend fun getUsers(): List<User> {
-        val snapshot = usersCollection.get().await()
+    suspend fun getUsers(filtros: List<List<String>>,fechaInicial:Date,fechaFinal:Date): List<User> {
+        val order = (
+            if (filtros[2][1] == "ascendente") Query.Direction.ASCENDING
+            else Query.Direction.DESCENDING
+        )
+        val snapshot = usersCollection./*whereArrayContains("sexo",filtros[0]).
+            whereArrayContains("estadoCivil",filtros[1]).
+            whereGreaterThan("fechaNacimiento", fechaInicial).
+            whereLessThan("fechaNacimiento", fechaFinal).*/
+            orderBy(filtros[2][0], order).get().await()
+
         return snapshot.map { x ->
             val obj = x.toObject(User::class.java)
             obj.firestoreID = x.id
@@ -99,5 +110,9 @@ class UserRepositorio @Inject constructor() {
             Log.e("UserRepositorio", "Error en la autenticación: ${e.message}")
             false
         }
+    }
+
+    fun cerrarSesion(){
+        auth.signOut()
     }
 }

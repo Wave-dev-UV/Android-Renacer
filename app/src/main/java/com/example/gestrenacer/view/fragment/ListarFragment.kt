@@ -13,11 +13,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
-import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Date
 
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
@@ -35,7 +35,14 @@ class ListarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userViewModel.getFeligreses()
+        userViewModel.getFeligreses(listOf(
+            listOf("Masculino","Femenino"),
+            listOf("Casado","Soltero"),
+            listOf("nombre","ascendente")
+        ),
+            Date(1910,1,1),
+            Date(2200,12,31)
+        )
         iniciarComponentes()
     }
 
@@ -64,6 +71,7 @@ class ListarFragment : Fragment() {
 
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
+                    userViewModel.cerrarSesion()
                     activity?.finish()
                 }
             })
@@ -111,7 +119,7 @@ class ListarFragment : Fragment() {
 
     private fun manejadorBtnFiltro() {
         binding.btnFiltrar.setOnClickListener{
-            val modalBottomSheet = ModalBottomSheet()
+            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses)
             modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
         }
     }

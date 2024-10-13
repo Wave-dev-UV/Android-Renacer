@@ -8,9 +8,13 @@ import android.view.ViewGroup
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.SheetFiltrosBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import java.util.Date
 
-class ModalBottomSheet : BottomSheetDialogFragment() {
+class ModalBottomSheet (
+    private val filtrarFuncion: (List<List<String>>, Date, Date) -> Unit
+) : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,9 +32,48 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
     private fun iniciarComponentes(){
         manejadoresCheckBox()
         manejadoresRadioBtn()
+        manejadorBtnFiltrar()
         manejadorBtnCerrar()
+    }
+
+    private fun manejadorBtnFiltrar(){
         binding.btnAplicarFiltro.setOnClickListener{
-            Log.d("boton","Clicqueado")
+            val listSexo = ArrayList<String>()
+            val listEstado = ArrayList<String>()
+            val listOrden = ArrayList<String>()
+            var fechaInicial = Date().apply {
+                hours = 0
+                minutes = 0
+                seconds = 0
+            }
+            var fechaFinal = Date().apply {
+                hours = 0
+                minutes = 0
+                seconds = 0
+            }
+
+            if (binding.checkFemenino.isChecked) listSexo.add("Femenino")
+            if (binding.checkMasculino.isChecked) listSexo.add("Masculino")
+            if (binding.checkCasado.isChecked) listEstado.add("Casado")
+            if (binding.checkSoltero.isChecked) listEstado.add("Soltero")
+            if (binding.radioBtnEdadAsc.isChecked) listOrden.add("Masculino")
+
+            when (binding.radioGroup.checkedRadioButtonId){
+                R.id.radioBtnAlfabeticoAsc -> listOrden.addAll(arrayOf("nombre","ascendente"))
+                R.id.radioBtnAlfabeticoDesc -> listOrden.addAll(arrayOf("nombre","descendente"))
+                R.id.radioBtnEdadAsc -> listOrden.addAll(arrayOf("fechaNacimiento","ascendente"))
+                R.id.radioBtnEdadDesc -> listOrden.addAll(arrayOf("fechaNacimiento","descendente"))
+            }
+
+            if (binding.txtEdadFinal.text.isNotEmpty()){
+                fechaInicial.year -= binding.txtEdadFinal.text.toString().toInt() + 1
+            }
+            if (binding.txtEdadInicial.text.isNotEmpty()){
+                fechaFinal.year -= binding.txtEdadInicial.text.toString().toInt() - 1
+            }
+
+            filtrarFuncion(listOf(listSexo,listEstado,listOrden), fechaInicial, fechaFinal)
+            dismiss()
         }
     }
 
