@@ -51,7 +51,7 @@
     <string name="lblEdadFiltro">Edad.</string>
     <string name="lblMin">A partir de:</string>
     <string name="lblMax">Hasta:</string>
-    <string name="lblBtnAplicarFiltro">Aplicar</string>
+    <string name="lblBtnAplicarFiltro">Filtrar y ordenar</string>
     <string-array name="listaTipoDocumento">
         <item>Cedula</item>
         <item>Tajerta de Identidad</item>

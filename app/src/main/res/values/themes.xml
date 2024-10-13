@@ -32,5 +32,4 @@
         <item name="colorPrimary">@color/onSelectedColorBotBar</item>
         <item name="colorSurface">@color/onSelectedColorBotBar</item>
     </style>
-
 </resources>
