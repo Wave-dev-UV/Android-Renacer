@@ -19,7 +19,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -59,7 +60,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:visibility="visible"
@@ -131,7 +132,33 @@
                         android:layout_width="350dp"
                         android:layout_height="48dp"
                         android:hint="@string/inserte_su_apellido"
-                        android:textColorHint="@color/secondary"/>
+                        android:textColorHint="@color/secondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fecha_de_nacimiento"
+                    android:textSize="16sp"
+                    android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    >
+
+                    <EditText
+                        android:id="@+id/editTextFechaNacimiento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/seleccione_fecha_de_nacimiento"
+                        android:autofillHints="none"
+                        android:padding="14dp"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:text="@={user.fechaNacimiento}"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -177,6 +204,61 @@
                         android:text="@={user.tipoId}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sexo"
+                    android:textSize="16sp"
+                    android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/selectSexo"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="350dp"
+                    android:layout_height="60dp"
+                    android:textColorHint="@color/secondary"
+                    app:boxStrokeColor="@color/azulPrincipal"
+                    app:endIconTint="@color/azulPrincipal"
+                    app:hintTextColor="@color/azulPrincipal"
+                    app:startIconTint="@color/azulPrincipal">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/autoCompleteSexo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/seleccione_el_sexo"
+                        android:importantForAccessibility="yes"
+                        android:inputType="none"
+                        android:text="@={user.sexo}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/estado_civil"
+                    android:textSize="16sp"
+                    android:layout_marginTop="20dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/selectEstadoCivil"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="350dp"
+                    android:layout_height="60dp"
+                    android:textColorHint="@color/secondary"
+                    app:boxStrokeColor="@color/azulPrincipal"
+                    app:endIconTint="@color/azulPrincipal"
+                    app:hintTextColor="@color/azulPrincipal"
+                    app:startIconTint="@color/azulPrincipal">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/autoCompleteEstadoCivil"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/seleccione_el_estado_civil"
+                        android:importantForAccessibility="yes"
+                        android:inputType="none"
+                        android:text="@={user.estadoCivil}" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -323,6 +405,62 @@
                         android:hint="@string/direcci_n_de_su_contacto"
                         android:textColorHint="@color/secondary" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp">
+                    <TextView
+                        android:id="@+id/tvSepararObservaciones"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/observaciones"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textColor="@color/black"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/tvSepararObservaciones"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginEnd="7dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:background="@color/secondary"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toEndOf="@id/tvSepararObservaciones"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginStart="7dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:background="@color/secondary"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/observaciones"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="160">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextObsevaciones"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:minLines="3"
+                        android:gravity="top|start"
+                        android:padding="8dp"
+                        android:text="@={user.obsevaciones}"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -441,7 +579,7 @@
                         android:id="@+id/autoCompleteRole"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Selecciones rol a asignar"
+                        android:hint="@string/selecciones_rol_a_asignar"
                         android:importantForAccessibility="yes"
                         android:inputType="none"
                         />

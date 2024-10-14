@@ -1,5 +1,6 @@
 package com.example.gestrenacer.view.fragment
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.DatePicker
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
@@ -18,7 +20,7 @@ import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
+import java.util.Calendar
 
 
 @AndroidEntryPoint
@@ -52,6 +54,53 @@ class EditarUsuarioFragment : Fragment() {
         activarBoton()
         manejadorBtnVolver()
         manejadorBtnEditar()
+        confSelSexo()
+        confSelEstadoCivil()
+        manejadorFechaNacimiento()
+    }
+
+    private fun confSelSexo(){
+        val adapter = ArrayAdapter.createFromResource(
+            this.requireContext(),
+            R.array.listaSexos,
+            android.R.layout.simple_dropdown_item_1line
+        )
+
+        binding.autoCompleteSexo.setAdapter(adapter)
+    }
+
+    private fun confSelEstadoCivil(){
+        val adapter = ArrayAdapter.createFromResource(
+            this.requireContext(),
+            R.array.listaEstadoCivil,
+            android.R.layout.simple_dropdown_item_1line
+        )
+
+        binding.autoCompleteEstadoCivil.setAdapter(adapter)
+    }
+
+
+    private fun manejadorFechaNacimiento(){
+        binding.editTextFechaNacimiento.setOnClickListener {
+            mostrarDatePicker()
+        }
+    }
+
+    private fun mostrarDatePicker() {
+        val calendar: Calendar = Calendar.getInstance()
+        val year: Int = calendar.get(Calendar.YEAR)
+        val month: Int = calendar.get(Calendar.MONTH)
+        val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+                val fechaNacimiento =
+                    selectedDay.toString() + "/" + (selectedMonth + 1) + "/" + selectedYear
+                binding.editTextFechaNacimiento.setText(fechaNacimiento)
+            }, year, month, day
+        )
+        datePickerDialog.show()
     }
 
     private fun anadirRol(){
@@ -85,6 +134,10 @@ class EditarUsuarioFragment : Fragment() {
             binding.editTextCelularContacto.setText(bundleUser.celularContacto)
             binding.editTextParentescoContacto.setText(bundleUser.parentescoContacto)
             binding.editTextDireccionContacto.setText(bundleUser.direccionContacto)
+            binding.autoCompleteSexo.setText(bundleUser.sexo, false)
+            binding.autoCompleteEstadoCivil.setText(bundleUser.estadoCivil, false)
+            binding.editTextObsevaciones.setText(bundleUser.obsevaciones)
+            binding.editTextFechaNacimiento.setText(bundleUser.fechaNacimiento)
 
             // Forzar delay para asegurarse de que los adaptadores estén completamente listos
             binding.autoCompleteTipoId.post {
@@ -204,8 +257,11 @@ class EditarUsuarioFragment : Fragment() {
             esLider = binding.switch1.isChecked,
             rol = binding.autoCompleteRole.text.toString(),
             estadoAtencion = binding.autoCompleteEstadoAtencion.text.toString(),
-            firestoreID = firestoreId
-
+            firestoreID = firestoreId,
+            sexo = binding.autoCompleteSexo.text.toString(),
+            estadoCivil = binding.autoCompleteEstadoCivil.text.toString(),
+            fechaNacimiento = binding.editTextFechaNacimiento.text.toString(),
+            obsevaciones = binding.editTextObsevaciones.text.toString()
         )
 
         userViewModel.editarUsuario(feligresActualizado)

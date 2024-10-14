@@ -62,7 +62,15 @@
     <string name="editar_usuario">Editar Usuario</string>
     <string name="subtituloEstadoDeAtencion">Estado de atención</string>>
     <string name="estado_de_atencion">Cambiar estado de atención</string>>
-    <string name="selecc_atencion">Cambie el estado de atención</string>>
+    <string name="selecc_atencion">Cambie el estado de atención</string>
+    <string name="sexo">Sexo</string>
+    <string name="seleccione_el_sexo">Seleccione el Sexo</string>
+    <string name="estado_civil">Estado Civil:</string>
+    <string name="seleccione_el_estado_civil">Seleccione el estado civil</string>
+    <string name="observaciones">Observaciones</string>
+    <string name="selecciones_rol_a_asignar">Selecciones rol a asignar</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="seleccione_fecha_de_nacimiento">Seleccione fecha de nacimiento</string>>
     <string-array name="listaRoles">
         <item>Feligrés</item>
         <item>Administrador</item>
@@ -73,5 +81,16 @@
         <item>Por Llamar</item>
         <item>En Proceso</item>
         <item>Llamado</item>
+    </string-array>
+    <string-array name="listaSexos">
+        <item>Masculino</item>
+        <item>Femenino</item>
+    </string-array>
+    <string-array name="listaEstadoCivil">
+        <item>Soltero(a)</item>
+        <item>Casado(a)</item>
+        <item>Unión libre</item>
+        <item>Divorciado(a)</item>
+        <item>Viudo(a)</item>
     </string-array>
 </resources>

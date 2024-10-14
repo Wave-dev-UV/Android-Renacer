@@ -17,9 +17,13 @@ data class User(
     var estadoAtencion: String,
     var firestoreID: String,
     var esLider: Boolean,
-    var rol: String
+    var rol: String,
+    var sexo: String,
+    var estadoCivil: String,
+    var fechaNacimiento: String,
+    var obsevaciones: String
 ): Serializable {
     constructor(): this("", "", "", "", "", "",
         "", "", "", "", "",
-        "","",false, "Feligrés")
+        "","",false, "Feligrés", "", "", "", "")
 }
