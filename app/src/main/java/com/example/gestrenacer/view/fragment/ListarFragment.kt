@@ -90,6 +90,8 @@ class ListarFragment : Fragment() {
     }
 
     private fun manejadorBottomBar() {
+        val bundle = Bundle()
+        bundle.putString("rol",arguments?.getString("rol"))
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.item_1 -> {
@@ -102,6 +104,7 @@ class ListarFragment : Fragment() {
                 }
                 R.id.item_3 -> {
                     Log.d("BottomNavSelect3", "Lista llamar deleccionado")
+                    findNavController().navigate(R.id.action_listarFragment_to_pendingFragment, bundle)
                     true
                 }
                 else -> false
