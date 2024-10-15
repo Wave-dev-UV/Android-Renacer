@@ -29,7 +29,7 @@ class UserAdapter(
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = listaUsers[position]
-        holder.setItemUser(user)
+        holder.bind(user)
     }
 
     class UserViewHolder(
@@ -38,20 +38,17 @@ class UserAdapter(
         private val rol: String?
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun setItemUser(user: User) {
+        fun bind(user: User) {
             val nombre = user.nombre
             val apellido = user.apellido
 
-            binding.lblIniciales.text = "${nombre[0]}${apellido[0]}".uppercase()
-            binding.txtNombre.text = "$nombre $apellido."
-            binding.txtCelular.text = "${user.celular}."
-            binding.txtRol.text = "${user.rol}."
-            binding.txtEsLider.text = if (user.esLider) "Si." else "No."
+            binding.lblIniciales.text = "${nombre.firstOrNull() ?: ""}${apellido.firstOrNull() ?: ""}".uppercase()
+            binding.txtNombre.text = "$nombre $apellido"
+            binding.txtCelular.text = user.celular
+            binding.txtRol.text = user.rol
+            binding.txtEsLider.text = if (user.esLider) "Si" else "No"
 
-            manejadorClicCard(user)
-        }
 
-        private fun manejadorClicCard(user: User) {
             if (rol != "Visualizador") {
                 binding.cardFeligres.setOnClickListener {
                     val bundle = Bundle().apply {
@@ -60,6 +57,8 @@ class UserAdapter(
                     }
                     navController.navigate(R.id.action_listarFragment_to_editarUsuarioFragment, bundle)
                 }
+            } else {
+                binding.cardFeligres.setOnClickListener(null)
             }
         }
     }

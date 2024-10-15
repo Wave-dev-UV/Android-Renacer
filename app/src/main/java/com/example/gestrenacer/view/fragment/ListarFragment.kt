@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,20 +20,19 @@ import com.example.gestrenacer.view.modal.ModalBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.widget.SearchView
 import java.text.Normalizer
-
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
     private val userViewModel: UserViewModel by viewModels()
-    private lateinit var adapter: UserAdapter
+    private var adapter: UserAdapter? = null
     private var userList = listOf<User>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentListarFeligresesBinding.inflate(inflater)
-        binding.lifecycleOwner = this
+    ): View {
+        binding = FragmentListarFeligresesBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 
@@ -62,16 +61,26 @@ class ListarFragment : Fragment() {
 
     private fun observerListFeligreses() {
         userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
-            userList = lista.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() }))
-            adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value)
-            binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
-            binding.listaFeligreses.adapter = adapter
 
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    activity?.finish()
-                }
-            })
+            userList = lista
+
+            if (adapter == null) {
+                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value)
+                binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
+                binding.listaFeligreses.adapter = adapter
+            } else {
+                adapter?.updateList(userList)
+            }
+
+
+            binding.lblResultado.text = "Resultados: ${userList.size}"
+
+
+            if (userList.isEmpty()) {
+                binding.txtNoResultados.visibility = View.VISIBLE
+            } else {
+                binding.txtNoResultados.visibility = View.GONE
+            }
         }
     }
 
@@ -82,14 +91,12 @@ class ListarFragment : Fragment() {
     }
 
     private fun observerRol() {
-        userViewModel.rol.observe(viewLifecycleOwner) {
-            val data = arguments?.getString("rol")
-            if (data in listOf("Administrador", "Gestor")) {
+        userViewModel.rol.observe(viewLifecycleOwner) { rol ->
+            if (rol in listOf("Administrador", "Gestor")) {
                 binding.btnAnadirFeligres.visibility = View.VISIBLE
-            }
-            if (data == "Administrador") {
-                binding.btnEnviarSms.visibility = View.VISIBLE
                 binding.contBottomNav.visibility = View.VISIBLE
+            } else if (rol == "Visualizador") {
+                binding.contBottomNav.visibility = View.GONE
             }
         }
     }
@@ -136,7 +143,7 @@ class ListarFragment : Fragment() {
     }
 
     private fun configurarBusqueda() {
-        val searchView = requireView().findViewById<SearchView>(R.id.search_view)
+        val searchView = binding.toolbar.searchView
         searchView.setIconifiedByDefault(false)
         searchView.isIconified = false
         searchView.clearFocus()
@@ -149,7 +156,9 @@ class ListarFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrEmpty()) {
-                    adapter.updateList(userList.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() })))
+                    // Si la búsqueda está vacía, se restablece la lista completa
+                    adapter?.updateList(userList)
+                    binding.lblResultado.text = "Resultados: ${userList.size}" // Actualizar el total de resultados
                 } else {
                     filter(newText)
                 }
@@ -170,18 +179,27 @@ class ListarFragment : Fragment() {
             val normalizedApellido = Normalizer.normalize(user.apellido, Normalizer.Form.NFD)
                 .replace("[^\\p{ASCII}]".toRegex(), "")
 
-            when (searchTerms.size) {
-                1 -> normalizedNombre.contains(searchTerms[0], ignoreCase = true) ||
-                        normalizedApellido.contains(searchTerms[0], ignoreCase = true)
-                2 -> normalizedNombre.contains(searchTerms[0], ignoreCase = true) &&
-                        normalizedApellido.contains(searchTerms[1], ignoreCase = true)
-                else -> {
-                    val fullName = "$normalizedNombre $normalizedApellido"
-                    fullName.contains(normalizedText, ignoreCase = true)
-                }
-            }
-        }.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() }))
+            val fullName = "$normalizedNombre $normalizedApellido"
 
-        adapter.updateList(filteredList)
+
+            searchTerms.all { term ->
+                normalizedNombre.contains(term, ignoreCase = true) ||
+                        normalizedApellido.contains(term, ignoreCase = true) ||
+                        fullName.contains(term, ignoreCase = true)
+            }
+        }
+
+
+        adapter?.updateList(filteredList)
+
+
+        binding.lblResultado.text = "Resultados: ${filteredList.size}"
+
+
+        if (filteredList.isEmpty()) {
+            binding.txtNoResultados.visibility = View.VISIBLE
+        } else {
+            binding.txtNoResultados.visibility = View.GONE
+        }
     }
 }
