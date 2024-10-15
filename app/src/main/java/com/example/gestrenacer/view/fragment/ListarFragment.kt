@@ -1,5 +1,6 @@
 package com.example.gestrenacer.view.fragment
 
+import UserAdapter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,15 +15,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
-import com.example.gestrenacer.view.adapter.UserAdapter
-import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
+import com.example.gestrenacer.view.modal.ModalBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.appcompat.widget.SearchView
+import java.text.Normalizer
 
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
     private val userViewModel: UserViewModel by viewModels()
+    private lateinit var adapter: UserAdapter
+    private var userList = listOf<User>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,28 +43,29 @@ class ListarFragment : Fragment() {
         iniciarComponentes()
     }
 
-    private fun iniciarComponentes(){
+    private fun iniciarComponentes() {
         anadirRol()
         observerListFeligreses()
         observerProgress()
         observerRol()
+        configurarBusqueda()
         manejadorBtnAnadir()
         manejadorBtnMensaje()
         manejadorBottomBar()
         manejadorBtnFiltro()
     }
 
-    private fun anadirRol(){
+    private fun anadirRol() {
         val data = arguments?.getString("rol")
         userViewModel.colocarRol(data)
     }
 
-    private fun observerListFeligreses(){
-        userViewModel.listaUsers.observe(viewLifecycleOwner){
-            val recyclerView = binding.listaFeligreses
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            val adapter = UserAdapter(it, findNavController(), userViewModel.rol.value)
-            recyclerView.adapter = adapter
+    private fun observerListFeligreses() {
+        userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
+            userList = lista.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() }))
+            adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value)
+            binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
+            binding.listaFeligreses.adapter = adapter
 
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
@@ -70,19 +75,19 @@ class ListarFragment : Fragment() {
         }
     }
 
-    private fun observerProgress(){
+    private fun observerProgress() {
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
         }
     }
 
-    private fun observerRol(){
+    private fun observerRol() {
         userViewModel.rol.observe(viewLifecycleOwner) {
             val data = arguments?.getString("rol")
-            if (data in listOf("Administrador", "Gestor")){
+            if (data in listOf("Administrador", "Gestor")) {
                 binding.btnAnadirFeligres.visibility = View.VISIBLE
             }
-            if (data == "Administrador"){
+            if (data == "Administrador") {
                 binding.btnEnviarSms.visibility = View.VISIBLE
                 binding.contBottomNav.visibility = View.VISIBLE
             }
@@ -101,7 +106,7 @@ class ListarFragment : Fragment() {
                     true
                 }
                 R.id.item_3 -> {
-                    Log.d("BottomNavSelect3", "Lista llamar deleccionado")
+                    Log.d("BottomNavSelect3", "Lista llamar seleccionado")
                     true
                 }
                 else -> false
@@ -110,23 +115,73 @@ class ListarFragment : Fragment() {
     }
 
     private fun manejadorBtnFiltro() {
-        binding.btnFiltrar.setOnClickListener{
+        binding.btnFiltrar.setOnClickListener {
             val modalBottomSheet = ModalBottomSheet()
-            modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
+            modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
     }
 
     private fun manejadorBtnMensaje() {
-        binding.btnEnviarSms.setOnClickListener{
-            Log.d("BtnSMS","Clic en el botón de SMS")
+        binding.btnEnviarSms.setOnClickListener {
+            Log.d("BtnSMS", "Clic en el botón de SMS")
         }
     }
 
-    private fun manejadorBtnAnadir(){
-        binding.btnAnadirFeligres.setOnClickListener{
+    private fun manejadorBtnAnadir() {
+        binding.btnAnadirFeligres.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("rol",userViewModel.rol.value)
-            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment,bundle)
+            bundle.putString("rol", userViewModel.rol.value)
+            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment, bundle)
         }
+    }
+
+    private fun configurarBusqueda() {
+        val searchView = requireView().findViewById<SearchView>(R.id.search_view)
+        searchView.setIconifiedByDefault(false)
+        searchView.isIconified = false
+        searchView.clearFocus()
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let { filter(it) }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrEmpty()) {
+                    adapter.updateList(userList.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() })))
+                } else {
+                    filter(newText)
+                }
+                return false
+            }
+        })
+    }
+
+    private fun filter(text: String) {
+        val normalizedText = Normalizer.normalize(text, Normalizer.Form.NFD)
+            .replace("[^\\p{ASCII}]".toRegex(), "")
+
+        val searchTerms = normalizedText.split(" ").filter { it.isNotEmpty() }
+
+        val filteredList = userList.filter { user ->
+            val normalizedNombre = Normalizer.normalize(user.nombre, Normalizer.Form.NFD)
+                .replace("[^\\p{ASCII}]".toRegex(), "")
+            val normalizedApellido = Normalizer.normalize(user.apellido, Normalizer.Form.NFD)
+                .replace("[^\\p{ASCII}]".toRegex(), "")
+
+            when (searchTerms.size) {
+                1 -> normalizedNombre.contains(searchTerms[0], ignoreCase = true) ||
+                        normalizedApellido.contains(searchTerms[0], ignoreCase = true)
+                2 -> normalizedNombre.contains(searchTerms[0], ignoreCase = true) &&
+                        normalizedApellido.contains(searchTerms[1], ignoreCase = true)
+                else -> {
+                    val fullName = "$normalizedNombre $normalizedApellido"
+                    fullName.contains(normalizedText, ignoreCase = true)
+                }
+            }
+        }.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() }))
+
+        adapter.updateList(filteredList)
     }
 }
