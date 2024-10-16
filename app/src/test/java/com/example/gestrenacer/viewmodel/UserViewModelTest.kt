@@ -65,13 +65,7 @@ class UserViewModelTest {
     fun `test editar usuario`() = runBlocking {
         Dispatchers.setMain(UnconfinedTestDispatcher())
 
-        val user = User(
-            "Juan", "Aristi", "1006054035", "Cédula", "3206355348",
-            "Dir1", "SOS", "ContactJuan", "3016355647", "Papá",
-            "DirContact1", "Por Llamar", "1", true, "Gestor"
-        )
-
-        userViewModel.editarUsuario(user)
+        userViewModel.editarUsuario(userActualizado)
 
         verify(userRepositorio).updateUser(user)
     }
