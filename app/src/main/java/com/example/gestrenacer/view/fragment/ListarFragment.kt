@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -36,10 +36,33 @@ class ListarFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        userViewModel.getFeligreses()
+        forceRecyclerViewUpdate()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userViewModel.getFeligreses()
         iniciarComponentes()
+
+
+        parentFragmentManager.setFragmentResultListener("editarUsuario", viewLifecycleOwner) { _, result ->
+            val usuarioEditado = result.getBoolean("usuarioEditado", false)
+            if (usuarioEditado) {
+
+                userViewModel.getFeligreses()
+                forceRecyclerViewUpdate()
+            }
+        }
+
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                activity?.finish()
+            }
+        })
     }
 
     private fun iniciarComponentes() {
@@ -61,7 +84,6 @@ class ListarFragment : Fragment() {
 
     private fun observerListFeligreses() {
         userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
-
             userList = lista
 
             if (adapter == null) {
@@ -95,8 +117,11 @@ class ListarFragment : Fragment() {
             if (rol in listOf("Administrador", "Gestor")) {
                 binding.btnAnadirFeligres.visibility = View.VISIBLE
                 binding.contBottomNav.visibility = View.VISIBLE
+                binding.btnEnviarSms.visibility = View.VISIBLE
             } else if (rol == "Visualizador") {
+                binding.btnAnadirFeligres.visibility = View.GONE
                 binding.contBottomNav.visibility = View.GONE
+                binding.btnEnviarSms.visibility = View.GONE
             }
         }
     }
@@ -156,9 +181,8 @@ class ListarFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrEmpty()) {
-                    // Si la búsqueda está vacía, se restablece la lista completa
                     adapter?.updateList(userList)
-                    binding.lblResultado.text = "Resultados: ${userList.size}" // Actualizar el total de resultados
+                    binding.lblResultado.text = "Resultados: ${userList.size}"
                 } else {
                     filter(newText)
                 }
@@ -181,7 +205,6 @@ class ListarFragment : Fragment() {
 
             val fullName = "$normalizedNombre $normalizedApellido"
 
-
             searchTerms.all { term ->
                 normalizedNombre.contains(term, ignoreCase = true) ||
                         normalizedApellido.contains(term, ignoreCase = true) ||
@@ -189,17 +212,19 @@ class ListarFragment : Fragment() {
             }
         }
 
-
         adapter?.updateList(filteredList)
-
-
         binding.lblResultado.text = "Resultados: ${filteredList.size}"
-
 
         if (filteredList.isEmpty()) {
             binding.txtNoResultados.visibility = View.VISIBLE
         } else {
             binding.txtNoResultados.visibility = View.GONE
         }
+    }
+
+    private fun forceRecyclerViewUpdate() {
+
+        binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
+        binding.listaFeligreses.adapter = adapter
     }
 }
