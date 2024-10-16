@@ -74,6 +74,9 @@
         <action
             android:id="@+id/action_pendingFragment_to_listarFragment"
             app:destination="@id/listarFragment" />
+        <action
+            android:id="@+id/action_pendingFragment_to_editarUsuarioFragment"
+            app:destination="@id/editarUsuarioFragment" />
     </fragment>
 
 </navigation>

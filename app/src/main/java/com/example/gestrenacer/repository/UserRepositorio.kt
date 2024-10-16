@@ -50,6 +50,8 @@ class UserRepositorio @Inject constructor() {
     }
 
 
+
+
     suspend fun getUserByPhone(phoneNumber: String): String? {
         return try {
             val snapshot = usersCollection
@@ -71,6 +73,17 @@ class UserRepositorio @Inject constructor() {
         } catch (e: Exception) {
             Log.e("UserRepositorio", "Error al obtener usuario: ${e.message}")
             null
+        }
+    }
+
+    suspend fun getPendingUsers(): List<User> {
+        val snapshot = usersCollection
+            .whereEqualTo("estadoAtencion", "Por Llamar")
+            .get().await()
+        return snapshot.map { x ->
+            val obj = x.toObject(User::class.java)
+            obj.firestoreID = x.id
+            obj
         }
     }
 

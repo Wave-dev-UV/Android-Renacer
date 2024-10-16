@@ -47,6 +47,18 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    fun getPendingUsers() {
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                _listaUsers.value = repository.getPendingUsers()
+                _progresState.value = false
+            } catch (e: Exception) {
+                _progresState.value = false
+            }
+        }
+    }
+
     fun colocarRol(rol: String?){
         _rol.value = rol
     }

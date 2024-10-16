@@ -6,10 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentPendingBinding
+import com.example.gestrenacer.view.adapter.PendingUserAdapter
 import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,11 +32,12 @@ class PendingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userViewModel.getFeligreses()
+        userViewModel.getPendingUsers()
         iniciarComponentes()
     }
 
     private fun iniciarComponentes(){
+        observerListPendingFeligreses()
         anadirRol()
         bottomNav()
         observerRol()
@@ -51,6 +55,21 @@ class PendingFragment : Fragment() {
             if (data == "Administrador") {
                 binding.contBottomNav.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun observerListPendingFeligreses(){
+        userViewModel.listaUsers.observe(viewLifecycleOwner){
+            val recyclerView = binding.listaFeligreses
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            val adapter = PendingUserAdapter(it, findNavController(), userViewModel.rol.value)
+            recyclerView.adapter = adapter
+
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    activity?.finish()
+                }
+            })
         }
     }
 
