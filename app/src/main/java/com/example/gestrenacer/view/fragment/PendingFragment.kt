@@ -62,7 +62,7 @@ class PendingFragment : Fragment() {
         userViewModel.listaUsers.observe(viewLifecycleOwner){
             val recyclerView = binding.listaFeligreses
             recyclerView.layoutManager = LinearLayoutManager(context)
-            val adapter = PendingUserAdapter(it, findNavController(), userViewModel.rol.value)
+            val adapter = PendingUserAdapter(it.toMutableList(), findNavController(), userViewModel.rol.value, userViewModel)
             recyclerView.adapter = adapter
 
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {

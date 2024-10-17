@@ -6,18 +6,19 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gestrenacer.R
-import com.example.gestrenacer.databinding.ItemUserBinding
+import com.example.gestrenacer.databinding.ItemPendingUserBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.viewmodel.UserViewModel
 
 class PendingUserAdapter(
-    private val listaUsers: List<User>,
+    private val listaUsers: MutableList<User>,
     private val navController: NavController,
-    private val rol: String?
+    private val rol: String?,
+    private val usersViewModel: UserViewModel
 ): RecyclerView.Adapter<PendingUserAdapter.UserViewHolder>() {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val binding = ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return UserViewHolder(binding, navController, rol)
+        val binding = ItemPendingUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return UserViewHolder(binding, navController, rol, usersViewModel, this)
     }
 
     override fun getItemCount(): Int {
@@ -27,12 +28,22 @@ class PendingUserAdapter(
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val feligres = listaUsers[position]
         holder.setItemUser(feligres)
+
     }
 
+    fun delete(position: Int) {
+        listaUsers.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, listaUsers.size)
+    }
+
+
     class UserViewHolder(
-        private val binding: ItemUserBinding,
+        private val binding: ItemPendingUserBinding,
         private val navController: NavController,
-        private val rol: String?
+        private val rol: String?,
+        private val usersViewModel: UserViewModel,
+        private val adapter: PendingUserAdapter
     ): RecyclerView.ViewHolder(binding.root) {
 
         fun setItemUser(user: User){
@@ -48,11 +59,13 @@ class PendingUserAdapter(
                     else "No.")
 
             manejadorClicCard(user)
+            manejadorEliminarPendientes(user)
+
         }
 
         private fun manejadorClicCard(user: User){
             if (rol != "Visualizador"){
-                binding.cardFeligres.setOnClickListener {
+                binding.cardPendingFeligres.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putSerializable("dataFeligres",user)
                     bundle.putString("rol",rol)
@@ -60,5 +73,19 @@ class PendingUserAdapter(
                 }
             }
         }
+
+        private fun manejadorEliminarPendientes (user:User) {
+            binding.removePendingUser.setOnClickListener {
+                user.estadoAtencion = "Llamado"
+                usersViewModel.editarUsuario(user)
+
+                val position = absoluteAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    adapter.delete(position)
+                }
+            }
+        }
+
+
     }
 }

@@ -68,7 +68,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:itemCount="1"
-                tools:listitem="@layout/item_user" />
+                tools:listitem="@layout/item_pending_user" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
