@@ -67,7 +67,7 @@ class UserViewModelTest {
 
         userViewModel.editarUsuario(userActualizado)
 
-        verify(userRepositorio).updateUser(user)
+        verify(userRepositorio).updateUser(userActualizado)
     }
 
 
