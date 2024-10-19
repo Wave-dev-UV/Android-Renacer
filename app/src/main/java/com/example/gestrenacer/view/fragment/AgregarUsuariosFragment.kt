@@ -18,6 +18,7 @@ import com.example.gestrenacer.databinding.FragmentAgregarUsuariosBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.UserViewModel
+import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -27,6 +28,7 @@ class AgregarUsuariosFragment : Fragment() {
     private lateinit var binding: FragmentAgregarUsuariosBinding
     private val userViewModel: UserViewModel by viewModels()
     private val user = User()
+    private var fechaNacimientoUser: Timestamp? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,9 +74,15 @@ class AgregarUsuariosFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             { _: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-                val fechaNacimiento =
-                    selectedDay.toString() + "/" + (selectedMonth + 1) + "/" + selectedYear
-                binding.editTextFechaNacimiento.setText(fechaNacimiento)
+                val fechaNacimiento = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, selectedYear)
+                    set(Calendar.MONTH, selectedMonth)
+                    set(Calendar.DAY_OF_MONTH, selectedDay)
+                }.time
+
+                fechaNacimientoUser = Timestamp(fechaNacimiento)
+                val fechatext = "${selectedDay}/${selectedMonth + 1}/$selectedYear"
+                binding.editTextFechaNacimiento.setText(fechatext)
             }, year, month, day
         )
         datePickerDialog.show()
@@ -168,9 +176,10 @@ class AgregarUsuariosFragment : Fragment() {
             DialogUtils.dialogoConfirmacion(requireContext(),
                 "¿Está seguro que desea añadir al usuario?"){
                 val user = binding.user ?: User()
-                user.rol = binding.autoCompleteRole.text.toString()
-                user.estadoAtencion = "Por Llamar"
-                userViewModel.crearUsuario(user)
+                val newUser = user.copy(fechaNacimiento = fechaNacimientoUser)
+                newUser.rol = binding.autoCompleteRole.text.toString()
+                newUser.estadoAtencion = "Por Llamar"
+                userViewModel.crearUsuario(newUser)
                 findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment,requireArguments())
             }
 

@@ -19,8 +19,12 @@ import com.example.gestrenacer.databinding.FragmentEditarUsuarioBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.UserViewModel
+import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -29,6 +33,7 @@ class EditarUsuarioFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var binding: FragmentEditarUsuarioBinding
     private  lateinit var bundleUser: User
+    private var fechaNacimientoUser: Timestamp? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,9 +100,15 @@ class EditarUsuarioFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             { _: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-                val fechaNacimiento =
-                    selectedDay.toString() + "/" + (selectedMonth + 1) + "/" + selectedYear
-                binding.editTextFechaNacimiento.setText(fechaNacimiento)
+                val fechaNacimiento = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, selectedYear)
+                    set(Calendar.MONTH, selectedMonth)
+                    set(Calendar.DAY_OF_MONTH, selectedDay)
+                }.time
+
+                fechaNacimientoUser = Timestamp(fechaNacimiento)
+                val fechatext = "${selectedDay}/${selectedMonth + 1}/$selectedYear"
+                binding.editTextFechaNacimiento.setText(fechatext)
             }, year, month, day
         )
         datePickerDialog.show()
@@ -115,6 +126,12 @@ class EditarUsuarioFragment : Fragment() {
                 binding.contRol.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun formatearFecha(timestamp: Timestamp): String{
+        val date: Date = timestamp.toDate()
+        val format = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+        return format.format(date)
     }
 
     private fun inicializarFeligres() {
@@ -137,7 +154,11 @@ class EditarUsuarioFragment : Fragment() {
             binding.autoCompleteSexo.setText(bundleUser.sexo, false)
             binding.autoCompleteEstadoCivil.setText(bundleUser.estadoCivil, false)
             binding.editTextObsevaciones.setText(bundleUser.obsevaciones)
-            binding.editTextFechaNacimiento.setText(bundleUser.fechaNacimiento)
+            binding.editTextFechaNacimiento.setText(bundleUser.fechaNacimiento?.let {
+                formatearFecha(
+                    it
+                )
+            })
 
             // Forzar delay para asegurarse de que los adaptadores estén completamente listos
             binding.autoCompleteTipoId.post {
@@ -260,8 +281,9 @@ class EditarUsuarioFragment : Fragment() {
             firestoreID = firestoreId,
             sexo = binding.autoCompleteSexo.text.toString(),
             estadoCivil = binding.autoCompleteEstadoCivil.text.toString(),
-            fechaNacimiento = binding.editTextFechaNacimiento.text.toString(),
-            obsevaciones = binding.editTextObsevaciones.text.toString()
+            fechaNacimiento = fechaNacimientoUser,
+            obsevaciones = binding.editTextObsevaciones.text.toString(),
+            fechaCreacion = bundleUser.fechaCreacion
         )
 
         userViewModel.editarUsuario(feligresActualizado)

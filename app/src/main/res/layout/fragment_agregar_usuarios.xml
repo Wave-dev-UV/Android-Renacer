@@ -156,7 +156,6 @@
                         android:padding="14dp"
                         android:inputType="none"
                         android:focusable="false"
-                        android:text="@={user.fechaNacimiento}"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
