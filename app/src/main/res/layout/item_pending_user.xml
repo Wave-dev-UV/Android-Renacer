@@ -122,8 +122,8 @@
 
     <ImageView
         android:id="@+id/remove_pending_user"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/close"
         android:contentDescription="Close"
         app:layout_constraintEnd_toEndOf="parent"

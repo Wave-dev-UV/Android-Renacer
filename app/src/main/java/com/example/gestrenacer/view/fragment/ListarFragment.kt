@@ -59,7 +59,7 @@ class ListarFragment : Fragment() {
         userViewModel.listaUsers.observe(viewLifecycleOwner){
             val recyclerView = binding.listaFeligreses
             recyclerView.layoutManager = LinearLayoutManager(context)
-            val adapter = UserAdapter(it, findNavController(), userViewModel.rol.value)
+            val adapter = UserAdapter(it, findNavController(), userViewModel.rol.value, userViewModel)
             recyclerView.adapter = adapter
 
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
