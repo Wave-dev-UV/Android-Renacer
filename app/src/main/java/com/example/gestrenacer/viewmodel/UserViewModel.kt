@@ -1,5 +1,6 @@
 package com.example.gestrenacer.viewmodel
 
+import java.text.Normalizer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: UserRepositorio
-): ViewModel() {
+) : ViewModel() {
+
     private val _listaUsers = MutableLiveData<List<User>>()
     val listaUsers: LiveData<List<User>> = _listaUsers
 
@@ -29,27 +31,31 @@ class UserViewModel @Inject constructor(
             _progresState.value = true
             try {
                 _listaUsers.value = repository.getUsers(filtros,fechaInicial,fechaFinal)
+                val users = repository.getUsers()
+                _listaUsers.value = users.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() }))
                 _progresState.value = false
             } catch (e: Exception) {
+
+            } finally {
                 _progresState.value = false
             }
         }
     }
 
-    fun crearUsuario(user: User){
+    fun crearUsuario(user: User) {
         viewModelScope.launch {
             repository.saveUser(user)
         }
     }
 
-    fun editarUsuario(user: User){
+    fun editarUsuario(user: User) {
         viewModelScope.launch {
             repository.updateUser(user)
         }
     }
 
-    fun colocarRol(rol: String?){
-        _rol.value = rol
+    fun colocarRol(rol: String?) {
+        _rol.value = rol ?: "Feligrés"
     }
 
     fun cerrarSesion(){
