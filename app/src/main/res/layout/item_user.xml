@@ -130,6 +130,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="16dp"
-        app:layout_constraintVertical_bias="0.54" />
+        app:layout_constraintVertical_bias="0.54"
+        app:tint="@color/secondary"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
