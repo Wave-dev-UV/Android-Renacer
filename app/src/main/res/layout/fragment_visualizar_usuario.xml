@@ -8,515 +8,533 @@
             type="com.example.gestrenacer.models.User" />
     </data>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/toolbar_ver_usuario"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/toolbar_ver_usuario"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/azulPrincipal"
-                android:orientation="horizontal"
-                android:paddingVertical="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tvTituloEditar"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/azulPrincipal"
+                    android:orientation="horizontal"
+                    android:paddingVertical="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvTituloEditar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ver_usuario"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="TextContrastCheck" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="15dp"
+                        android:backgroundTint="#00FFFFFF"
+                        android:contentDescription="@string/boton_para_retroceder"
+                        android:src="@drawable/ic_arrow_back"
+                        app:tint="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ImageContrastCheck" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guide_line"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ver_usuario"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="TextContrastCheck" />
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="170dp"
+                    />
 
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="15dp"
-                    android:backgroundTint="#00FFFFFF"
-                    android:contentDescription="@string/boton_para_retroceder"
-                    android:src="@drawable/ic_arrow_back"
-                    app:tint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview_imagen_usuario"
+                    android:layout_width="120dp"
+                    android:layout_height="160dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ImageContrastCheck" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/guide_line"
+                    app:layout_constraintBottom_toBottomOf="@id/guide_line"
+                    android:layout_marginTop="20dp"
+                    app:cardElevation="8dp"
+                    app:cardCornerRadius="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/imagen_usuario"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:contentDescription="@string/imagen_de_perfil"
+                            android:scaleType="centerCrop"
+                            tools:src="@drawable/logo_renacer"
+                            android:visibility="visible"/>
+
+                        <TextView
+                            android:id="@+id/tvIniciales"
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:fontFamily="@font/roboto_bold"
+                            android:textColor="@color/white"
+                            android:textSize="29sp"
+                            android:padding="10dp"
+                            tools:text="LV"
+                            android:gravity="center"
+                            android:background="@color/azulPrincipal"
+                            android:layout_margin="8dp"
+                            android:visibility="gone"
+                            />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/guide_line"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginHorizontal="10dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="6dp"
+                    android:backgroundTint="@color/fondoCardListaFelirgeses"
+                    android:layout_marginBottom="100dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginHorizontal="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{user.nombre + ` ` + user.apellido}"
+                            android:layout_marginTop="100dp"
+                            tools:text="Luisa Cardenas Vallejo"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{user.rol}"
+                            tools:text="Feligrés"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"
+                            />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="wrap_content"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/datos_personales"
+                            android:layout_gravity="center"
+                            android:textColor="@color/secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="5dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/cedula"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.id}"
+                                tools:text="1001011111"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/sexo"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.sexo}"
+                                tools:text="Femenino"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/estado_civil"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.estadoCivil}"
+                                tools:text="Soltero(a)"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/celular"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.celular}"
+                                tools:text="3206202020"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fecha_nacimiento"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/tvFechaNacimiento"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="30/12/1998"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/direcci_n"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.direccion}"
+                                tools:text="Calle 22 #1-19"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/eps"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.eps}"
+                                tools:text="SOS"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="wrap_content"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/contacto_de_emergencia"
+                            android:layout_gravity="center"
+                            android:textColor="@color/secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="5dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nombre"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.nombreContacto}"
+                                tools:text="Raul Cardenas Restrepo"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/parentesco"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.parentescoContacto}"
+                                tools:text="Padre"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/direcci_n"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.direccionContacto}"
+                                tools:text="Calle 15 #1-20"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/celular"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.celularContacto}"
+                                tools:text="3205202020"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="wrap_content"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/otros_datos"
+                            android:layout_gravity="center"
+                            android:textColor="@color/secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="5dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fecha_registro"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/tvFechaRegistro"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="30/03/2023"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="wrap_content"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/observaciones"
+                            android:layout_gravity="center"
+                            android:textColor="@color/secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="5dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{user.obsevaciones}"
+                            tools:text="Morena, ojos claros, y otras muchas cosas más que ahora mismo no se me ocurren "
+                            android:textSize="16sp"
+                            android:layout_marginBottom="15dp"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guide_line"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="170dp"
-                />
+        </ScrollView>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardview_imagen_usuario"
-                android:layout_width="120dp"
-                android:layout_height="160dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/guide_line"
-                app:layout_constraintBottom_toBottomOf="@id/guide_line"
-                android:layout_marginTop="20dp"
-                app:cardElevation="8dp"
-                app:cardCornerRadius="8dp">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_editar"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/azulPrincipal"
+            android:contentDescription="@string/bot_n_para_editar_usuario"
+            android:src="@drawable/ic_edit"
+            app:tint="@color/white"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_borrar"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="30dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/redFAB"
+            android:contentDescription="@string/bot_n_para_borrar_usuario"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/white"/>
 
-                    <ImageView
-                        android:id="@+id/imagen_usuario"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:contentDescription="@string/imagen_de_perfil"
-                        android:scaleType="centerCrop"
-                        tools:src="@drawable/logo_renacer"
-                        android:visibility="visible"/>
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-                    <TextView
-                        android:id="@+id/tvIniciales"
-                        android:layout_height="match_parent"
-                        android:layout_width="match_parent"
-                        android:fontFamily="@font/roboto_bold"
-                        android:textColor="@color/white"
-                        android:textSize="29sp"
-                        android:padding="10dp"
-                        tools:text="LV"
-                        android:gravity="center"
-                        android:background="@color/azulPrincipal"
-                        android:layout_margin="8dp"
-                        android:visibility="gone"
-                        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/guide_line"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginHorizontal="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="6dp"
-                android:backgroundTint="@color/fondoCardListaFelirgeses"
-                android:layout_marginBottom="100dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginHorizontal="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{user.nombre + ` ` + user.apellido}"
-                        android:layout_marginTop="100dp"
-                        tools:text="Luisa Cardenas Vallejo"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{user.rol}"
-                        tools:text="Feligrés"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"
-                        />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="wrap_content"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="10dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/datos_personales"
-                        android:layout_gravity="center"
-                        android:textColor="@color/secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="5dp"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cedula"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{user.id}"
-                            tools:text="1001011111"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sexo"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{`TODO`}"
-                            tools:text="Femenino"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/estado_civil"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{`TODO`}"
-                            tools:text="Soltero(a)"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/celular"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{user.celular}"
-                            tools:text="3206202020"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/fecha_nacimiento"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{`TODO`}"
-                            tools:text="30/12/1998"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/fecha_registro"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{`TODO`}"
-                            tools:text="1001011111"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/direcci_n"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{user.direccion}"
-                            tools:text="Calle 22 #1-19"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/eps"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{user.eps}"
-                            tools:text="SOS"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="wrap_content"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="10dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/contacto_de_emergencia"
-                        android:layout_gravity="center"
-                        android:textColor="@color/secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="5dp"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/nombre"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{user.nombreContacto}"
-                            tools:text="Raul Cardenas Restrepo"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/parentesco"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{user.parentescoContacto}"
-                            tools:text="Padre"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/direcci_n"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{user.direccionContacto}"
-                            tools:text="Calle 15 #1-20"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/celular"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{user.celularContacto}"
-                            tools:text="3205202020"
-                            android:textSize="16sp"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="wrap_content"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="10dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/observaciones"
-                        android:layout_gravity="center"
-                        android:textColor="@color/secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="5dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{`TODO`}"
-                        tools:text="Morena, ojos claros, y otras muchas cosas más que ahora mismo no se me ocurren "
-                        android:textSize="16sp"
-                        android:layout_marginBottom="15dp"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-            
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/button_editar"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="20dp"
-                android:backgroundTint="@color/azulPrincipal"
-                android:contentDescription="@string/bot_n_para_editar_usuario"
-                android:src="@drawable/ic_edit"
-                app:tint="@color/white"/>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/button_borrar"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginStart="30dp"
-                android:layout_marginBottom="20dp"
-                android:backgroundTint="@color/redFAB"
-                android:contentDescription="@string/bot_n_para_borrar_usuario"
-                android:src="@drawable/ic_delete"
-                app:tint="@color/white"/>
-
-
-            <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-    </ScrollView>
 
 
 </layout>

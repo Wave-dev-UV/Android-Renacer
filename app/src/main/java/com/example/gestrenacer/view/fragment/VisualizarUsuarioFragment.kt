@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentVisualizarUsuarioBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.utils.Format
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,10 +36,16 @@ class VisualizarUsuarioFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         inicializarVariables()
         inicializarImagen()
+        formatearFechas()
         observerProgressBar()
         manejadorBotonEditar()
         manejadorBotonBorrar()
         manejadorBotonVolver()
+    }
+
+    private fun formatearFechas(){
+        binding.tvFechaNacimiento.text = user.fechaNacimiento?.let { Format.timestampToString(it) }
+        binding.tvFechaRegistro.text = user.fechaCreacion?.let { Format.timestampToString(it) }
     }
 
     private fun observerProgressBar(){
@@ -51,7 +58,8 @@ class VisualizarUsuarioFragment : Fragment() {
         if (binding.imagenUsuario.drawable == null){
             binding.imagenUsuario.isVisible = false
             binding.tvIniciales.isVisible = true
-            binding.tvIniciales.text = "${user.nombre.firstOrNull() ?: ""}${user.apellido.firstOrNull() ?: ""}".uppercase()
+            val text = "${user.nombre.firstOrNull() ?: ""}${user.apellido.firstOrNull() ?: ""}".uppercase()
+            binding.tvIniciales.text = text
         } else {
             binding.imagenUsuario.isVisible = true
             binding.tvIniciales.isVisible = false

@@ -80,7 +80,8 @@
     <string name="seleccione_el_estado_civil">Seleccione el estado civil</string>
     <string name="selecciones_rol_a_asignar">Selecciones rol a asignar</string>
     <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
-    <string name="seleccione_fecha_de_nacimiento">Seleccione fecha de nacimiento</string>>
+    <string name="seleccione_fecha_de_nacimiento">Seleccione fecha de nacimiento</string>
+    <string name="otros_datos">Otros datos</string>>
     <string-array name="listaRoles">
         <item>Feligrés</item>
         <item>Administrador</item>
