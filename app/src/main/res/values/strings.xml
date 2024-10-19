@@ -11,15 +11,15 @@
     <string name="tipo_de_documento">Tipo de documento:</string>
     <string name="n_mero_de_celular">Celular</string>
     <string name="digite_su_n_mero_de_celular">Digite su número de celular</string>
-    <string name="direcci_n">Dirección</string>
+    <string name="direcci_n">Dirección:</string>
     <string name="inserte_su_direcci_n">Inserte su dirección</string>
-    <string name="eps">EPS</string>
+    <string name="eps">EPS:</string>
     <string name="inserte_su_eps">Inserte su EPS</string>
     <string name="seleccione_su_tipo_de_documento">Seleccione su tipo de documento</string>
     <string name="datos_personales">Datos Personales</string>
     <string name="nombre_completo">Nombre completo:</string>
     <string name="digite_el_celular_de_su_contacto">Digite el celular de su contacto</string>
-    <string name="parentesco">Parentesco</string>
+    <string name="parentesco">Parentesco:</string>
     <string name="direccion_emergencia">Dirección</string>
     <string name="direcci_n_de_su_contacto">Dirección de su contacto</string>
     <string name="cargo_en_la_iglesia">Cargo en la iglesia</string>
@@ -63,7 +63,19 @@
     <string name="editar_usuario">Editar Usuario</string>
     <string name="subtituloEstadoDeAtencion">Estado de atención</string>>
     <string name="estado_de_atencion">Cambiar estado de atención</string>>
-    <string name="selecc_atencion">Cambie el estado de atención</string>>
+    <string name="selecc_atencion">Cambie el estado de atención</string>
+    <string name="ver_usuario">Ver Usuario</string>
+    <string name="imagen_de_perfil">imagen de perfil</string>
+    <string name="cedula">Cedula:</string>
+    <string name="sexo">Sexo:</string>
+    <string name="estado_civil">Estado Civil:</string>
+    <string name="fecha_nacimiento">Fecha Nacimiento:</string>
+    <string name="fecha_registro">Fecha Registro:</string>
+    <string name="nombre">Nombre:</string>
+    <string name="celular">Celular:</string>
+    <string name="observaciones">Observaciones</string>
+    <string name="bot_n_para_editar_usuario">Botón para editar usuario</string>
+    <string name="bot_n_para_borrar_usuario">Botón para borrar usuario</string>>
     <string-array name="listaRoles">
         <item>Feligrés</item>
         <item>Administrador</item>

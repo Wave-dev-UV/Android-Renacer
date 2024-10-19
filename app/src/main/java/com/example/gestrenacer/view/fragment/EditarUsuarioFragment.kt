@@ -147,7 +147,7 @@ class EditarUsuarioFragment : Fragment() {
 
     private fun manejadorBtnVolver(){
         binding.imageButton.setOnClickListener{
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_editarUsuarioFragment_to_visualizarUsuarioFragment, requireArguments())
         }
     }
 
