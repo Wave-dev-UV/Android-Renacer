@@ -1,5 +1,6 @@
 package com.example.gestrenacer.models
 
+import com.google.firebase.Timestamp
 import java.io.Serializable
 
 data class User(
@@ -17,9 +18,14 @@ data class User(
     var estadoAtencion: String,
     var firestoreID: String,
     var esLider: Boolean,
-    var rol: String
+    var rol: String,
+    var sexo: String,
+    var estadoCivil: String,
+    var fechaNacimiento: Timestamp?,
+    var obsevaciones: String,
+    var fechaCreacion: Timestamp?
 ): Serializable {
     constructor(): this("", "", "", "", "", "",
         "", "", "", "", "",
-        "","",false, "Feligrés")
+        "","",false, "Feligrés", "", "", null, "", null)
 }

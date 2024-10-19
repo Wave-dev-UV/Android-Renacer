@@ -76,6 +76,11 @@
     <string name="observaciones">Observaciones</string>
     <string name="bot_n_para_editar_usuario">Botón para editar usuario</string>
     <string name="bot_n_para_borrar_usuario">Botón para borrar usuario</string>>
+    <string name="seleccione_el_sexo">Seleccione el Sexo</string>
+    <string name="seleccione_el_estado_civil">Seleccione el estado civil</string>
+    <string name="selecciones_rol_a_asignar">Selecciones rol a asignar</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="seleccione_fecha_de_nacimiento">Seleccione fecha de nacimiento</string>>
     <string-array name="listaRoles">
         <item>Feligrés</item>
         <item>Administrador</item>
@@ -86,5 +91,16 @@
         <item>Por Llamar</item>
         <item>En Proceso</item>
         <item>Llamado</item>
+    </string-array>
+    <string-array name="listaSexos">
+        <item>Masculino</item>
+        <item>Femenino</item>
+    </string-array>
+    <string-array name="listaEstadoCivil">
+        <item>Soltero(a)</item>
+        <item>Casado(a)</item>
+        <item>Unión libre</item>
+        <item>Divorciado(a)</item>
+        <item>Viudo(a)</item>
     </string-array>
 </resources>
