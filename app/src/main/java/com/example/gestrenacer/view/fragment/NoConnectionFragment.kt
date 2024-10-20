@@ -33,6 +33,11 @@ class NoConnectionFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        connectionViewModel.checkConnection()
+    }
+
     private fun setupObservers() {
         connectionViewModel.isConnected.observe(viewLifecycleOwner) { isConnected ->
             if (isConnected) {

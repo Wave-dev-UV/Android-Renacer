@@ -1,6 +1,8 @@
 package com.example.gestrenacer.view
 
 import android.os.Bundle
+import android.view.View
+import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gestrenacer.R
@@ -27,6 +29,12 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.noConnectionContainer, NoConnectionFragment(), "NoConnectionFragment")
                     .commit()
+
+                // Asegurarte de que el contenedor esté visible
+                findViewById<FrameLayout>(R.id.noConnectionContainer).visibility = View.VISIBLE
+            } else {
+                // Ocultar el fragmento si ya hay conexión
+                findViewById<FrameLayout>(R.id.noConnectionContainer).visibility = View.GONE
             }
         }
     }
