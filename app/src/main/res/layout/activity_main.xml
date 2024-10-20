@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         tools:context=".view.MainActivity">
 
-        <!-- Contenedor principal para la navegación -->
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/navigationContainer"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -23,7 +23,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Contenedor para el fragmento de "Sin Conexión", inicialmente oculto -->
         <FrameLayout
             android:id="@+id/noConnectionContainer"
             android:layout_width="match_parent"

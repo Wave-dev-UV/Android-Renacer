@@ -41,7 +41,6 @@ class NoConnectionFragment : Fragment() {
     private fun setupObservers() {
         connectionViewModel.isConnected.observe(viewLifecycleOwner) { isConnected ->
             if (isConnected) {
-                // Aquí puedes agregar lógica para ocultar el fragmento si hay conexión
                 requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
             }
         }

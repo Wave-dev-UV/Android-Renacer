@@ -25,15 +25,14 @@ class MainActivity : AppCompatActivity() {
     private fun setupObservers() {
         connectionViewModel.isConnected.observe(this) { isConnected ->
             if (isConnected == false) {
-                // Mostrar fragmento de conexión perdida
+
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.noConnectionContainer, NoConnectionFragment(), "NoConnectionFragment")
                     .commit()
 
-                // Asegurarte de que el contenedor esté visible
                 findViewById<FrameLayout>(R.id.noConnectionContainer).visibility = View.VISIBLE
             } else {
-                // Ocultar el fragmento si ya hay conexión
+
                 findViewById<FrameLayout>(R.id.noConnectionContainer).visibility = View.GONE
             }
         }
