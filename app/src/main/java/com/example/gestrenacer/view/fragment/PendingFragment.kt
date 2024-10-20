@@ -59,17 +59,26 @@ class PendingFragment : Fragment() {
     }
 
     private fun observerListPendingFeligreses(){
-        userViewModel.listaUsers.observe(viewLifecycleOwner){
-            val recyclerView = binding.listaFeligreses
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            val adapter = PendingUserAdapter(it.toMutableList(), findNavController(), userViewModel.rol.value, userViewModel)
-            recyclerView.adapter = adapter
+            userViewModel.listaUsers.observe(viewLifecycleOwner){
 
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    activity?.finish()
-                }
-            })
+            if (it.isEmpty()) {
+                binding.listaFeligreses.visibility = View.GONE
+                binding.noDataMessage.visibility = View.VISIBLE
+            } else {
+                binding.listaFeligreses.visibility = View.VISIBLE
+                binding.noDataMessage.visibility = View.GONE
+
+                val recyclerView = binding.listaFeligreses
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                val adapter = PendingUserAdapter(it.toMutableList(), findNavController(), userViewModel.rol.value, userViewModel)
+                recyclerView.adapter = adapter
+
+                requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        activity?.finish()
+                    }
+                })
+            }
         }
     }
 

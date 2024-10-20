@@ -61,6 +61,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/contBottomNav">
 
+
+            <TextView
+                android:id="@+id/no_data_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginBottom="352dp"
+                android:text="@string/no_hay_elementos_a_mostrar"
+                android:textSize="25sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listaFeligreses"
                 android:layout_width="match_parent"

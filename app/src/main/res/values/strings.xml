@@ -62,7 +62,8 @@
     <string name="editar_usuario">Editar Usuario</string>
     <string name="subtituloEstadoDeAtencion">Estado de atención</string>>
     <string name="estado_de_atencion">Cambiar estado de atención</string>>
-    <string name="selecc_atencion">Cambie el estado de atención</string>>
+    <string name="selecc_atencion">Cambie el estado de atención</string>
+    <string name="no_hay_elementos_a_mostrar">No hay elementos a mostrar</string>>
     <string-array name="listaRoles">
         <item>Feligrés</item>
         <item>Administrador</item>
