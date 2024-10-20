@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
-import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel

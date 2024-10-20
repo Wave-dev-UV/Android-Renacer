@@ -29,6 +29,16 @@ class UserAdapter(
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val feligres = listaUsers[position]
 
+        if (position == listaUsers.lastIndex) {
+            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+            params.bottomMargin = 300
+            holder.itemView.layoutParams = params
+        } else {
+            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+            params.bottomMargin = 0
+            holder.itemView.layoutParams = params
+        }
+
         holder.setItemUser(feligres)
     }
 
