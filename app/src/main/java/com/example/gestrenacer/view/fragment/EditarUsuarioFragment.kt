@@ -111,6 +111,7 @@ class EditarUsuarioFragment : Fragment() {
                 binding.editTextFechaNacimiento.setText(fechatext)
             }, year, month, day
         )
+        datePickerDialog.datePicker.maxDate = calendar.timeInMillis
         datePickerDialog.show()
     }
 

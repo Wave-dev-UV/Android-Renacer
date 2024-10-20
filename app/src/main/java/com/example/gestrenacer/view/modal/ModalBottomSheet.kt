@@ -90,11 +90,11 @@ class ModalBottomSheet (
                 binding.radioBtnAlfabeticoDesc.isChecked = true
                 binding.lblCriterioOrden.text = getString(R.string.lblFiltroAlfabeticoDescen)
             }
-            "edad ascendente" -> {
+            "fechaNacimiento ascendente" -> {
                 binding.radioBtnEdadAsc.isChecked = true
                 binding.lblCriterioOrden.text = getString(R.string.lblFiltroEdadAscen)
             }
-            "edad descendente" -> {
+            "fechaNacimiento descendente" -> {
                 binding.radioBtnEdadDesc.isChecked = true
                 binding.lblCriterioOrden.text = getString(R.string.lblFiltroEdadDescen)
             }
@@ -146,21 +146,19 @@ class ModalBottomSheet (
                 fechaInicial.year -= binding.txtEdadFinal.text.toString().toInt() + 1
             }
             else{
-                fechaInicial.year = 300 //2200
-                fechaInicial.month = 12 //diciembre
-                fechaInicial.date = 0 //21
+                fechaInicial.year = 0 //1900
+                fechaInicial.month = 0 //enero
+                fechaInicial.date = 1 //1
             }
             if (binding.txtEdadInicial.text.isNotEmpty()){
                 fechaFinal.year -= binding.txtEdadInicial.text.toString().toInt() - 1
             }
             else {
-                fechaInicial.year = 0 //1900
-                fechaInicial.month = 0 //enero
-                fechaInicial.date = 1 //1
+                fechaFinal.year = 300 //2200
+                fechaFinal.month = 12 //diciembre
+                fechaFinal.date = 0 //21
             }
 
-            Log.d("fechaInicial",fechaInicial.toString())
-            Log.d("fechaFinal",fechaFinal.toString())
             filtrarFuncion(
                 Timestamp(fechaInicial), Timestamp(fechaFinal),
                 listEstado, listSexo, listOrden[0], listOrden[1])

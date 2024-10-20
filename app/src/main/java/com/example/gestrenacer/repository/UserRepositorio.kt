@@ -32,11 +32,6 @@ class UserRepositorio @Inject constructor() {
             else Query.Direction.DESCENDING
         )
 
-        Log.d("sexo",filtroSexo.toString())
-        Log.d("civil",filtroEstCivil.toString())
-        Log.d("escala",escalaOrden)
-        Log.d("orden",critOrden)
-
         val snapshot = usersCollection.whereIn("sexo",filtroSexo).
             whereIn("estadoCivil",filtroEstCivil).
             whereGreaterThan("fechaNacimiento", fechaInicial).
