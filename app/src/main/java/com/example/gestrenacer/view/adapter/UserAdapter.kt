@@ -55,7 +55,7 @@ class UserAdapter(
                         putSerializable("dataFeligres", user)
                         putString("rol", rol)
                     }
-                    navController.navigate(R.id.action_listarFragment_to_editarUsuarioFragment, bundle)
+                    navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
                 }
             } else {
                 binding.cardFeligres.setOnClickListener(null)

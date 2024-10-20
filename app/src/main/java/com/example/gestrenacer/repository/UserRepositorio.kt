@@ -10,9 +10,12 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.log
 
 class UserRepositorio @Inject constructor() {
 
@@ -100,6 +103,16 @@ class UserRepositorio @Inject constructor() {
         } catch (e: Exception) {
             Log.e("UserRepositorio", "Error en la autenticación: ${e.message}")
             false
+        }
+    }
+
+    suspend fun borrarUsuario(user: User){
+        withContext(Dispatchers.IO){
+            try {
+                usersCollection.document(user.firestoreID).delete().await()
+            } catch (e: Exception) {
+                Log.d("Error", e.toString())
+            }
         }
     }
 }

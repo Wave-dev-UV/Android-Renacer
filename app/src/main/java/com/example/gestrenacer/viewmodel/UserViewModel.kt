@@ -54,4 +54,16 @@ class UserViewModel @Inject constructor(
     fun colocarRol(rol: String?) {
         _rol.value = rol ?: "Feligrés"
     }
+
+    fun borrarUsuario(user: User){
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                repository.borrarUsuario(user)
+                _progresState.value = false
+            } catch (e: Exception) {
+                _progresState.value = false
+            }
+        }
+    }
 }
