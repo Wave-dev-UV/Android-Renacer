@@ -50,6 +50,8 @@
     <string name="lblFiltroAlfabeticoDescen">A-Z descendente.</string>
     <string name="lblFiltroEdadAscen">Edad ascendente.</string>
     <string name="lblFiltroEdadDescen">Edad descendente.</string>
+    <string name="lblFiltroAntiAscen">Mas antiguo.</string>
+    <string name="lblFiltroAntiDescen">Menos antiguo.</string>
     <string name="lblEdadFiltro">Edad.</string>
     <string name="lblMin">A partir de:</string>
     <string name="lblMax">Hasta:</string>

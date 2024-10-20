@@ -98,6 +98,14 @@ class ModalBottomSheet (
                 binding.radioBtnEdadDesc.isChecked = true
                 binding.lblCriterioOrden.text = getString(R.string.lblFiltroEdadDescen)
             }
+            "fechaRegistro ascendente" -> {
+                binding.radioBtnAntiguedadAsc.isChecked = true
+                binding.lblCriterioOrden.text = getString(R.string.lblFiltroAntiAscen)
+            }
+            "fechaRegistro descendente" -> {
+                binding.radioBtnAntiguedadDesc.isChecked = true
+                binding.lblCriterioOrden.text = getString(R.string.lblFiltroAntiDescen)
+            }
         }
     }
 
@@ -140,6 +148,8 @@ class ModalBottomSheet (
                 R.id.radioBtnAlfabeticoDesc -> listOrden.addAll(arrayOf("nombre","descendente"))
                 R.id.radioBtnEdadAsc -> listOrden.addAll(arrayOf("fechaNacimiento","ascendente"))
                 R.id.radioBtnEdadDesc -> listOrden.addAll(arrayOf("fechaNacimiento","descendente"))
+                R.id.radioBtnAntiguedadAsc -> listOrden.addAll(arrayOf("fechaCreacion","ascendente"))
+                R.id.radioBtnAntiguedadDesc -> listOrden.addAll(arrayOf("fechaCreacion","descendente"))
             }
 
             if (binding.txtEdadFinal.text.isNotEmpty()){
@@ -168,7 +178,8 @@ class ModalBottomSheet (
 
     private fun manejadoresRadioBtn(){
         val list = listOf(binding.radioBtnEdadAsc, binding.radioBtnEdadDesc,
-            binding.radioBtnAlfabeticoAsc, binding.radioBtnAlfabeticoDesc)
+            binding.radioBtnAlfabeticoAsc, binding.radioBtnAlfabeticoDesc,
+            binding.radioBtnAntiguedadAsc, binding.radioBtnAntiguedadDesc)
 
         for (i in list) {
             i.setOnClickListener {
@@ -178,6 +189,8 @@ class ModalBottomSheet (
                     R.id.radioBtnEdadDesc -> text=getString(R.string.lblFiltroEdadDescen)
                     R.id.radioBtnAlfabeticoAsc -> text=getString(R.string.lblFiltroAlfabeticoAscen)
                     R.id.radioBtnAlfabeticoDesc -> text=getString(R.string.lblFiltroAlfabeticoDescen)
+                    R.id.radioBtnAntiguedadAsc -> text=getString(R.string.lblFiltroAntiAscen)
+                    R.id.radioBtnAntiguedadDesc -> text=getString(R.string.lblFiltroAntiDescen)
                 }
                 binding.lblCriterioOrden.text = text
             }

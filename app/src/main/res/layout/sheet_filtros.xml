@@ -110,6 +110,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lblFiltroEdadDescen" />
+                    <RadioButton
+                        android:id="@+id/radioBtnAntiguedadAsc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroAntiAscen" />
+                    <RadioButton
+                        android:id="@+id/radioBtnAntiguedadDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroAntiDescen" />
                 </RadioGroup>
                 <TextView
                     android:layout_width="wrap_content"
