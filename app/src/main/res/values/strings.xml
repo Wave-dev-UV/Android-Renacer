@@ -94,4 +94,7 @@
         <item>Divorciado(a)</item>
         <item>Viudo(a)</item>
     </string-array>
+
+    <string name="conexión_perdida">Se ha perdido la conexión a internet</string>
+    <string name="btn_reintentar_conexión">Reintentar</string>
 </resources>
