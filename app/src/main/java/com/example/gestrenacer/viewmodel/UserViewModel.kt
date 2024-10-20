@@ -44,7 +44,7 @@ class UserViewModel @Inject constructor(
 
                 filtros = listOf(filtroSexo, filtroEstcivil, listOf(aInicio,aFinal))
                 orden = listOf(critOrden, escalaOrden)
-                _listaUsers.value = users.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() }))
+                _listaUsers.value = users
                 _progresState.value = false
             } finally {
                 _progresState.value = false

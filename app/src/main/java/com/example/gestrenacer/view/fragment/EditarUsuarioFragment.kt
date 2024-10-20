@@ -99,6 +99,7 @@ class EditarUsuarioFragment : Fragment() {
 
         val datePickerDialog = DatePickerDialog(
             requireContext(),
+            R.style.ThemeOverlay_App_Dialog,
             { _: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
                 val fechaNacimiento = Calendar.getInstance().apply {
                     set(Calendar.YEAR, selectedYear)

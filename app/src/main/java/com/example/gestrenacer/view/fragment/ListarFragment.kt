@@ -41,6 +41,7 @@ class ListarFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        binding.toolbar.searchView.setQuery("",false)
         verFeligreses()
         forceRecyclerViewUpdate()
     }
@@ -120,6 +121,13 @@ class ListarFragment : Fragment() {
     private fun observerProgress() {
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
+
+            if (!it) {
+                binding.listaFeligreses.visibility = View.VISIBLE
+            }
+            else{
+                binding.listaFeligreses.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -174,6 +182,7 @@ class ListarFragment : Fragment() {
         binding.btnAnadirFeligres.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("rol", userViewModel.rol.value)
+            binding.toolbar.searchView.setQuery("",false)
             findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment, bundle)
         }
     }

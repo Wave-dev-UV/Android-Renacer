@@ -189,9 +189,7 @@
                     android:layout_height="60dp"
                     android:textColorHint="@color/secondary"
                     app:boxStrokeColor="@color/azulPrincipal"
-                    app:endIconTint="@color/azulPrincipal"
-                    app:hintTextColor="@color/azulPrincipal"
-                    app:startIconTint="@color/azulPrincipal">
+                    app:hintTextColor="@color/azulPrincipal">
 
                     <AutoCompleteTextView
                         android:id="@+id/autoCompleteTipoId"
@@ -217,9 +215,7 @@
                     android:layout_height="60dp"
                     android:textColorHint="@color/secondary"
                     app:boxStrokeColor="@color/azulPrincipal"
-                    app:endIconTint="@color/azulPrincipal"
-                    app:hintTextColor="@color/azulPrincipal"
-                    app:startIconTint="@color/azulPrincipal">
+                    app:hintTextColor="@color/azulPrincipal">
 
                     <AutoCompleteTextView
                         android:id="@+id/autoCompleteSexo"
@@ -245,9 +241,7 @@
                     android:layout_height="60dp"
                     android:textColorHint="@color/secondary"
                     app:boxStrokeColor="@color/azulPrincipal"
-                    app:endIconTint="@color/azulPrincipal"
-                    app:hintTextColor="@color/azulPrincipal"
-                    app:startIconTint="@color/azulPrincipal">
+                    app:hintTextColor="@color/azulPrincipal">
 
                     <AutoCompleteTextView
                         android:id="@+id/autoCompleteEstadoCivil"
@@ -570,9 +564,7 @@
                     android:layout_height="60dp"
                     android:textColorHint="@color/secondary"
                     app:boxStrokeColor="@color/azulPrincipal"
-                    app:endIconTint="@color/azulPrincipal"
-                    app:hintTextColor="@color/azulPrincipal"
-                    app:startIconTint="@color/azulPrincipal">
+                    app:hintTextColor="@color/azulPrincipal">
 
                     <AutoCompleteTextView
                         android:id="@+id/autoCompleteRole"
