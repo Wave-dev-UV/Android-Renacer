@@ -91,7 +91,6 @@
                         android:id="@+id/radioBtnAlfabeticoAsc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checked="true"
                         android:text="@string/lblFiltroAlfabeticoAscen" />
 
                     <RadioButton
@@ -220,8 +219,7 @@
                     android:layout_column="0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lblFiltroMasculino"
-                    android:checked="true" />
+                    android:text="@string/lblFiltroMasculino" />
                 <CheckBox
                     android:theme="@style/CheckboxStyle"
                     android:id="@+id/checkFemenino"
@@ -230,8 +228,7 @@
                     android:layout_column="0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lblFiltroFemenino"
-                    android:checked="true"/>
+                    android:text="@string/lblFiltroFemenino"/>
 
                         <TextView
                             android:layout_column="0"
@@ -253,8 +250,7 @@
                     android:layout_column="0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lblFiltroCasado"
-                    android:checked="true"/>
+                    android:text="@string/lblFiltroCasado"/>
                 <CheckBox
                     android:theme="@style/CheckboxStyle"
                     android:id="@+id/checkSoltero"
@@ -263,8 +259,34 @@
                     android:layout_column="0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lblFiltroSoltero"
-                    android:checked="true"/>
+                    android:text="@string/lblFiltroSoltero"/>
+                <CheckBox
+                    android:theme="@style/CheckboxStyle"
+                    android:id="@+id/checkLibre"
+                    android:layout_marginStart="40dp"
+                    android:layout_columnSpan="2"
+                    android:layout_column="0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lblFiltroLibre"/>
+                <CheckBox
+                    android:theme="@style/CheckboxStyle"
+                    android:id="@+id/checkDivorciado"
+                    android:layout_marginStart="40dp"
+                    android:layout_columnSpan="2"
+                    android:layout_column="0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lblFiltroDivorciado"/>
+                <CheckBox
+                    android:theme="@style/CheckboxStyle"
+                    android:id="@+id/checkViudo"
+                    android:layout_marginStart="40dp"
+                    android:layout_columnSpan="2"
+                    android:layout_column="0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lblFiltroViudo"/>
             </GridLayout>
         </ScrollView>
 

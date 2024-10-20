@@ -5,13 +5,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.SheetFiltrosBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.Timestamp
+import java.util.Calendar
 import java.util.Date
 
 class ModalBottomSheet (
-    private val filtrarFuncion: (List<List<String>>, Date, Date) -> Unit
+    val filtrarFuncion: (Timestamp, Timestamp, List<String>, List<String>, String, String) -> Unit,
+    private val filtros: List<List<String>>,
+    private val orden: List<String>
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
 
@@ -30,10 +35,80 @@ class ModalBottomSheet (
     }
 
     private fun iniciarComponentes(){
+        iniciarCheckbox()
+        iniciarText()
+        iniciarRadioBtn()
+        manejadorTxt()
         manejadoresCheckBox()
         manejadoresRadioBtn()
         manejadorBtnFiltrar()
         manejadorBtnCerrar()
+    }
+
+    private fun iniciarText(){
+        val anos = filtros[2].map { it.toInt() + 1900 }
+        val anoActual = Calendar.getInstance().get(Calendar.YEAR)
+        val edadFinal = anoActual - anos[0] - 1
+        val edadInicial = anoActual - anos[1] + 1
+
+        if (edadInicial > 0) {
+            binding.txtEdadInicial.setText(edadInicial.toString())
+        }
+
+        if (edadFinal < 100) {
+            binding.txtEdadFinal.setText(edadFinal.toString())
+        }
+    }
+
+    private fun iniciarCheckbox(){
+        val checkBox: MutableList<String> = mutableListOf()
+
+        checkBox.addAll(filtros[0])
+        checkBox.addAll(filtros[1])
+
+        for (i in checkBox) {
+            when (i) {
+                "Soltero(a)" -> binding.checkSoltero.isChecked = true
+                "Divorciado(a)" -> binding.checkDivorciado.isChecked = true
+                "Unión libre" -> binding.checkLibre.isChecked = true
+                "Viudo(a)" -> binding.checkViudo.isChecked = true
+                "Casado(a)" -> binding.checkCasado.isChecked = true
+                "Masculino" -> binding.checkMasculino.isChecked = true
+                "Femenino" -> binding.checkFemenino.isChecked = true
+            }
+        }
+    }
+
+    private fun iniciarRadioBtn(){
+        val res = "${orden[0]} ${orden[1]}"
+        when (res){
+            "nombre ascendente" -> {
+                binding.radioBtnAlfabeticoAsc.isChecked = true
+                binding.lblCriterioOrden.text = getString(R.string.lblFiltroAlfabeticoAscen)
+            }
+            "nombre descendente" -> {
+                binding.radioBtnAlfabeticoDesc.isChecked = true
+                binding.lblCriterioOrden.text = getString(R.string.lblFiltroAlfabeticoDescen)
+            }
+            "edad ascendente" -> {
+                binding.radioBtnEdadAsc.isChecked = true
+                binding.lblCriterioOrden.text = getString(R.string.lblFiltroEdadAscen)
+            }
+            "edad descendente" -> {
+                binding.radioBtnEdadDesc.isChecked = true
+                binding.lblCriterioOrden.text = getString(R.string.lblFiltroEdadDescen)
+            }
+        }
+    }
+
+    private fun manejadorTxt(){
+        val txt = listOf(binding.txtEdadFinal,binding.txtEdadInicial)
+
+        for (i in txt){
+            i.addTextChangedListener{
+                validarDatos()
+            }
+        }
     }
 
     private fun manejadorBtnFiltrar(){
@@ -54,9 +129,11 @@ class ModalBottomSheet (
 
             if (binding.checkFemenino.isChecked) listSexo.add("Femenino")
             if (binding.checkMasculino.isChecked) listSexo.add("Masculino")
-            if (binding.checkCasado.isChecked) listEstado.add("Casado")
-            if (binding.checkSoltero.isChecked) listEstado.add("Soltero")
-            if (binding.radioBtnEdadAsc.isChecked) listOrden.add("Masculino")
+            if (binding.checkCasado.isChecked) listEstado.add("Casado(a)")
+            if (binding.checkSoltero.isChecked) listEstado.add("Soltero(a)")
+            if (binding.checkDivorciado.isChecked) listEstado.add("Divorciado(a)")
+            if (binding.checkLibre.isChecked) listEstado.add("Unión libre")
+            if (binding.checkViudo.isChecked) listEstado.add("Viudo(a)")
 
             when (binding.radioGroup.checkedRadioButtonId){
                 R.id.radioBtnAlfabeticoAsc -> listOrden.addAll(arrayOf("nombre","ascendente"))
@@ -68,11 +145,25 @@ class ModalBottomSheet (
             if (binding.txtEdadFinal.text.isNotEmpty()){
                 fechaInicial.year -= binding.txtEdadFinal.text.toString().toInt() + 1
             }
+            else{
+                fechaInicial.year = 300 //2200
+                fechaInicial.month = 12 //diciembre
+                fechaInicial.date = 0 //21
+            }
             if (binding.txtEdadInicial.text.isNotEmpty()){
                 fechaFinal.year -= binding.txtEdadInicial.text.toString().toInt() - 1
             }
+            else {
+                fechaInicial.year = 0 //1900
+                fechaInicial.month = 0 //enero
+                fechaInicial.date = 1 //1
+            }
 
-            filtrarFuncion(listOf(listSexo,listEstado,listOrden), fechaInicial, fechaFinal)
+            Log.d("fechaInicial",fechaInicial.toString())
+            Log.d("fechaFinal",fechaFinal.toString())
+            filtrarFuncion(
+                Timestamp(fechaInicial), Timestamp(fechaFinal),
+                listEstado, listSexo, listOrden[0], listOrden[1])
             dismiss()
         }
     }
@@ -97,7 +188,8 @@ class ModalBottomSheet (
 
     private fun manejadoresCheckBox(){
         val list = listOf(binding.checkCasado, binding.checkSoltero,
-        binding.checkMasculino,binding.checkFemenino)
+            binding.checkViudo,binding.checkLibre,binding.checkDivorciado,
+            binding.checkMasculino,binding.checkFemenino)
 
         for (i in list) {
             i.setOnClickListener { validarDatos() }
@@ -110,12 +202,26 @@ class ModalBottomSheet (
         }
     }
 
+    private fun validarEdad(): Boolean{
+        val txtInicial = binding.txtEdadInicial.text.toString()
+        val txtFinal = binding.txtEdadFinal.text.toString()
+        val vacio = txtInicial.isEmpty() && txtFinal.isEmpty()
+        val ambosLlenosMax = txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtInicial.toInt() <= txtFinal.toInt())
+        val ambosLlenosMin = txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtFinal.toInt() >= txtInicial.toInt())
+        val llenoInicial = txtInicial.isNotEmpty() && txtFinal.isEmpty()
+        val llenoFinal = txtFinal.isNotEmpty() && txtInicial.isEmpty()
+
+        return vacio || (ambosLlenosMax && ambosLlenosMin) || llenoInicial || llenoFinal
+    }
+
     private fun validarDatos(){
         var color = resources.getColor(R.color.onSelectedColorBotBar)
-        val listEstadoCheck = listOf(binding.checkCasado.isChecked, binding.checkSoltero.isChecked)
+        val listEstadoCheck = listOf(binding.checkCasado.isChecked, binding.checkSoltero.isChecked,
+            binding.checkLibre.isChecked, binding.checkViudo.isChecked, binding.checkDivorciado.isChecked)
         val listSexoCheck = listOf(binding.checkFemenino.isChecked, binding.checkMasculino.isChecked)
         val activado = (listSexoCheck.reduce{acc, checkBox -> acc || checkBox } &&
-                listEstadoCheck.reduce{acc, checkBox -> acc || checkBox})
+                listEstadoCheck.reduce{acc, checkBox -> acc || checkBox} &&
+                validarEdad())
 
         if (!activado) {
             color = resources.getColor(R.color.btnDesactivado)

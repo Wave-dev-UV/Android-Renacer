@@ -1,15 +1,15 @@
 package com.example.gestrenacer.viewmodel
 
-import java.text.Normalizer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.repository.UserRepositorio
+import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,16 +26,26 @@ class UserViewModel @Inject constructor(
     private val _rol = MutableLiveData("Feligrés")
     val rol: LiveData<String> = _rol
 
-    fun getFeligreses(filtros: List<List<String>>, fechaInicial: Date, fechaFinal: Date){
+    var filtros: List<List<String>> = listOf()
+
+    var orden: List<String> = listOf()
+
+    fun getFeligreses(fechaInicial: Timestamp, fechaFinal: Timestamp,
+                      filtroEstcivil: List<String>,
+                      filtroSexo: List<String>,
+                      critOrden: String = "nombre", escalaOrden: String = "ascendente"){
         viewModelScope.launch {
             _progresState.value = true
             try {
-                _listaUsers.value = repository.getUsers(filtros,fechaInicial,fechaFinal)
-                val users = repository.getUsers()
+                val aInicio = fechaInicial.toDate().year.toString()
+                val aFinal = fechaFinal.toDate().year.toString()
+                val users = repository.getUsers(filtroSexo,filtroEstcivil,
+                    fechaInicial,fechaFinal,critOrden,escalaOrden)
+
+                filtros = listOf(filtroSexo, filtroEstcivil, listOf(aInicio,aFinal))
+                orden = listOf(critOrden, escalaOrden)
                 _listaUsers.value = users.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() }))
                 _progresState.value = false
-            } catch (e: Exception) {
-
             } finally {
                 _progresState.value = false
             }
@@ -56,9 +66,5 @@ class UserViewModel @Inject constructor(
 
     fun colocarRol(rol: String?) {
         _rol.value = rol ?: "Feligrés"
-    }
-
-    fun cerrarSesion(){
-        repository.cerrarSesion()
     }
 }

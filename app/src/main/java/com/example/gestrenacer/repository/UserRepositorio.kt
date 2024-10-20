@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
@@ -23,16 +24,24 @@ class UserRepositorio @Inject constructor() {
     private val usersCollection = db.collection("users")
 
 
-    suspend fun getUsers(filtros: List<List<String>>,fechaInicial:Date,fechaFinal:Date): List<User> {
+    suspend fun getUsers(filtroSexo: List<String>,filtroEstCivil: List<String>,
+                         fechaInicial:Timestamp,fechaFinal:Timestamp, critOrden: String,
+                         escalaOrden: String): List<User> {
         val order = (
-            if (filtros[2][1] == "ascendente") Query.Direction.ASCENDING
+            if (escalaOrden == "ascendente") Query.Direction.ASCENDING
             else Query.Direction.DESCENDING
         )
-        val snapshot = usersCollection./*whereArrayContains("sexo",filtros[0]).
-            whereArrayContains("estadoCivil",filtros[1]).
+
+        Log.d("sexo",filtroSexo.toString())
+        Log.d("civil",filtroEstCivil.toString())
+        Log.d("escala",escalaOrden)
+        Log.d("orden",critOrden)
+
+        val snapshot = usersCollection.whereIn("sexo",filtroSexo).
+            whereIn("estadoCivil",filtroEstCivil).
             whereGreaterThan("fechaNacimiento", fechaInicial).
-            whereLessThan("fechaNacimiento", fechaFinal).*/
-            orderBy(filtros[2][0], order).get().await()
+            whereLessThan("fechaNacimiento", fechaFinal).
+            orderBy(critOrden, order).get().await()
 
         return snapshot.map { x ->
             val obj = x.toObject(User::class.java)

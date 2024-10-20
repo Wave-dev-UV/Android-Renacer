@@ -17,10 +17,10 @@ import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
-import com.example.gestrenacer.view.modal.ModalBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 import androidx.appcompat.widget.SearchView
+import com.google.firebase.Timestamp
 import java.text.Normalizer
 
 @AndroidEntryPoint
@@ -41,28 +41,18 @@ class ListarFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-        userViewModel.getFeligreses()
+        verFeligreses()
         forceRecyclerViewUpdate()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userViewModel.getFeligreses(listOf(
-            listOf("Masculino","Femenino"),
-            listOf("Casado","Soltero"),
-            listOf("nombre","ascendente")
-        ),
-            Date(1910,1,1),
-            Date(2200,12,31)
-        )
         iniciarComponentes()
 
         parentFragmentManager.setFragmentResultListener("editarUsuario", viewLifecycleOwner) { _, result ->
             val usuarioEditado = result.getBoolean("usuarioEditado", false)
             if (usuarioEditado) {
-
-                userViewModel.getFeligreses()
+                verFeligreses()
                 forceRecyclerViewUpdate()
             }
         }
@@ -87,6 +77,17 @@ class ListarFragment : Fragment() {
         manejadorBtnFiltro()
     }
 
+    private fun verFeligreses(){
+        val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
+        val listSexo = resources.getStringArray(R.array.listaSexos).toList()
+
+        userViewModel.getFeligreses(
+            Timestamp(Date(0,1,0)),
+            Timestamp(Date(300,12,0)),
+            listEst, listSexo
+        )
+    }
+
     private fun anadirRol() {
         val data = arguments?.getString("rol")
         userViewModel.colocarRol(data)
@@ -95,10 +96,6 @@ class ListarFragment : Fragment() {
     private fun observerListFeligreses(){
         userViewModel.listaUsers.observe(viewLifecycleOwner){
             userList = it
-            val recyclerView = binding.listaFeligreses
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            val adapter = UserAdapter(it, findNavController(), userViewModel.rol.value)
-            recyclerView.adapter = adapter
 
             if (adapter == null) {
                 adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value)
@@ -162,7 +159,7 @@ class ListarFragment : Fragment() {
 
     private fun manejadorBtnFiltro() {
         binding.btnFiltrar.setOnClickListener{
-            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses)
+            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,userViewModel.filtros,userViewModel.orden)
             modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
         }
     }

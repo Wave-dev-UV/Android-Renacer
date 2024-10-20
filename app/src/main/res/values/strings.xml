@@ -98,7 +98,10 @@
     <string name="lblFiltroSexo">Sexo.</string>
     <string name="lblFiltroMasculino">Masculino.</string>
     <string name="lblFiltroFemenino">Femenino.</string>
-    <string name="lblFiltroCasado">Casado.</string>
-    <string name="lblFiltroSoltero">Soltero.</string>
+    <string name="lblFiltroCasado">Casado(a).</string>
+    <string name="lblFiltroSoltero">Soltero(a).</string>
+    <string name="lblFiltroLibre">Unión libre.</string>
+    <string name="lblFiltroDivorciado">Divorciado(a).</string>
+    <string name="lblFiltroViudo">Viudo(a).</string>
     <string name="lblFiltroSheet">Filtrar por:</string>
 </resources>
