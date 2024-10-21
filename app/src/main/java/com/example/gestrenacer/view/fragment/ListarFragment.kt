@@ -1,6 +1,5 @@
 package com.example.gestrenacer.view.fragment
 
-import UserAdapter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -19,6 +18,7 @@ import com.example.gestrenacer.viewmodel.UserViewModel
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.widget.SearchView
+import com.example.gestrenacer.view.adapter.UserAdapter
 import java.text.Normalizer
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
@@ -65,7 +65,7 @@ class ListarFragment : Fragment() {
         })
     }
 
-    private fun iniciarComponentes() {
+    private fun iniciarComponentes(){
         anadirRol()
         observerListFeligreses()
         observerProgress()
@@ -77,17 +77,16 @@ class ListarFragment : Fragment() {
         manejadorBtnFiltro()
     }
 
-    private fun anadirRol() {
+    private fun anadirRol(){
         val data = arguments?.getString("rol")
         userViewModel.colocarRol(data)
     }
 
-    private fun observerListFeligreses() {
-        userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
+    private fun observerListFeligreses(){
+        userViewModel.listaUsers.observe(viewLifecycleOwner){lista ->
             userList = lista
-
             if (adapter == null) {
-                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value)
+                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value, userViewModel)
                 binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
                 binding.listaFeligreses.adapter = adapter
             } else {
@@ -106,7 +105,7 @@ class ListarFragment : Fragment() {
         }
     }
 
-    private fun observerProgress() {
+    private fun observerProgress(){
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
         }
@@ -127,6 +126,8 @@ class ListarFragment : Fragment() {
     }
 
     private fun manejadorBottomBar() {
+        val bundle = Bundle()
+        bundle.putString("rol",arguments?.getString("rol"))
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.item_1 -> {
@@ -138,7 +139,8 @@ class ListarFragment : Fragment() {
                     true
                 }
                 R.id.item_3 -> {
-                    Log.d("BottomNavSelect3", "Lista llamar seleccionado")
+                    Log.d("BottomNavSelect3", "Lista llamar deleccionado")
+                    findNavController().navigate(R.id.action_listarFragment_to_pendingFragment, bundle)
                     true
                 }
                 else -> false
@@ -147,23 +149,23 @@ class ListarFragment : Fragment() {
     }
 
     private fun manejadorBtnFiltro() {
-        binding.btnFiltrar.setOnClickListener {
+        binding.btnFiltrar.setOnClickListener{
             val modalBottomSheet = ModalBottomSheet()
             modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
     }
 
     private fun manejadorBtnMensaje() {
-        binding.btnEnviarSms.setOnClickListener {
-            Log.d("BtnSMS", "Clic en el botón de SMS")
+        binding.btnEnviarSms.setOnClickListener{
+            Log.d("BtnSMS","Clic en el botón de SMS")
         }
     }
 
-    private fun manejadorBtnAnadir() {
-        binding.btnAnadirFeligres.setOnClickListener {
+    private fun manejadorBtnAnadir(){
+        binding.btnAnadirFeligres.setOnClickListener{
             val bundle = Bundle()
-            bundle.putString("rol", userViewModel.rol.value)
-            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment, bundle)
+            bundle.putString("rol",userViewModel.rol.value)
+            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment,bundle)
         }
     }
 

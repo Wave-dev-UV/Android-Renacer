@@ -82,6 +82,7 @@
     <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
     <string name="seleccione_fecha_de_nacimiento">Seleccione fecha de nacimiento</string>
     <string name="otros_datos">Otros datos</string>>
+    <string name="no_hay_elementos_a_mostrar">No hay elementos a mostrar</string>>
     <string-array name="listaRoles">
         <item>Feligrés</item>
         <item>Administrador</item>
@@ -93,6 +94,8 @@
         <item>En Proceso</item>
         <item>Llamado</item>
     </string-array>
+    <string name="conexión_perdida">Se ha perdido la conexión a internet</string>
+    <string name="btn_reintentar_conexión">Reintentar</string>
     <string-array name="listaSexos">
         <item>Masculino</item>
         <item>Femenino</item>
@@ -104,7 +107,4 @@
         <item>Divorciado(a)</item>
         <item>Viudo(a)</item>
     </string-array>
-
-    <string name="conexión_perdida">Se ha perdido la conexión a internet</string>
-    <string name="btn_reintentar_conexión">Reintentar</string>
 </resources>

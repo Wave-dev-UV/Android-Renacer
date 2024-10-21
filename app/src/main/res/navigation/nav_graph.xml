@@ -28,7 +28,7 @@
             app:destination="@id/listarFragment" />
     </fragment>
 
-    <fragment
+     <fragment
         android:id="@+id/listarFragment"
         android:name="com.example.gestrenacer.view.fragment.ListarFragment"
         android:label="ListarFragment"
@@ -39,7 +39,13 @@
         <action
             android:id="@+id/action_listarFragment_to_agregarUsuariosFragment"
             app:destination="@id/agregarUsuariosFragment" />
-    </fragment>
+        <action
+            android:id="@+id/action_listarFragment_to_editarUsuarioFragment"
+            app:destination="@id/editarUsuarioFragment" />
+         <action
+             android:id="@+id/action_listarFragment_to_pendingFragment"
+             app:destination="@id/pendingFragment" />
+     </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
@@ -68,6 +74,20 @@
             app:destination="@id/listarFragment" />
     </fragment>
     <fragment
+        android:id="@+id/pendingFragment"
+        android:name="com.example.gestrenacer.view.fragment.PendingFragment"
+        android:label="PendingFragment" >
+        <action
+            android:id="@+id/action_pendingFragment_to_listarFragment"
+            app:destination="@id/listarFragment" />
+        <action
+            android:id="@+id/action_pendingFragment_to_editarUsuarioFragment"
+            app:destination="@id/editarUsuarioFragment" />
+        <action
+            android:id="@+id/action_pendingFragment_to_visualizarUsuarioFragment"
+            app:destination="@id/visualizarUsuarioFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/visualizarUsuarioFragment"
         android:name="com.example.gestrenacer.view.fragment.VisualizarUsuarioFragment"
         android:label="VisualizarUsuarioFragment"
@@ -79,5 +99,4 @@
             android:id="@+id/action_visualizarUsuarioFragment_to_editarUsuarioFragment"
             app:destination="@id/editarUsuarioFragment" />
     </fragment>
-
 </navigation>

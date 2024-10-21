@@ -1,6 +1,5 @@
 package com.example.gestrenacer.viewmodel
 
-import java.text.Normalizer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,8 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: UserRepositorio
-) : ViewModel() {
-
+): ViewModel() {
     private val _listaUsers = MutableLiveData<List<User>>()
     val listaUsers: LiveData<List<User>> = _listaUsers
 
@@ -25,7 +23,7 @@ class UserViewModel @Inject constructor(
     private val _rol = MutableLiveData("Feligrés")
     val rol: LiveData<String> = _rol
 
-    fun getFeligreses() {
+    fun getFeligreses(){
         viewModelScope.launch {
             _progresState.value = true
             try {
@@ -39,20 +37,32 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun crearUsuario(user: User) {
+    fun crearUsuario(user: User){
         viewModelScope.launch {
             repository.saveUser(user)
         }
     }
 
-    fun editarUsuario(user: User) {
+    fun editarUsuario(user: User){
         viewModelScope.launch {
             repository.updateUser(user)
         }
     }
 
-    fun colocarRol(rol: String?) {
-        _rol.value = rol ?: "Feligrés"
+    fun getPendingUsers() {
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                _listaUsers.value = repository.getPendingUsers()
+                _progresState.value = false
+            } catch (e: Exception) {
+                _progresState.value = false
+            }
+        }
+    }
+
+    fun colocarRol(rol: String?){
+        _rol.value = rol
     }
 
     fun borrarUsuario(user: User){
