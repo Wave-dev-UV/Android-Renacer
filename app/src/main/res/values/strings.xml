@@ -91,7 +91,6 @@
     </string-array>
     <string-array name="listaEstadoAtencion">
         <item>Por Llamar</item>
-        <item>En Proceso</item>
         <item>Llamado</item>
     </string-array>
     <string name="conexión_perdida">Se ha perdido la conexión a internet</string>
