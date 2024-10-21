@@ -1,3 +1,5 @@
+package com.example.gestrenacer.view.adapter
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,12 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.ItemUserBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.viewmodel.UserViewModel
 
 class UserAdapter(
     private var listaUsers: List<User>,
     private val navController: NavController,
-    private val rol: String?
-) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+    private val rol: String?,
+    private val usersViewModel: UserViewModel
+): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     fun updateList(newList: List<User>) {
         listaUsers = newList
@@ -20,7 +24,7 @@ class UserAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return UserViewHolder(binding, navController, rol)
+        return UserViewHolder(binding, navController, rol, usersViewModel, this)
     }
 
     override fun getItemCount(): Int {
@@ -28,15 +32,32 @@ class UserAdapter(
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        val user = listaUsers[position]
-        holder.bind(user)
+        val feligres = listaUsers[position]
+
+        if (position == listaUsers.lastIndex) {
+            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+            params.bottomMargin = 300
+            holder.itemView.layoutParams = params
+        } else {
+            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+            params.bottomMargin = 0
+            holder.itemView.layoutParams = params
+        }
+
+        holder.bind(feligres)
+    }
+
+    fun changeStatus(position: Int) {
+        notifyItemChanged(position)
     }
 
     class UserViewHolder(
         private val binding: ItemUserBinding,
         private val navController: NavController,
-        private val rol: String?
-    ) : RecyclerView.ViewHolder(binding.root) {
+        private val rol: String?,
+        private val usersViewModel: UserViewModel,
+        private val adapter: UserAdapter
+    ): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(user: User) {
             val nombre = user.nombre
@@ -48,17 +69,50 @@ class UserAdapter(
             binding.txtRol.text = user.rol
             binding.txtEsLider.text = if (user.esLider) "Si" else "No"
 
+            if (user.estadoAtencion == "Por Llamar") {
+                binding.addPendingUser.setImageResource(R.drawable.filled_notifications);
+            } else {
+                binding.addPendingUser.setImageResource(R.drawable.notifications);
+            }
 
+            manejadorClicCard(user)
+            manejadorAnadirPendientes(user)
+
+        }
+
+        private fun manejadorClicCard(user: User){
             if (rol != "Visualizador") {
                 binding.cardFeligres.setOnClickListener {
                     val bundle = Bundle().apply {
                         putSerializable("dataFeligres", user)
                         putString("rol", rol)
                     }
-                    navController.navigate(R.id.action_listarFragment_to_editarUsuarioFragment, bundle)
+                    navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
                 }
             } else {
                 binding.cardFeligres.setOnClickListener(null)
+            }
+        }
+
+        private fun manejadorAnadirPendientes (user:User) {
+            binding.addPendingUser.setOnClickListener {
+
+                val currentState = user.estadoAtencion
+
+                if (currentState == "Por Llamar") {
+                    user.estadoAtencion = "Llamado"
+                    binding.addPendingUser.setImageResource(R.drawable.filled_notifications)
+                } else {
+                    user.estadoAtencion = "Por Llamar"
+                    binding.addPendingUser.setImageResource(R.drawable.notifications)
+                }
+
+                usersViewModel.editarUsuario(user)
+
+                val position = absoluteAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    adapter.changeStatus(position)
+                }
             }
         }
     }

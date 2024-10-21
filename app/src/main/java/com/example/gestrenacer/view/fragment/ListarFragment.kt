@@ -66,7 +66,7 @@ class ListarFragment : Fragment() {
         })
     }
 
-    private fun iniciarComponentes() {
+    private fun iniciarComponentes(){
         anadirRol()
         observerListFeligreses()
         observerProgress()
@@ -99,7 +99,7 @@ class ListarFragment : Fragment() {
             userList = it
 
             if (adapter == null) {
-                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value)
+                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value, userViewModel)
                 binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
                 binding.listaFeligreses.adapter = adapter
             } else {
@@ -118,7 +118,7 @@ class ListarFragment : Fragment() {
         }
     }
 
-    private fun observerProgress() {
+    private fun observerProgress(){
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
 
@@ -153,6 +153,8 @@ class ListarFragment : Fragment() {
     }
 
     private fun manejadorBottomBar() {
+        val bundle = Bundle()
+        bundle.putString("rol",arguments?.getString("rol"))
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.item_1 -> {
@@ -164,7 +166,8 @@ class ListarFragment : Fragment() {
                     true
                 }
                 R.id.item_3 -> {
-                    Log.d("BottomNavSelect3", "Lista llamar seleccionado")
+                    Log.d("BottomNavSelect3", "Lista llamar deleccionado")
+                    findNavController().navigate(R.id.action_listarFragment_to_pendingFragment, bundle)
                     true
                 }
                 else -> false

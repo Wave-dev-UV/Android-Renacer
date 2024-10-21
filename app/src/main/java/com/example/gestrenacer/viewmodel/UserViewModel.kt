@@ -15,8 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: UserRepositorio
-) : ViewModel() {
-
+): ViewModel() {
     private val _listaUsers = MutableLiveData<List<User>>()
     val listaUsers: LiveData<List<User>> = _listaUsers
 
@@ -33,7 +32,7 @@ class UserViewModel @Inject constructor(
     fun getFeligreses(fechaInicial: Timestamp, fechaFinal: Timestamp,
                       filtroEstcivil: List<String>,
                       filtroSexo: List<String>,
-                      critOrden: String = "nombre", escalaOrden: String = "ascendente"){
+                      critOrden: String = "nombre", escalaOrden: String = "ascendente") {
         viewModelScope.launch {
             _progresState.value = true
             try {
@@ -64,7 +63,31 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun colocarRol(rol: String?) {
-        _rol.value = rol ?: "Feligrés"
+    fun getPendingUsers() {
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                _listaUsers.value = repository.getPendingUsers()
+                _progresState.value = false
+            } catch (e: Exception) {
+                _progresState.value = false
+            }
+        }
+    }
+
+    fun colocarRol(rol: String?){
+        _rol.value = rol
+    }
+
+    fun borrarUsuario(user: User){
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                repository.borrarUsuario(user)
+                _progresState.value = false
+            } catch (e: Exception) {
+                _progresState.value = false
+            }
+        }
     }
 }
