@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -16,7 +15,6 @@ import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentPendingBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.adapter.PendingUserAdapter
-import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
@@ -28,7 +26,7 @@ import java.util.Date
 class PendingFragment : Fragment() {
     private lateinit var binding: FragmentPendingBinding
     private val userViewModel: UserViewModel by viewModels()
-    private var adapter: UserAdapter? = null
+    private var adapter: PendingUserAdapter? = null
     private var userList = listOf<User>()
 
     override fun onCreateView(
@@ -78,7 +76,7 @@ class PendingFragment : Fragment() {
         userViewModel.getFeligreses(
             Timestamp(Date(0,1,0)),
             Timestamp(Date(300,12,0)),
-            listEst, listSexo
+            listEst, listSexo, listOf("Por Llamar")
         )
     }
 
@@ -98,25 +96,25 @@ class PendingFragment : Fragment() {
 
     private fun observerListPendingFeligreses(){
             userViewModel.listaUsers.observe(viewLifecycleOwner){
+                userList = it
 
-            if (it.isEmpty()) {
-                binding.listaFeligreses.visibility = View.GONE
-                binding.noDataMessage.visibility = View.VISIBLE
-            } else {
-                binding.listaFeligreses.visibility = View.VISIBLE
-                binding.noDataMessage.visibility = View.GONE
+                if (adapter == null) {
+                    adapter = PendingUserAdapter(userList.toMutableList(), findNavController(), userViewModel.rol.value, userViewModel)
+                    binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
+                    binding.listaFeligreses.adapter = adapter
+                } else {
+                    adapter?.updateList(userList.toMutableList())
+                }
 
-                val recyclerView = binding.listaFeligreses
-                recyclerView.layoutManager = LinearLayoutManager(context)
-                val adapter = PendingUserAdapter(it.toMutableList(), findNavController(), userViewModel.rol.value, userViewModel)
-                recyclerView.adapter = adapter
 
-                requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        activity?.finish()
-                    }
-                })
-            }
+                binding.lblResultado.text = "Resultados: ${userList.size}"
+
+
+                if (userList.isEmpty()) {
+                    binding.noDataMessage.visibility = View.VISIBLE
+                } else {
+                    binding.noDataMessage.visibility = View.GONE
+                }
         }
     }
 
@@ -136,7 +134,9 @@ class PendingFragment : Fragment() {
 
     private fun manejadorBtnFiltro() {
         binding.btnFiltrar.setOnClickListener{
-            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,userViewModel.filtros,userViewModel.orden)
+            val listFiltros = userViewModel.filtros.value as List<List<String>>
+            val listOrden = userViewModel.orden.value as List<String>
+            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,listFiltros,listOrden)
             modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
     }
@@ -190,7 +190,7 @@ class PendingFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrEmpty()) {
-                    adapter?.updateList(userList)
+                    adapter?.updateList(userList.toMutableList())
                     binding.lblResultado.text = "Resultados: ${userList.size}"
                 } else {
                     filter(newText)
@@ -203,7 +203,7 @@ class PendingFragment : Fragment() {
             searchView.setQuery("",false)
             searchView.clearFocus()
             if (userList.size>0){
-                binding.lblResultado.visibility = View.GONE
+                binding.noDataMessage.visibility = View.GONE
             }
         }
 
@@ -230,7 +230,7 @@ class PendingFragment : Fragment() {
             }
         }
 
-        adapter?.updateList(filteredList)
+        adapter?.updateList(filteredList.toMutableList())
         binding.lblResultado.text = "Resultados: ${filteredList.size}"
 
         if (filteredList.isEmpty()) {

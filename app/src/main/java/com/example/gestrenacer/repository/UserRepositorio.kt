@@ -24,7 +24,8 @@ class UserRepositorio @Inject constructor() {
 
 
     suspend fun getUsers(filtroSexo: List<String>,filtroEstCivil: List<String>,
-                         fechaInicial:Timestamp,fechaFinal:Timestamp, critOrden: String,
+                         filtroLlamado: List<String>,fechaInicial:Timestamp,
+                         fechaFinal:Timestamp, critOrden: String,
                          escalaOrden: String): List<User> {
         val order = (
             if (escalaOrden == "ascendente") Query.Direction.ASCENDING
@@ -33,6 +34,7 @@ class UserRepositorio @Inject constructor() {
 
         val snapshot = usersCollection.whereIn("sexo",filtroSexo).
             whereIn("estadoCivil",filtroEstCivil).
+            whereIn("estadoAtencion",filtroLlamado).
             whereGreaterThan("fechaNacimiento", fechaInicial).
             whereLessThan("fechaNacimiento", fechaFinal).
             orderBy(critOrden, order).get().await()

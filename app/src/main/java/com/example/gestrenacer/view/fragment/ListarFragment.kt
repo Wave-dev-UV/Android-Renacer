@@ -81,11 +81,12 @@ class ListarFragment : Fragment() {
     private fun verFeligreses(){
         val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
         val listSexo = resources.getStringArray(R.array.listaSexos).toList()
+        val listEstado = resources.getStringArray(R.array.listaEstadoAtencion).toList()
 
         userViewModel.getFeligreses(
             Timestamp(Date(0,1,0)),
             Timestamp(Date(300,12,0)),
-            listEst, listSexo
+            listEst, listSexo, listEstado
         )
     }
 
@@ -177,7 +178,10 @@ class ListarFragment : Fragment() {
 
     private fun manejadorBtnFiltro() {
         binding.btnFiltrar.setOnClickListener{
-            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,userViewModel.filtros,userViewModel.orden)
+            val listFiltros = userViewModel.filtros.value as List<List<String>>
+            val listOrden = userViewModel.orden.value as List<String>
+            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
+                listFiltros,listOrden)
             modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
         }
     }

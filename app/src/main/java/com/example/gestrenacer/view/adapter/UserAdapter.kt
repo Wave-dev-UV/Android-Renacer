@@ -1,6 +1,7 @@
 package com.example.gestrenacer.view.adapter
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.NavController
@@ -69,6 +70,7 @@ class UserAdapter(
             binding.txtRol.text = user.rol
             binding.txtEsLider.text = if (user.esLider) "Si" else "No"
 
+            Log.d("estado",user.estadoAtencion)
             if (user.estadoAtencion == "Por Llamar") {
                 binding.addPendingUser.setImageResource(R.drawable.filled_notifications);
             } else {
