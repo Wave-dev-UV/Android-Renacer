@@ -98,11 +98,11 @@ class ModalBottomSheet (
                 binding.radioBtnEdadDesc.isChecked = true
                 binding.lblCriterioOrden.text = getString(R.string.lblFiltroEdadDescen)
             }
-            "fechaRegistro ascendente" -> {
+            "fechaCreacion ascendente" -> {
                 binding.radioBtnAntiguedadAsc.isChecked = true
                 binding.lblCriterioOrden.text = getString(R.string.lblFiltroAntiAscen)
             }
-            "fechaRegistro descendente" -> {
+            "fechaCreacion descendente" -> {
                 binding.radioBtnAntiguedadDesc.isChecked = true
                 binding.lblCriterioOrden.text = getString(R.string.lblFiltroAntiDescen)
             }
