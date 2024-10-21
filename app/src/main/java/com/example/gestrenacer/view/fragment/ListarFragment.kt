@@ -3,12 +3,13 @@ package com.example.gestrenacer.view.fragment
 import UserAdapter
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,11 +18,10 @@ import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import java.util.Date
-import androidx.appcompat.widget.SearchView
 import com.google.firebase.Timestamp
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
+import java.util.Date
 
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
@@ -124,6 +124,7 @@ class ListarFragment : Fragment() {
 
             if (!it) {
                 binding.listaFeligreses.visibility = View.VISIBLE
+                reanudarBusqueda()
             }
             else{
                 binding.listaFeligreses.visibility = View.INVISIBLE
@@ -142,6 +143,12 @@ class ListarFragment : Fragment() {
                 binding.contBottomNav.visibility = View.GONE
                 binding.btnEnviarSms.visibility = View.GONE
             }
+        }
+    }
+
+    private fun reanudarBusqueda(){
+        if (binding.toolbar.searchView.query.isNotEmpty()){
+            filter(binding.toolbar.searchView.query.toString())
         }
     }
 
@@ -189,6 +196,7 @@ class ListarFragment : Fragment() {
 
     private fun configurarBusqueda() {
         val searchView = binding.toolbar.searchView
+        val closeButton: View? = searchView.findViewById(androidx.appcompat.R.id.search_close_btn)
         searchView.setIconifiedByDefault(false)
         searchView.isIconified = false
         searchView.clearFocus()
@@ -209,6 +217,15 @@ class ListarFragment : Fragment() {
                 return false
             }
         })
+
+        closeButton?.setOnClickListener {
+            searchView.setQuery("",false)
+            searchView.clearFocus()
+            if (userList.size>0){
+                binding.txtNoResultados.visibility = View.GONE
+            }
+        }
+
     }
 
     private fun filter(text: String) {
