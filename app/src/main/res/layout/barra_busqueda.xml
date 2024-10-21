@@ -1,17 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/onSelectedColorBotBar">
-        <com.google.android.material.search.SearchBar
-            android:id="@+id/search_bar"
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/tooltipBarraBusqueda"/>
+            android:queryHint="@string/buscar_hint"
+            android:background="@drawable/search_view_background"
+            android:iconifiedByDefault="false"
+            android:layout_margin="10dp"
+            style="@style/CustomSearchView" />
     </com.google.android.material.appbar.AppBarLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

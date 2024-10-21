@@ -69,7 +69,7 @@ class PendingUserAdapter(
                     val bundle = Bundle()
                     bundle.putSerializable("dataFeligres",user)
                     bundle.putString("rol",rol)
-                    navController.navigate(R.id.action_pendingFragment_to_editarUsuarioFragment, bundle)
+                    navController.navigate(R.id.action_pendingFragment_to_visualizarUsuarioFragment, bundle)
                 }
             }
         }

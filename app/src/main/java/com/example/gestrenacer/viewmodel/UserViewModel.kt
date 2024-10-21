@@ -27,9 +27,11 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             _progresState.value = true
             try {
-                _listaUsers.value = repository.getUsers()
-                _progresState.value = false
+                val users = repository.getUsers()
+                _listaUsers.value = users.sortedWith(compareBy({ it.nombre.lowercase() }, { it.apellido.lowercase() }))
             } catch (e: Exception) {
+
+            } finally {
                 _progresState.value = false
             }
         }
@@ -61,5 +63,17 @@ class UserViewModel @Inject constructor(
 
     fun colocarRol(rol: String?){
         _rol.value = rol
+    }
+
+    fun borrarUsuario(user: User){
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                repository.borrarUsuario(user)
+                _progresState.value = false
+            } catch (e: Exception) {
+                _progresState.value = false
+            }
+        }
     }
 }

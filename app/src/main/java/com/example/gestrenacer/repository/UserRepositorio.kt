@@ -4,14 +4,18 @@ import android.app.Activity
 import android.util.Log
 import com.example.gestrenacer.models.User
 import com.google.firebase.FirebaseException
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.log
 
 class UserRepositorio @Inject constructor() {
 
@@ -31,7 +35,8 @@ class UserRepositorio @Inject constructor() {
 
     suspend fun saveUser(user: User) {
         try {
-            usersCollection.add(user).await()
+            val newUser = user.copy(fechaCreacion = Timestamp.now())
+            usersCollection.add(newUser).await()
             Log.d("UserRepositorio", "Usuario agregado con éxito")
         } catch (e: Exception) {
             Log.e("UserRepositorio", "Error al agregar el usuario: ${e.message}")
@@ -111,6 +116,16 @@ class UserRepositorio @Inject constructor() {
         } catch (e: Exception) {
             Log.e("UserRepositorio", "Error en la autenticación: ${e.message}")
             false
+        }
+    }
+
+    suspend fun borrarUsuario(user: User){
+        withContext(Dispatchers.IO){
+            try {
+                usersCollection.document(user.firestoreID).delete().await()
+            } catch (e: Exception) {
+                Log.d("Error", e.toString())
+            }
         }
     }
 }

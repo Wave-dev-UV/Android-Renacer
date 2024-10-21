@@ -11,11 +11,16 @@ import com.example.gestrenacer.models.User
 import com.example.gestrenacer.viewmodel.UserViewModel
 
 class UserAdapter(
-    private val listaUsers: List<User>,
+    private var listaUsers: List<User>,
     private val navController: NavController,
     private val rol: String?,
     private val usersViewModel: UserViewModel
 ): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+
+    fun updateList(newList: List<User>) {
+        listaUsers = newList
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -39,7 +44,7 @@ class UserAdapter(
             holder.itemView.layoutParams = params
         }
 
-        holder.setItemUser(feligres)
+        holder.bind(feligres)
     }
 
     fun changeStatus(position: Int) {
@@ -54,17 +59,15 @@ class UserAdapter(
         private val adapter: UserAdapter
     ): RecyclerView.ViewHolder(binding.root) {
 
-        fun setItemUser(user: User){
+        fun bind(user: User) {
             val nombre = user.nombre
             val apellido = user.apellido
 
-            binding.lblIniciales.text = "${nombre.get(0)}${apellido.get(0)}".uppercase()
-            binding.txtNombre.text = "${nombre} ${apellido}."
-            binding.txtCelular.text = "${user.celular}."
-            binding.txtRol.text = "${user.rol}."
-            binding.txtEsLider.text = (
-                    if (user.esLider) "Si."
-                    else "No.")
+            binding.lblIniciales.text = "${nombre.firstOrNull() ?: ""}${apellido.firstOrNull() ?: ""}".uppercase()
+            binding.txtNombre.text = "$nombre $apellido"
+            binding.txtCelular.text = user.celular
+            binding.txtRol.text = user.rol
+            binding.txtEsLider.text = if (user.esLider) "Si" else "No"
 
             if (user.estadoAtencion == "Por Llamar") {
                 binding.addPendingUser.setImageResource(R.drawable.filled_notifications);
@@ -74,16 +77,20 @@ class UserAdapter(
 
             manejadorClicCard(user)
             manejadorAnadirPendientes(user)
+
         }
 
         private fun manejadorClicCard(user: User){
-            if (rol != "Visualizador"){
+            if (rol != "Visualizador") {
                 binding.cardFeligres.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putSerializable("dataFeligres",user)
-                    bundle.putString("rol",rol)
-                    navController.navigate(R.id.action_listarFragment_to_editarUsuarioFragment, bundle)
+                    val bundle = Bundle().apply {
+                        putSerializable("dataFeligres", user)
+                        putString("rol", rol)
+                    }
+                    navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
                 }
+            } else {
+                binding.cardFeligres.setOnClickListener(null)
             }
         }
 
