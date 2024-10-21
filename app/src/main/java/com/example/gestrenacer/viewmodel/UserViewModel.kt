@@ -15,8 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: UserRepositorio
-) : ViewModel() {
-
+): ViewModel() {
     private val _listaUsers = MutableLiveData<List<User>>()
     val listaUsers: LiveData<List<User>> = _listaUsers
 
@@ -26,24 +25,28 @@ class UserViewModel @Inject constructor(
     private val _rol = MutableLiveData("Feligrés")
     val rol: LiveData<String> = _rol
 
-    var filtros: List<List<String>> = listOf()
+    private val _filtros = MutableLiveData<List<List<String>>>()
+    val filtros: LiveData<List<List<String>>> = _filtros
 
-    var orden: List<String> = listOf()
+    private val _orden = MutableLiveData<List<String>>()
+    val orden: LiveData<List<String>> = _orden
 
     fun getFeligreses(fechaInicial: Timestamp, fechaFinal: Timestamp,
                       filtroEstcivil: List<String>,
                       filtroSexo: List<String>,
-                      critOrden: String = "nombre", escalaOrden: String = "ascendente"){
+                      filtroLlamado: List<String>,
+                      critOrden: String = "nombre", escalaOrden: String = "ascendente") {
         viewModelScope.launch {
             _progresState.value = true
             try {
                 val aInicio = fechaInicial.toDate().year.toString()
                 val aFinal = fechaFinal.toDate().year.toString()
-                val users = repository.getUsers(filtroSexo,filtroEstcivil,
+                val users = repository.getUsers(filtroSexo,filtroEstcivil,filtroLlamado,
                     fechaInicial,fechaFinal,critOrden,escalaOrden)
 
-                filtros = listOf(filtroSexo, filtroEstcivil, listOf(aInicio,aFinal))
-                orden = listOf(critOrden, escalaOrden)
+                _filtros.value = listOf(filtroSexo, filtroEstcivil,
+                    listOf(aInicio,aFinal), filtroLlamado)
+                _orden.value = listOf(critOrden, escalaOrden)
                 _listaUsers.value = users
                 _progresState.value = false
             } finally {
@@ -64,7 +67,19 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun colocarRol(rol: String?) {
-        _rol.value = rol ?: "Feligrés"
+    fun colocarRol(rol: String?){
+        _rol.value = rol
+    }
+
+    fun borrarUsuario(user: User){
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                repository.borrarUsuario(user)
+                _progresState.value = false
+            } catch (e: Exception) {
+                _progresState.value = false
+            }
+        }
     }
 }

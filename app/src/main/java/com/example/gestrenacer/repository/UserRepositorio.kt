@@ -3,17 +3,16 @@ package com.example.gestrenacer.repository
 import android.app.Activity
 import android.util.Log
 import com.example.gestrenacer.models.User
-import com.google.firebase.FirebaseException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
-import java.util.Date
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -25,7 +24,8 @@ class UserRepositorio @Inject constructor() {
 
 
     suspend fun getUsers(filtroSexo: List<String>,filtroEstCivil: List<String>,
-                         fechaInicial:Timestamp,fechaFinal:Timestamp, critOrden: String,
+                         filtroLlamado: List<String>,fechaInicial:Timestamp,
+                         fechaFinal:Timestamp, critOrden: String,
                          escalaOrden: String): List<User> {
         val order = (
             if (escalaOrden == "ascendente") Query.Direction.ASCENDING
@@ -34,6 +34,7 @@ class UserRepositorio @Inject constructor() {
 
         val snapshot = usersCollection.whereIn("sexo",filtroSexo).
             whereIn("estadoCivil",filtroEstCivil).
+            whereIn("estadoAtencion",filtroLlamado).
             whereGreaterThan("fechaNacimiento", fechaInicial).
             whereLessThan("fechaNacimiento", fechaFinal).
             orderBy(critOrden, order).get().await()
@@ -91,6 +92,17 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
+    suspend fun getPendingUsers(): List<User> {
+        val snapshot = usersCollection
+            .whereEqualTo("estadoAtencion", "Por Llamar")
+            .get().await()
+        return snapshot.map { x ->
+            val obj = x.toObject(User::class.java)
+            obj.firestoreID = x.id
+            obj
+        }
+    }
+
 
     fun sendVerificationCode(
         phoneNumber: String,
@@ -118,7 +130,13 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
-    fun cerrarSesion(){
-        auth.signOut()
+    suspend fun borrarUsuario(user: User){
+        withContext(Dispatchers.IO){
+            try {
+                usersCollection.document(user.firestoreID).delete().await()
+            } catch (e: Exception) {
+                Log.d("Error", e.toString())
+            }
+        }
     }
 }

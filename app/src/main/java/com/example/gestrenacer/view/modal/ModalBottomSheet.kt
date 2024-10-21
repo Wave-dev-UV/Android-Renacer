@@ -14,7 +14,7 @@ import java.util.Calendar
 import java.util.Date
 
 class ModalBottomSheet (
-    val filtrarFuncion: (Timestamp, Timestamp, List<String>, List<String>, String, String) -> Unit,
+    val filtrarFuncion: (Timestamp, Timestamp, List<String>, List<String>, List<String>, String, String) -> Unit,
     private val filtros: List<List<String>>,
     private val orden: List<String>
 ) : BottomSheetDialogFragment() {
@@ -171,7 +171,7 @@ class ModalBottomSheet (
 
             filtrarFuncion(
                 Timestamp(fechaInicial), Timestamp(fechaFinal),
-                listEstado, listSexo, listOrden[0], listOrden[1])
+                listEstado, listSexo, filtros[3], listOrden[0], listOrden[1])
             dismiss()
         }
     }

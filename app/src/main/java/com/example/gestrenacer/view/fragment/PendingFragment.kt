@@ -2,20 +2,19 @@ package com.example.gestrenacer.view.fragment
 
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
-import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
+import com.example.gestrenacer.databinding.FragmentPendingBinding
 import com.example.gestrenacer.models.User
-import com.example.gestrenacer.view.adapter.UserAdapter
+import com.example.gestrenacer.view.adapter.PendingUserAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
@@ -24,18 +23,18 @@ import java.text.Normalizer
 import java.util.Date
 
 @AndroidEntryPoint
-class ListarFragment : Fragment() {
-    private lateinit var binding: FragmentListarFeligresesBinding
+class PendingFragment : Fragment() {
+    private lateinit var binding: FragmentPendingBinding
     private val userViewModel: UserViewModel by viewModels()
-    private var adapter: UserAdapter? = null
+    private var adapter: PendingUserAdapter? = null
     private var userList = listOf<User>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentListarFeligresesBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
+    ): View? {
+        binding = FragmentPendingBinding.inflate(inflater)
+        binding.lifecycleOwner = this
         return binding.root
     }
 
@@ -57,23 +56,15 @@ class ListarFragment : Fragment() {
                 forceRecyclerViewUpdate()
             }
         }
-
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                activity?.finish()
-            }
-        })
     }
 
     private fun iniciarComponentes(){
-        anadirRol()
-        observerListFeligreses()
+        observerListPendingFeligreses()
         observerProgress()
+        anadirRol()
+        bottomNav()
         observerRol()
         configurarBusqueda()
-        manejadorBtnAnadir()
-        manejadorBtnMensaje()
         manejadorBottomBar()
         manejadorBtnFiltro()
     }
@@ -81,41 +72,49 @@ class ListarFragment : Fragment() {
     private fun verFeligreses(){
         val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
         val listSexo = resources.getStringArray(R.array.listaSexos).toList()
-        val listEstado = resources.getStringArray(R.array.listaEstadoAtencion).toList()
 
         userViewModel.getFeligreses(
             Timestamp(Date(0,1,0)),
             Timestamp(Date(300,12,0)),
-            listEst, listSexo, listEstado
+            listEst, listSexo, listOf("Por Llamar")
         )
     }
 
-    private fun anadirRol() {
+    private fun anadirRol(){
         val data = arguments?.getString("rol")
         userViewModel.colocarRol(data)
     }
 
-    private fun observerListFeligreses(){
-        userViewModel.listaUsers.observe(viewLifecycleOwner){
-            userList = it
-
-            if (adapter == null) {
-                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value, userViewModel)
-                binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
-                binding.listaFeligreses.adapter = adapter
-            } else {
-                adapter?.updateList(userList)
+    private fun observerRol() {
+        userViewModel.rol.observe(viewLifecycleOwner) {
+            val data = arguments?.getString("rol")
+            if (data != "Visualizador") {
+                binding.contBottomNav.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun observerListPendingFeligreses(){
+            userViewModel.listaUsers.observe(viewLifecycleOwner){
+                userList = it
+
+                if (adapter == null) {
+                    adapter = PendingUserAdapter(userList.toMutableList(), findNavController(), userViewModel.rol.value, userViewModel)
+                    binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
+                    binding.listaFeligreses.adapter = adapter
+                } else {
+                    adapter?.updateList(userList.toMutableList())
+                }
 
 
-            binding.lblResultado.text = "Resultados: ${userList.size}"
+                binding.lblResultado.text = "Resultados: ${userList.size}"
 
 
-            if (userList.isEmpty()) {
-                binding.txtNoResultados.visibility = View.VISIBLE
-            } else {
-                binding.txtNoResultados.visibility = View.GONE
-            }
+                if (userList.isEmpty()) {
+                    binding.noDataMessage.visibility = View.VISIBLE
+                } else {
+                    binding.noDataMessage.visibility = View.GONE
+                }
         }
     }
 
@@ -133,17 +132,12 @@ class ListarFragment : Fragment() {
         }
     }
 
-    private fun observerRol() {
-        userViewModel.rol.observe(viewLifecycleOwner) { rol ->
-            if (rol in listOf("Administrador", "Gestor")) {
-                binding.btnAnadirFeligres.visibility = View.VISIBLE
-                binding.contBottomNav.visibility = View.VISIBLE
-                binding.btnEnviarSms.visibility = View.VISIBLE
-            } else if (rol == "Visualizador") {
-                binding.btnAnadirFeligres.visibility = View.GONE
-                binding.contBottomNav.visibility = View.GONE
-                binding.btnEnviarSms.visibility = View.GONE
-            }
+    private fun manejadorBtnFiltro() {
+        binding.btnFiltrar.setOnClickListener{
+            val listFiltros = userViewModel.filtros.value as List<List<String>>
+            val listOrden = userViewModel.orden.value as List<String>
+            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,listFiltros,listOrden)
+            modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
     }
 
@@ -160,15 +154,16 @@ class ListarFragment : Fragment() {
             when (item.itemId) {
                 R.id.item_1 -> {
                     Log.d("BottomNavSelect1", "Menú principal seleccionado")
+                    findNavController().navigate(R.id.action_pendingFragment_to_listarFragment, bundle)
                     true
                 }
                 R.id.item_2 -> {
                     Log.d("BottomNavSelect2", "Reportes seleccionado")
+                    findNavController().navigate(R.id.action_pendingFragment_to_listarFragment, bundle)
                     true
                 }
                 R.id.item_3 -> {
                     Log.d("BottomNavSelect3", "Lista llamar deleccionado")
-                    findNavController().navigate(R.id.action_listarFragment_to_pendingFragment, bundle)
                     true
                 }
                 else -> false
@@ -176,29 +171,8 @@ class ListarFragment : Fragment() {
         }
     }
 
-    private fun manejadorBtnFiltro() {
-        binding.btnFiltrar.setOnClickListener{
-            val listFiltros = userViewModel.filtros.value as List<List<String>>
-            val listOrden = userViewModel.orden.value as List<String>
-            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
-                listFiltros,listOrden)
-            modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
-        }
-    }
-
-    private fun manejadorBtnMensaje() {
-        binding.btnEnviarSms.setOnClickListener {
-            Log.d("BtnSMS", "Clic en el botón de SMS")
-        }
-    }
-
-    private fun manejadorBtnAnadir() {
-        binding.btnAnadirFeligres.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("rol", userViewModel.rol.value)
-            binding.toolbar.searchView.setQuery("",false)
-            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment, bundle)
-        }
+    private fun bottomNav() {
+        binding.bottomNavigation.menu.findItem(R.id.item_3).setChecked(true);
     }
 
     private fun configurarBusqueda() {
@@ -216,7 +190,7 @@ class ListarFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrEmpty()) {
-                    adapter?.updateList(userList)
+                    adapter?.updateList(userList.toMutableList())
                     binding.lblResultado.text = "Resultados: ${userList.size}"
                 } else {
                     filter(newText)
@@ -229,7 +203,7 @@ class ListarFragment : Fragment() {
             searchView.setQuery("",false)
             searchView.clearFocus()
             if (userList.size>0){
-                binding.txtNoResultados.visibility = View.GONE
+                binding.noDataMessage.visibility = View.GONE
             }
         }
 
@@ -256,13 +230,13 @@ class ListarFragment : Fragment() {
             }
         }
 
-        adapter?.updateList(filteredList)
+        adapter?.updateList(filteredList.toMutableList())
         binding.lblResultado.text = "Resultados: ${filteredList.size}"
 
         if (filteredList.isEmpty()) {
-            binding.txtNoResultados.visibility = View.VISIBLE
+            binding.noDataMessage.visibility = View.VISIBLE
         } else {
-            binding.txtNoResultados.visibility = View.GONE
+            binding.noDataMessage.visibility = View.GONE
         }
     }
 
