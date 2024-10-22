@@ -24,9 +24,28 @@ class UserAdapter(
         return listaUsers.filterIndexed { index, _ -> selectedUsers[index] == true }
     }
 
+    fun clearSelection() {
+        selectedUsers.clear() // Limpiar la selección
+        notifyDataSetChanged() // Notificar al adaptador que los datos han cambiado
+        onSelectedUsersCountChange(getSelectedUsersCount()) // Actualiza el contador al deseleccionar
+        onDeleteUsers(false) // Actualiza la visibilidad del botón de eliminar
+    }
+
     fun updateList(newList: List<User>) {
         listaUsers = newList
         notifyDataSetChanged()
+    }
+
+    fun selectAll(shouldSelect: Boolean) {
+        listaUsers.forEachIndexed { index, _ ->
+            selectedUsers[index] = shouldSelect
+        }
+        notifyDataSetChanged()
+        onSelectedUsersCountChange(getSelectedUsersCount()) // Actualiza el contador al seleccionar/deseleccionar todos
+    }
+
+    fun getSelectedUsersCount(): Int {
+        return selectedUsers.values.count { it }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -72,7 +91,8 @@ class UserAdapter(
         onDeleteUsers(anyUserSelected)
 
         // Nuevo código para contar los seleccionados
-        val selectedCount = selectedUsers.values.count { it }
+        //val selectedCount = selectedUsers.values.count { it }
+        val selectedCount = getSelectedUsersCount()
         Log.d("listar2", "Number of selected users: $selectedCount")
         onSelectedUsersCountChange(selectedCount)  // Llamamos al callback para pasar el número de seleccionados
     }

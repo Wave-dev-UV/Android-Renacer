@@ -73,11 +73,20 @@ class ListarFragment : Fragment() {
         manejadorBtnMensaje()
         manejadorBottomBar()
         manejadorBtnFiltro()
+        manejadorBtnEliminar()
+        manejadorBtnCancelar()
 
-        // Manejo del botón de eliminar
-        binding.btnEliminar.setOnClickListener {
-            eliminarSeleccionados()
+
+        // Inicialmente, mostrar los botones de enviar SMS y añadir
+        binding.btnEnviarSms.isVisible = true
+        binding.btnAnadirFeligres.isVisible = true
+        binding.checkboxSelectAll.isVisible = false // Ocultar inicialmente
+        binding.checkboxSelectAll.setOnCheckedChangeListener { _, isChecked ->
+            adapter?.selectAll(isChecked)
+            //binding.lblSeleccionados.text = "Usuarios seleccionados: ${adapter?.getSelectedUsersCount()}"
+            updateSelectedCountDisplay(adapter?.getSelectedUsersCount() ?: 0)
         }
+
     }
 
     private fun anadirRol() {
@@ -88,24 +97,43 @@ class ListarFragment : Fragment() {
     private fun observerListFeligreses() {
         userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
             userList = lista
-            Log.d("ListarFragment", "Lista de usuarios actualizada: ${userList.size}")
+            binding.lblResultado.text = "Resultados: ${userList.size}"
+            binding.txtNoResultados.isVisible = userList.isEmpty()
 
             if (adapter == null) {
                 adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value,
                     { isVisible -> binding.btnEliminar.isVisible = isVisible },
-                    { selectedCount ->
-                        binding.lblSeleccionados.text = "Usuarios seleccionados: $selectedCount"  // Actualiza el conteo aquí
-                        Log.d("Listar1", "Usuarios seleccionados: $selectedCount") // Agrega el log aquí
+                    { selectedCount -> updateSelectedCountDisplay(selectedCount)
                     }
                 )
                 binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
                 binding.listaFeligreses.adapter = adapter
+
             } else {
                 adapter?.updateList(userList)
             }
+            // Actualiza la visualización de la selección al cargar la lista
+            updateSelectedCountDisplay(adapter?.getSelectedUsersCount() ?: 0)
+        }
+    }
 
-            binding.lblResultado.text = "Resultados: ${userList.size}"
-            binding.txtNoResultados.isVisible = userList.isEmpty()
+    private fun updateSelectedCountDisplay(selectedCount: Int) {
+        binding.lblSeleccionados.text = "Seleccionados: $selectedCount"
+        binding.lblSeleccionados.isVisible = selectedCount > 0
+        binding.checkboxSelectAll.isVisible = selectedCount > 0
+        binding.checkboxSelectAll.isChecked = selectedCount == userList.size
+
+        // Mostrar los botones de acción si hay usuarios seleccionados
+        if (selectedCount > 0) {
+            binding.btnEliminar.isVisible = true
+            binding.btnCancelar.isVisible = true
+            binding.btnEnviarSms.isVisible = false // Ocultar cuando hay selecciones
+            binding.btnAnadirFeligres.isVisible = false // Ocultar cuando hay selecciones
+        } else {
+            binding.btnEliminar.isVisible = false
+            binding.btnCancelar.isVisible = false
+            binding.btnEnviarSms.isVisible = true // Mostrar cuando no hay selecciones
+            binding.btnAnadirFeligres.isVisible = true // Mostrar cuando no hay selecciones
         }
     }
 
@@ -219,6 +247,12 @@ class ListarFragment : Fragment() {
         binding.listaFeligreses.adapter = adapter
     }
 
+    private fun manejadorBtnEliminar() {
+        binding.btnEliminar.setOnClickListener {
+            eliminarSeleccionados()
+        }
+    }
+
     private fun eliminarSeleccionados() {
         val seleccionados = adapter?.getSelectedUsers() ?: return
         if (seleccionados.isEmpty()) return
@@ -228,9 +262,18 @@ class ListarFragment : Fragment() {
             .setMessage("¿Estás seguro de que deseas eliminar a los usuarios seleccionados?")
             .setPositiveButton("Sí") { _, _ ->
                 userViewModel.eliminarUsuarios(seleccionados)
-                binding.btnEliminar.isVisible = false
+                adapter?.clearSelection()
+                updateSelectedCountDisplay(0)
+
             }
             .setNegativeButton("No", null)
             .show()
+    }
+
+    private fun manejadorBtnCancelar() {
+        binding.btnCancelar.setOnClickListener {
+            adapter?.clearSelection() // Método para deseleccionar
+            updateSelectedCountDisplay(0) // Actualizar la visualización a 0 seleccionados
+        }
     }
 }
