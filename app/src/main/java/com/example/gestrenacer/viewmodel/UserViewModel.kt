@@ -1,5 +1,6 @@
 package com.example.gestrenacer.viewmodel
 
+import android.util.Log
 import java.text.Normalizer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -48,6 +49,22 @@ class UserViewModel @Inject constructor(
     fun editarUsuario(user: User) {
         viewModelScope.launch {
             repository.updateUser(user)
+        }
+    }
+
+
+    // Eliminar un usuario
+    fun eliminarUsuarios(users: List<User>) {
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                repository.eliminarUsuarios(users)
+                Log.d("UserViewModel", "Usuario eliminado con éxito")
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error al eliminar el usuario: ${e.message}")
+            } finally {
+                _progresState.value = false
+            }
         }
     }
 

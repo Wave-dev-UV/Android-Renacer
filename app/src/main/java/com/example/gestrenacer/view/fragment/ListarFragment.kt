@@ -1,14 +1,15 @@
 package com.example.gestrenacer.view.fragment
 
 import UserAdapter
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,12 +21,14 @@ import com.example.gestrenacer.view.modal.ModalBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.widget.SearchView
 import java.text.Normalizer
+
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: UserAdapter? = null
     private var userList = listOf<User>()
+    //private val seleccionados = mutableListOf<User>() // Lista para usuarios seleccionados
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +41,6 @@ class ListarFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         userViewModel.getFeligreses()
         forceRecyclerViewUpdate()
     }
@@ -47,16 +49,13 @@ class ListarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         iniciarComponentes()
 
-
         parentFragmentManager.setFragmentResultListener("editarUsuario", viewLifecycleOwner) { _, result ->
             val usuarioEditado = result.getBoolean("usuarioEditado", false)
             if (usuarioEditado) {
-
                 userViewModel.getFeligreses()
                 forceRecyclerViewUpdate()
             }
         }
-
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -75,6 +74,11 @@ class ListarFragment : Fragment() {
         manejadorBtnMensaje()
         manejadorBottomBar()
         manejadorBtnFiltro()
+
+        // Manejo del botón de eliminar
+        binding.btnEliminar.setOnClickListener {
+            eliminarSeleccionados()
+        }
     }
 
     private fun anadirRol() {
@@ -85,26 +89,23 @@ class ListarFragment : Fragment() {
     private fun observerListFeligreses() {
         userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
             userList = lista
+            Log.d("ListarFragment", "Lista de usuarios actualizada: ${userList.size}")
 
             if (adapter == null) {
-                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value)
+                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value) { isVisible ->
+                    binding.btnEliminar.isVisible = isVisible // Muestra u oculta el botón basado en el estado
+                }
                 binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
                 binding.listaFeligreses.adapter = adapter
             } else {
                 adapter?.updateList(userList)
             }
 
-
             binding.lblResultado.text = "Resultados: ${userList.size}"
-
-
-            if (userList.isEmpty()) {
-                binding.txtNoResultados.visibility = View.VISIBLE
-            } else {
-                binding.txtNoResultados.visibility = View.GONE
-            }
+            binding.txtNoResultados.isVisible = userList.isEmpty()
         }
     }
+
 
     private fun observerProgress() {
         userViewModel.progresState.observe(viewLifecycleOwner) {
@@ -114,15 +115,9 @@ class ListarFragment : Fragment() {
 
     private fun observerRol() {
         userViewModel.rol.observe(viewLifecycleOwner) { rol ->
-            if (rol in listOf("Administrador", "Gestor")) {
-                binding.btnAnadirFeligres.visibility = View.VISIBLE
-                binding.contBottomNav.visibility = View.VISIBLE
-                binding.btnEnviarSms.visibility = View.VISIBLE
-            } else if (rol == "Visualizador") {
-                binding.btnAnadirFeligres.visibility = View.GONE
-                binding.contBottomNav.visibility = View.GONE
-                binding.btnEnviarSms.visibility = View.GONE
-            }
+            binding.btnAnadirFeligres.isVisible = rol in listOf("Administrador", "Gestor")
+            binding.contBottomNav.isVisible = rol in listOf("Administrador", "Gestor")
+            binding.btnEnviarSms.isVisible = rol in listOf("Administrador", "Gestor")
         }
     }
 
@@ -215,16 +210,27 @@ class ListarFragment : Fragment() {
         adapter?.updateList(filteredList)
         binding.lblResultado.text = "Resultados: ${filteredList.size}"
 
-        if (filteredList.isEmpty()) {
-            binding.txtNoResultados.visibility = View.VISIBLE
-        } else {
-            binding.txtNoResultados.visibility = View.GONE
-        }
+        binding.txtNoResultados.isVisible = filteredList.isEmpty()
     }
 
     private fun forceRecyclerViewUpdate() {
-
         binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
         binding.listaFeligreses.adapter = adapter
+    }
+
+
+    private fun eliminarSeleccionados() {
+        val seleccionados = adapter?.getSelectedUsers() ?: return
+        if (seleccionados.isEmpty()) return
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Confirmar Eliminación")
+            .setMessage("¿Estás seguro de que deseas eliminar a los usuarios seleccionados?")
+            .setPositiveButton("Sí") { _, _ ->
+                userViewModel.eliminarUsuarios(seleccionados)
+                binding.btnEliminar.isVisible = false
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 }

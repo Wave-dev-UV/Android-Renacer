@@ -10,7 +10,9 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -102,4 +104,31 @@ class UserRepositorio @Inject constructor() {
             false
         }
     }
+
+    // Método para eliminar uno o varios usuarios
+    suspend fun eliminarUsuarios(users: List<User>) {
+        withContext(Dispatchers.IO) {
+            try {
+                for (user in users) {
+                    usersCollection.document(user.firestoreID).delete().await()
+                }
+                Log.d("UserRepositorio", "Usuarios eliminados con éxito: ${users.size}")
+            } catch (e: Exception) {
+                Log.e("UserRepositorio", "Error al eliminar usuarios: ${e.message}")
+            }
+        }
+    }
+
+//    // Eliminar un usuario
+//    suspend fun borrarUsuario(user: User) {
+//        withContext(Dispatchers.IO) {
+//            try {
+//                usersCollection.document(user.firestoreID).delete().await()
+//                Log.d("UserRepositorio", "Usuario eliminado con éxito: ${user.firestoreID}")
+//            } catch (e: Exception) {
+//                Log.e("UserRepositorio", "Error al eliminar el usuario: ${e.message}")
+//            }
+//        }
+//    }
+
 }
