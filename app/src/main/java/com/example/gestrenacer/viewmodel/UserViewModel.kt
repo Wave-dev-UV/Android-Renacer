@@ -51,8 +51,7 @@ class UserViewModel @Inject constructor(
             repository.updateUser(user)
         }
     }
-
-
+    
     // Eliminar un usuario
     fun eliminarUsuarios(users: List<User>) {
         viewModelScope.launch {
@@ -60,6 +59,7 @@ class UserViewModel @Inject constructor(
             try {
                 repository.eliminarUsuarios(users)
                 Log.d("UserViewModel", "Usuario eliminado con éxito")
+                getFeligreses()
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Error al eliminar el usuario: ${e.message}")
             } finally {

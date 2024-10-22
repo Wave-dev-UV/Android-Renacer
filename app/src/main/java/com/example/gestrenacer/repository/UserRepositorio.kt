@@ -119,16 +119,5 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
-//    // Eliminar un usuario
-//    suspend fun borrarUsuario(user: User) {
-//        withContext(Dispatchers.IO) {
-//            try {
-//                usersCollection.document(user.firestoreID).delete().await()
-//                Log.d("UserRepositorio", "Usuario eliminado con éxito: ${user.firestoreID}")
-//            } catch (e: Exception) {
-//                Log.e("UserRepositorio", "Error al eliminar el usuario: ${e.message}")
-//            }
-//        }
-//    }
 
 }
