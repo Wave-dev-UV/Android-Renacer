@@ -13,7 +13,8 @@ class UserAdapter(
     private var listaUsers: List<User>,
     private val navController: NavController,
     private val rol: String?,
-    private val onDeleteUsers: (Boolean) -> Unit
+    private val onDeleteUsers: (Boolean) -> Unit,
+    private val onSelectedUsersCountChange: (Int) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     private val selectedUsers = mutableMapOf<Int, Boolean>()
@@ -59,8 +60,6 @@ class UserAdapter(
     }
 
     private fun selectUser(view: View, position: Int, isChecked: Boolean) {
-        Log.d("UserAdapter", "SelectUser called with position: $position, isChecked: $isChecked")
-
         selectedUsers[position] = isChecked
 
         // Actualizamos el ítem después de que el RecyclerView termine de computar su layout
@@ -68,11 +67,14 @@ class UserAdapter(
             notifyItemChanged(position)
         }
 
-        Log.d("UserAdapter", "Selected users: $selectedUsers")
-
         val anyUserSelected = selectedUsers.values.any { it }
         Log.d("UserAdapter", "Any user selected: $anyUserSelected")
         onDeleteUsers(anyUserSelected)
+
+        // Nuevo código para contar los seleccionados
+        val selectedCount = selectedUsers.values.count { it }
+        Log.d("listar2", "Number of selected users: $selectedCount")
+        onSelectedUsersCountChange(selectedCount)  // Llamamos al callback para pasar el número de seleccionados
     }
 
     class UserViewHolder(
@@ -90,9 +92,9 @@ class UserAdapter(
             binding.txtEsLider.text = if (user.esLider) "Si" else "No"
 
             binding.checkboxSelect.visibility = if (longPressMode) View.VISIBLE else View.GONE
-            binding.checkboxSelect.isChecked = isSelected
 
             binding.checkboxSelect.setOnCheckedChangeListener(null)
+            binding.checkboxSelect.isChecked = isSelected
             binding.checkboxSelect.setOnCheckedChangeListener { _, isChecked ->
                 onCheckedChange(isChecked)
             }

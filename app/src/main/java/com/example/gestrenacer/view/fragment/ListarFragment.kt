@@ -28,7 +28,6 @@ class ListarFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: UserAdapter? = null
     private var userList = listOf<User>()
-    //private val seleccionados = mutableListOf<User>() // Lista para usuarios seleccionados
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,9 +91,13 @@ class ListarFragment : Fragment() {
             Log.d("ListarFragment", "Lista de usuarios actualizada: ${userList.size}")
 
             if (adapter == null) {
-                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value) { isVisible ->
-                    binding.btnEliminar.isVisible = isVisible // Muestra u oculta el botón basado en el estado
-                }
+                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value,
+                    { isVisible -> binding.btnEliminar.isVisible = isVisible },
+                    { selectedCount ->
+                        binding.lblSeleccionados.text = "Usuarios seleccionados: $selectedCount"  // Actualiza el conteo aquí
+                        Log.d("Listar1", "Usuarios seleccionados: $selectedCount") // Agrega el log aquí
+                    }
+                )
                 binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
                 binding.listaFeligreses.adapter = adapter
             } else {
@@ -105,7 +108,6 @@ class ListarFragment : Fragment() {
             binding.txtNoResultados.isVisible = userList.isEmpty()
         }
     }
-
 
     private fun observerProgress() {
         userViewModel.progresState.observe(viewLifecycleOwner) {
@@ -209,7 +211,6 @@ class ListarFragment : Fragment() {
 
         adapter?.updateList(filteredList)
         binding.lblResultado.text = "Resultados: ${filteredList.size}"
-
         binding.txtNoResultados.isVisible = filteredList.isEmpty()
     }
 
@@ -217,7 +218,6 @@ class ListarFragment : Fragment() {
         binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
         binding.listaFeligreses.adapter = adapter
     }
-
 
     private fun eliminarSeleccionados() {
         val seleccionados = adapter?.getSelectedUsers() ?: return
