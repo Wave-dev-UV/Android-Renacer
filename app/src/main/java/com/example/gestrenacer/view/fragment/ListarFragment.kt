@@ -2,24 +2,27 @@ package com.example.gestrenacer.view.fragment
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
-import com.example.gestrenacer.viewmodel.UserViewModel
-import com.example.gestrenacer.view.modal.ModalBottomSheet
-import dagger.hilt.android.AndroidEntryPoint
-import androidx.appcompat.widget.SearchView
 import com.example.gestrenacer.view.adapter.UserAdapter
+import com.example.gestrenacer.view.modal.ModalBottomSheet
+import com.example.gestrenacer.viewmodel.UserViewModel
+import com.google.firebase.Timestamp
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
+import java.util.Date
+
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
@@ -38,8 +41,8 @@ class ListarFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-        userViewModel.getFeligreses()
+        binding.toolbar.searchView.setQuery("",false)
+        verFeligreses()
         forceRecyclerViewUpdate()
     }
 
@@ -47,12 +50,10 @@ class ListarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         iniciarComponentes()
 
-
         parentFragmentManager.setFragmentResultListener("editarUsuario", viewLifecycleOwner) { _, result ->
             val usuarioEditado = result.getBoolean("usuarioEditado", false)
             if (usuarioEditado) {
-
-                userViewModel.getFeligreses()
+                verFeligreses()
                 forceRecyclerViewUpdate()
             }
         }
@@ -77,14 +78,27 @@ class ListarFragment : Fragment() {
         manejadorBtnFiltro()
     }
 
-    private fun anadirRol(){
+    private fun verFeligreses(){
+        val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
+        val listSexo = resources.getStringArray(R.array.listaSexos).toList()
+        val listEstado = resources.getStringArray(R.array.listaEstadoAtencion).toList()
+
+        userViewModel.getFeligreses(
+            Timestamp(Date(0,1,0)),
+            Timestamp(Date(300,12,0)),
+            listEst, listSexo, listEstado
+        )
+    }
+
+    private fun anadirRol() {
         val data = arguments?.getString("rol")
         userViewModel.colocarRol(data)
     }
 
     private fun observerListFeligreses(){
-        userViewModel.listaUsers.observe(viewLifecycleOwner){lista ->
-            userList = lista
+        userViewModel.listaUsers.observe(viewLifecycleOwner){
+            userList = it
+
             if (adapter == null) {
                 adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value, userViewModel)
                 binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
@@ -108,6 +122,14 @@ class ListarFragment : Fragment() {
     private fun observerProgress(){
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
+
+            if (!it) {
+                binding.listaFeligreses.visibility = View.VISIBLE
+                reanudarBusqueda()
+            }
+            else{
+                binding.listaFeligreses.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -122,6 +144,12 @@ class ListarFragment : Fragment() {
                 binding.contBottomNav.visibility = View.GONE
                 binding.btnEnviarSms.visibility = View.GONE
             }
+        }
+    }
+
+    private fun reanudarBusqueda(){
+        if (binding.toolbar.searchView.query.isNotEmpty()){
+            filter(binding.toolbar.searchView.query.toString())
         }
     }
 
@@ -150,27 +178,32 @@ class ListarFragment : Fragment() {
 
     private fun manejadorBtnFiltro() {
         binding.btnFiltrar.setOnClickListener{
-            val modalBottomSheet = ModalBottomSheet()
-            modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
+            val listFiltros = userViewModel.filtros.value as List<List<String>>
+            val listOrden = userViewModel.orden.value as List<String>
+            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
+                listFiltros,listOrden)
+            modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
         }
     }
 
     private fun manejadorBtnMensaje() {
-        binding.btnEnviarSms.setOnClickListener{
-            Log.d("BtnSMS","Clic en el botón de SMS")
+        binding.btnEnviarSms.setOnClickListener {
+            Log.d("BtnSMS", "Clic en el botón de SMS")
         }
     }
 
-    private fun manejadorBtnAnadir(){
-        binding.btnAnadirFeligres.setOnClickListener{
+    private fun manejadorBtnAnadir() {
+        binding.btnAnadirFeligres.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("rol",userViewModel.rol.value)
-            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment,bundle)
+            bundle.putString("rol", userViewModel.rol.value)
+            binding.toolbar.searchView.setQuery("",false)
+            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment, bundle)
         }
     }
 
     private fun configurarBusqueda() {
         val searchView = binding.toolbar.searchView
+        val closeButton: View? = searchView.findViewById(androidx.appcompat.R.id.search_close_btn)
         searchView.setIconifiedByDefault(false)
         searchView.isIconified = false
         searchView.clearFocus()
@@ -191,6 +224,15 @@ class ListarFragment : Fragment() {
                 return false
             }
         })
+
+        closeButton?.setOnClickListener {
+            searchView.setQuery("",false)
+            searchView.clearFocus()
+            if (userList.size>0){
+                binding.txtNoResultados.visibility = View.GONE
+            }
+        }
+
     }
 
     private fun filter(text: String) {

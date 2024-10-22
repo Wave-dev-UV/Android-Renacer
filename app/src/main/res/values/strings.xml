@@ -50,10 +50,12 @@
     <string name="lblFiltroAlfabeticoDescen">A-Z descendente.</string>
     <string name="lblFiltroEdadAscen">Edad ascendente.</string>
     <string name="lblFiltroEdadDescen">Edad descendente.</string>
-    <string name="lblEdadFiltro">Filtrar por edad.</string>
+    <string name="lblFiltroAntiAscen">Mas antiguo.</string>
+    <string name="lblFiltroAntiDescen">Menos antiguo.</string>
+    <string name="lblEdadFiltro">Edad.</string>
     <string name="lblMin">A partir de:</string>
     <string name="lblMax">Hasta:</string>
-    <string name="lblBtnAplicarFiltro">Aplicar</string>
+    <string name="lblBtnAplicarFiltro">Filtrar y ordenar</string>
     <string-array name="listaTipoDocumento">
         <item>Cedula</item>
         <item>Tajerta de Identidad</item>
@@ -91,7 +93,6 @@
     </string-array>
     <string-array name="listaEstadoAtencion">
         <item>Por Llamar</item>
-        <item>En Proceso</item>
         <item>Llamado</item>
     </string-array>
     <string name="conexión_perdida">Se ha perdido la conexión a internet</string>
@@ -107,4 +108,14 @@
         <item>Divorciado(a)</item>
         <item>Viudo(a)</item>
     </string-array>
+    <string name="lblFiltroEstadoCivil">Estado civil.</string>
+    <string name="lblFiltroSexo">Sexo.</string>
+    <string name="lblFiltroMasculino">Masculino.</string>
+    <string name="lblFiltroFemenino">Femenino.</string>
+    <string name="lblFiltroCasado">Casado(a).</string>
+    <string name="lblFiltroSoltero">Soltero(a).</string>
+    <string name="lblFiltroLibre">Unión libre.</string>
+    <string name="lblFiltroDivorciado">Divorciado(a).</string>
+    <string name="lblFiltroViudo">Viudo(a).</string>
+    <string name="lblFiltroSheet">Filtrar por:</string>
 </resources>

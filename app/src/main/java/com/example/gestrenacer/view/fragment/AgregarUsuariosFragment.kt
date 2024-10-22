@@ -73,6 +73,7 @@ class AgregarUsuariosFragment : Fragment() {
 
         val datePickerDialog = DatePickerDialog(
             requireContext(),
+            R.style.ThemeOverlay_App_Dialog,
             { _: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
                 val fechaNacimiento = Calendar.getInstance().apply {
                     set(Calendar.YEAR, selectedYear)
@@ -85,6 +86,7 @@ class AgregarUsuariosFragment : Fragment() {
                 binding.editTextFechaNacimiento.setText(fechatext)
             }, year, month, day
         )
+        datePickerDialog.datePicker.maxDate = calendar.timeInMillis
         datePickerDialog.show()
     }
 

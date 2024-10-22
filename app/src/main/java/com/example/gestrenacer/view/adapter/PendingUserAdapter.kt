@@ -11,7 +11,7 @@ import com.example.gestrenacer.models.User
 import com.example.gestrenacer.viewmodel.UserViewModel
 
 class PendingUserAdapter(
-    private val listaUsers: MutableList<User>,
+    private var listaUsers: MutableList<User>,
     private val navController: NavController,
     private val rol: String?,
     private val usersViewModel: UserViewModel
@@ -19,6 +19,11 @@ class PendingUserAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemPendingUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return UserViewHolder(binding, navController, rol, usersViewModel, this)
+    }
+
+    fun updateList(newList: MutableList<User>) {
+        listaUsers = newList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
