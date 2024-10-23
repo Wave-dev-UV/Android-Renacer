@@ -75,17 +75,7 @@ class ListarFragment : Fragment() {
         manejadorBtnFiltro()
         manejadorBtnEliminar()
         manejadorBtnCancelar()
-
-
-        // Inicialmente, mostrar los botones de enviar SMS y añadir
-        binding.btnEnviarSms.isVisible = true
-        binding.btnAnadirFeligres.isVisible = true
-        binding.checkboxSelectAll.isVisible = false // Ocultar inicialmente
-        binding.checkboxSelectAll.setOnCheckedChangeListener { _, isChecked ->
-            adapter?.selectAll(isChecked)
-            //binding.lblSeleccionados.text = "Usuarios seleccionados: ${adapter?.getSelectedUsersCount()}"
-            updateSelectedCountDisplay(adapter?.getSelectedUsersCount() ?: 0)
-        }
+        setupSelectAllCheckbox()
 
     }
 
@@ -247,6 +237,13 @@ class ListarFragment : Fragment() {
         binding.listaFeligreses.adapter = adapter
     }
 
+    private fun setupSelectAllCheckbox() {
+        binding.checkboxSelectAll.setOnCheckedChangeListener { buttonView, isChecked ->
+            Log.d("YourFragment", "Checkbox 'Seleccionar Todos' presionado.")
+            adapter?.selectAll(isChecked) // Selecciona o deselecciona según el estado del CheckBox
+            binding.lblSeleccionados.text = "Seleccionados: ${adapter?.getSelectedUsersCount() ?: 0}" // Actualiza el texto
+        }
+    }
     private fun manejadorBtnEliminar() {
         binding.btnEliminar.setOnClickListener {
             eliminarSeleccionados()

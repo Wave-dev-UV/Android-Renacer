@@ -34,7 +34,6 @@ class UserAdapter(
     fun updateList(newList: List<User>) {
         listaUsers = newList
         notifyDataSetChanged()
-
     }
 
     fun selectAll(shouldSelect: Boolean) {
