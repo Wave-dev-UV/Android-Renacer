@@ -267,10 +267,12 @@ class ListarFragment : Fragment() {
             .show()
     }
 
+
     private fun manejadorBtnCancelar() {
         binding.btnCancelar.setOnClickListener {
             adapter?.clearSelection() // Método para deseleccionar
             updateSelectedCountDisplay(0) // Actualizar la visualización a 0 seleccionados
+            adapter?.setLongPressMode(false)
         }
     }
 }
