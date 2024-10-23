@@ -269,7 +269,6 @@ class ListarFragment : Fragment() {
 
     private fun manejadorBtnCancelar() {
         binding.btnCancelar.setOnClickListener {
-            Log.d("CancelButton", "Cancel button clicked")
             adapter?.clearSelection() // Método para deseleccionar
             updateSelectedCountDisplay(0) // Actualizar la visualización a 0 seleccionados
         }

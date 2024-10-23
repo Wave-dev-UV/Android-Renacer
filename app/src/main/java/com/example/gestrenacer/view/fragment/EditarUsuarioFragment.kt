@@ -272,8 +272,7 @@ class EditarUsuarioFragment : Fragment() {
     }
 
     private fun eliminarUsuario() {
-        userViewModel.eliminarUsuarios(listOf(bundleUser)) // Aquí pasas el usuario a eliminar
-        // Una vez eliminado, navegas a la lista de usuarios
+        userViewModel.eliminarUsuarios(listOf(bundleUser))
         findNavController().navigate(R.id.action_editarUsuarioFragment_to_listarFragment)
     }
 
