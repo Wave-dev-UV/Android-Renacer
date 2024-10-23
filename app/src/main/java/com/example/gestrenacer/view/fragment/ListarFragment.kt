@@ -250,9 +250,30 @@ class ListarFragment : Fragment() {
         }
     }
 
+    private fun contarAdministradores(): Int {
+        return userList.count { it.rol == "Administrador" }
+    }
+
+
     private fun eliminarSeleccionados() {
         val seleccionados = adapter?.getSelectedUsers() ?: return
         if (seleccionados.isEmpty()) return
+
+        // Contar administradores actuales
+        val adminCount = contarAdministradores()
+
+        // Contar cuántos administradores se están eliminando
+        val eliminandoAdmins = seleccionados.count { it.rol == "Administrador" }
+
+        // Verificar si quedará al menos un administrador
+        if (adminCount - eliminandoAdmins < 2) {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Advertencia")
+                .setMessage("Debes mantener al menos dos administradores en la lista.")
+                .setPositiveButton("Ok", null)
+                .show()
+            return
+        }
 
         AlertDialog.Builder(requireContext())
             .setTitle("Confirmar Eliminación")
@@ -261,12 +282,10 @@ class ListarFragment : Fragment() {
                 userViewModel.eliminarUsuarios(seleccionados)
                 adapter?.clearSelection()
                 updateSelectedCountDisplay(0)
-
             }
             .setNegativeButton("No", null)
             .show()
     }
-
 
     private fun manejadorBtnCancelar() {
         binding.btnCancelar.setOnClickListener {
@@ -275,4 +294,5 @@ class ListarFragment : Fragment() {
             adapter?.setLongPressMode(false)
         }
     }
+
 }
