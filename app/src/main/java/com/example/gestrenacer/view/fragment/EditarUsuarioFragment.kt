@@ -62,6 +62,7 @@ class EditarUsuarioFragment : Fragment() {
         confSelSexo()
         confSelEstadoCivil()
         manejadorFechaNacimiento()
+        manejadorBtnEliminar()
     }
 
     private fun confSelSexo(){
@@ -252,7 +253,6 @@ class EditarUsuarioFragment : Fragment() {
     }
 
 
-
     private fun manejadorBtnEditar() {
         binding.buttonEditar.setOnClickListener {
             DialogUtils.dialogoConfirmacion(requireContext(),
@@ -260,6 +260,21 @@ class EditarUsuarioFragment : Fragment() {
                 updateFeligres()
             }
         }
+    }
+
+    private fun manejadorBtnEliminar() {
+        binding.buttonEliminar.setOnClickListener {
+            DialogUtils.dialogoConfirmacion(requireContext(),
+                "¿Está seguro que desea eliminar el usuario?") {
+                eliminarUsuario() // Llamar a la función de eliminar
+            }
+        }
+    }
+
+    private fun eliminarUsuario() {
+        userViewModel.eliminarUsuarios(listOf(bundleUser)) // Aquí pasas el usuario a eliminar
+        // Una vez eliminado, navegas a la lista de usuarios
+        findNavController().navigate(R.id.action_editarUsuarioFragment_to_listarFragment)
     }
 
     private fun updateFeligres() {

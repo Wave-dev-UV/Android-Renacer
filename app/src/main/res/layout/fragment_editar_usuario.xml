@@ -671,9 +671,20 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/azulPrincipal"
                 android:text="@string/editar_usuario"
+                tools:textSize="17sp" />
+
+            <Button
+                android:id="@+id/buttonEliminar"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="@color/azulPrincipal"
+                android:text="Eliminar usuario"
                 tools:textSize="17sp" />
 
         </LinearLayout>
