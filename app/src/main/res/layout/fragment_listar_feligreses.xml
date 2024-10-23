@@ -136,7 +136,6 @@
             android:layout_height="wrap_content"
             android:text="Cancelar"
             android:importantForAccessibility="no"
-            android:enabled="false"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/contBottomNav"
             app:layout_constraintStart_toStartOf="parent"
