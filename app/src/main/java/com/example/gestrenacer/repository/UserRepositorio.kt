@@ -26,7 +26,7 @@ class UserRepositorio @Inject constructor() {
     suspend fun getUsers(filtroSexo: List<String>,filtroEstCivil: List<String>,
                          filtroLlamado: List<String>,fechaInicial:Timestamp,
                          fechaFinal:Timestamp, critOrden: String,
-                         escalaOrden: String): List<User> {
+                         escalaOrden: String): MutableList<User> {
         val order = (
             if (escalaOrden == "ascendente") Query.Direction.ASCENDING
             else Query.Direction.DESCENDING
@@ -43,7 +43,7 @@ class UserRepositorio @Inject constructor() {
             val obj = x.toObject(User::class.java)
             obj.firestoreID = x.id
             obj
-        }
+        }.toMutableList()
     }
 
     suspend fun saveUser(user: User) {

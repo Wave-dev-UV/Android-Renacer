@@ -28,7 +28,7 @@ class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: UserAdapter? = null
-    private var userList = listOf<User>()
+    private var userList = mutableListOf<User>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

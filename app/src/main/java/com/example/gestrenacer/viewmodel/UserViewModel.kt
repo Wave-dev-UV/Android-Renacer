@@ -16,8 +16,8 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val repository: UserRepositorio
 ): ViewModel() {
-    private val _listaUsers = MutableLiveData<List<User>>()
-    val listaUsers: LiveData<List<User>> = _listaUsers
+    private val _listaUsers = MutableLiveData<MutableList<User>>()
+    val listaUsers: LiveData<MutableList<User>> = _listaUsers
 
     private val _progresState = MutableLiveData(false)
     val progresState: LiveData<Boolean> = _progresState
