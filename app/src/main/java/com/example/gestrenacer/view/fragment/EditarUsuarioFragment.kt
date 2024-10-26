@@ -100,6 +100,7 @@ class EditarUsuarioFragment : Fragment() {
 
         val datePickerDialog = DatePickerDialog(
             requireContext(),
+            R.style.ThemeOverlay_App_Dialog,
             { _: DatePicker?, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
                 val fechaNacimiento = Calendar.getInstance().apply {
                     set(Calendar.YEAR, selectedYear)
@@ -112,6 +113,7 @@ class EditarUsuarioFragment : Fragment() {
                 binding.editTextFechaNacimiento.setText(fechatext)
             }, year, month, day
         )
+        datePickerDialog.datePicker.maxDate = calendar.timeInMillis
         datePickerDialog.show()
     }
 
@@ -222,7 +224,7 @@ class EditarUsuarioFragment : Fragment() {
 
     private fun manejadorBtnVolver(){
         binding.imageButton.setOnClickListener{
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_editarUsuarioFragment_to_visualizarUsuarioFragment, requireArguments())
         }
     }
 

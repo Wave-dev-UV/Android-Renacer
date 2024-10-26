@@ -11,4 +11,6 @@
     <color name="fondoCardListaFelirgeses">#f5f5f5</color>
     <color name="colorHint">#888888</color>
     <color name="colorTextPrimary">#000000</color>
+    <color name="redFAB">#FF3B30</color>
+    <color name="btnDesactivado">#848991</color>
 </resources>

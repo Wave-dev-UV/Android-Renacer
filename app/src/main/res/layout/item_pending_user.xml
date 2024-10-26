@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/card_pending_feligres"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="15dp"
+    android:paddingHorizontal="14dp"
+    android:layout_marginHorizontal="18dp"
+    android:layout_marginTop="15dp"
+    android:background="@drawable/borde_negro">
+
+    <TextView
+        android:id="@+id/lblIniciales"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/white"
+        android:textSize="29sp"
+        android:padding="10dp"
+        android:text="AA"
+        android:background="@drawable/burbuja_iniciales"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.17" />
+
+    <TextView
+        android:id="@+id/txtNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        tools:text="Alejandro Álvarez."
+        android:textSize="18sp"
+        android:fontFamily="@font/roboto_bold"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/lblCelular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_marginStart="12dp"
+        android:text="@string/lblTelListarFragment"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/txtNombre"
+        android:layout_marginTop="3dp"/>
+
+    <TextView
+        android:id="@+id/txtCelular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="3161230000."
+        android:fontFamily="@font/roboto_regular"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="3dp"
+        app:layout_constraintStart_toEndOf="@+id/lblCelular"
+        app:layout_constraintTop_toBottomOf="@+id/txtNombre"/>
+
+    <TextView
+        android:id="@+id/lblRol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lblRolListarFragment"
+        android:textSize="14sp"
+        android:fontFamily="@font/roboto_bold"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/lblCelular"
+        android:layout_marginTop="3dp"/>
+
+    <TextView
+        android:id="@+id/txtRol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Administrador."
+        android:fontFamily="@font/roboto_regular"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="3dp"
+        app:layout_constraintStart_toEndOf="@+id/lblRol"
+        app:layout_constraintTop_toBottomOf="@+id/txtCelular"/>
+
+    <TextView
+        android:id="@+id/lblEsLider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lblLiderListarFragment"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="14sp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/lblRol"
+        android:gravity="center_vertical"
+        android:drawablePadding="5dp"
+        android:layout_marginTop="3dp"/>
+
+    <TextView
+        android:id="@+id/txtEsLider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="No."
+        android:fontFamily="@font/roboto_regular"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="3dp"
+        app:layout_constraintStart_toEndOf="@+id/lblEsLider"
+        app:layout_constraintTop_toBottomOf="@+id/txtRol"/>
+
+    <ImageView
+        android:id="@+id/remove_pending_user"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/close"
+        android:contentDescription="Close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

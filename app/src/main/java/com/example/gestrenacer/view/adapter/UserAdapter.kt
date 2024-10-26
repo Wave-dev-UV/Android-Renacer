@@ -1,3 +1,5 @@
+package com.example.gestrenacer.view.adapter
+
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.ItemUserBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.viewmodel.UserViewModel
 
 class UserAdapter(
     private var listaUsers: List<User>,
     private val navController: NavController,
     private val rol: String?,
+    private val usersViewModel: UserViewModel,
     private val onDeleteUsers: (Boolean) -> Unit,
     private val onSelectedUsersCountChange: (Int) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
@@ -50,10 +54,11 @@ class UserAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return UserViewHolder(binding, navController, rol) { isChecked, position ->
+        return UserViewHolder(binding, navController, rol, { isChecked, position ->
             selectUser(parent, position, isChecked)
-        }
+        }, usersViewModel, this)
     }
+
 
     override fun getItemCount(): Int {
         return listaUsers.size
@@ -61,6 +66,15 @@ class UserAdapter(
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = listaUsers[position]
+        if (position == listaUsers.lastIndex) {
+            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+            params.bottomMargin = 300
+            holder.itemView.layoutParams = params
+        } else {
+            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+            params.bottomMargin = 0
+            holder.itemView.layoutParams = params
+        }
         holder.bind(user, selectedUsers[position] == true, longPressMode) { isChecked ->
             selectUser(holder.itemView, position, isChecked)
         }
@@ -71,6 +85,9 @@ class UserAdapter(
             selectUser(holder.itemView, position, true)
             true
         }
+    }
+    fun changeStatus(position: Int) {
+        notifyItemChanged(position)
     }
 
     fun setLongPressMode(enabled: Boolean) {
@@ -101,8 +118,10 @@ class UserAdapter(
         private val binding: ItemUserBinding,
         private val navController: NavController,
         private val rol: String?,
-        private val onCheckedChange: (Boolean, Int) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
+        private val onCheckedChange: (Boolean, Int) -> Unit,
+        private val usersViewModel: UserViewModel,
+        private val adapter: UserAdapter
+    ): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(user: User, isSelected: Boolean, longPressMode: Boolean, onCheckedChange: (Boolean) -> Unit) {
             binding.lblIniciales.text = "${user.nombre.firstOrNull()}${user.apellido.firstOrNull()}".uppercase()
@@ -119,16 +138,50 @@ class UserAdapter(
                 onCheckedChange(isChecked)
             }
 
+            if (user.estadoAtencion == "Por Llamar") {
+                binding.addPendingUser.setImageResource(R.drawable.filled_notifications);
+            } else {
+                binding.addPendingUser.setImageResource(R.drawable.notifications);
+            }
+
+            manejadorClicCard(user)
+            manejadorAnadirPendientes(user)
+
+        }
+
+        private fun manejadorClicCard(user: User){
             if (rol != "Visualizador") {
                 binding.cardFeligres.setOnClickListener {
                     val bundle = Bundle().apply {
                         putSerializable("dataFeligres", user)
                         putString("rol", rol)
                     }
-                    navController.navigate(R.id.action_listarFragment_to_editarUsuarioFragment, bundle)
+                    navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
                 }
             } else {
                 binding.cardFeligres.setOnClickListener(null)
+            }
+        }
+
+        private fun manejadorAnadirPendientes (user:User) {
+            binding.addPendingUser.setOnClickListener {
+
+                val currentState = user.estadoAtencion
+
+                if (currentState == "Por Llamar") {
+                    user.estadoAtencion = "Llamado"
+                    binding.addPendingUser.setImageResource(R.drawable.filled_notifications)
+                } else {
+                    user.estadoAtencion = "Por Llamar"
+                    binding.addPendingUser.setImageResource(R.drawable.notifications)
+                }
+
+                usersViewModel.editarUsuario(user)
+
+                val position = absoluteAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    adapter.changeStatus(position)
+                }
             }
         }
     }
