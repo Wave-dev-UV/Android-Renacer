@@ -43,6 +43,7 @@ class ModalBottomSheet (
         manejadoresRadioBtn()
         manejadorBtnFiltrar()
         manejadorBtnCerrar()
+        manejadorCreadorDeGrupos()
     }
 
     private fun iniciarText(){
@@ -211,6 +212,14 @@ class ModalBottomSheet (
         binding.btnCerrarFiltros.setOnClickListener{
             dismiss()
         }
+    }
+
+    private fun manejadorCreadorDeGrupos(){
+        val toggleButton = binding.createGroupToggle
+        toggleButton.setOnClickListener {
+            toggleButton.isChecked.also { binding.groupEv.isEnabled = it }
+        }
+
     }
 
     private fun validarEdad(): Boolean{

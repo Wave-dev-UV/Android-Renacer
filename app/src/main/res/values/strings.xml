@@ -118,4 +118,8 @@
     <string name="lblFiltroDivorciado">Divorciado(a).</string>
     <string name="lblFiltroViudo">Viudo(a).</string>
     <string name="lblFiltroSheet">Filtrar por:</string>
+    <string name="nombre_del_grupo">Nombre del grupo</string>
+    <string name="deseas_crear_un_grupo_con_estos_filtros">¿Deseas crear un grupo con estos filtros?</string>
+    <string name="off">OFF</string>
+    <string name="on">ON</string>
 </resources>
