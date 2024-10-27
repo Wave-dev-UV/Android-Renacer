@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 import java.util.Date
 
+
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
@@ -129,19 +130,13 @@ class ListarFragment : Fragment() {
         binding.checkboxSelectAll.isVisible = selectedCount > 0
         binding.checkboxSelectAll.isChecked = selectedCount == userList.size
 
-        // Mostrar los botones de acción si hay usuarios seleccionados
-        if (selectedCount > 0) {
-            binding.btnEliminar.isVisible = true
-            binding.btnCancelar.isVisible = true
-            binding.btnEnviarSms.isVisible = false // Ocultar cuando hay selecciones
-            binding.btnAnadirFeligres.isVisible = false // Ocultar cuando hay selecciones
-        } else {
-            binding.btnEliminar.isVisible = false
-            binding.btnCancelar.isVisible = false
-            binding.btnEnviarSms.isVisible = true // Mostrar cuando no hay selecciones
-            binding.btnAnadirFeligres.isVisible = true // Mostrar cuando no hay selecciones
+        // Mostrar/ocultar botones según si hay usuarios seleccionados
+        val hasSelectedUsers = selectedCount > 0
+        binding.btnEliminar.isVisible = hasSelectedUsers
+        binding.btnCancelar.isVisible = hasSelectedUsers
+        binding.btnEnviarSms.isVisible = !hasSelectedUsers
+        binding.btnAnadirFeligres.isVisible = !hasSelectedUsers
 
-        }
     }
 
     private fun observerProgress(){
@@ -163,6 +158,7 @@ class ListarFragment : Fragment() {
             binding.btnAnadirFeligres.isVisible = rol in listOf("Administrador", "Gestor")
             binding.contBottomNav.isVisible = rol in listOf("Administrador", "Gestor")
             binding.btnEnviarSms.isVisible = rol in listOf("Administrador", "Gestor")
+            binding.btnEliminar.isVisible = rol in listOf("Administrador")
         }
     }
 
@@ -302,7 +298,6 @@ class ListarFragment : Fragment() {
         return userList.count { it.rol == "Administrador" }
     }
 
-
     private fun eliminarSeleccionados() {
         val seleccionados = adapter?.getSelectedUsers() ?: return
         if (seleccionados.isEmpty()) return
@@ -314,15 +309,16 @@ class ListarFragment : Fragment() {
         val eliminandoAdmins = seleccionados.count { it.rol == "Administrador" }
 
         // Verificar si quedará al menos un administrador
-        if (adminCount - eliminandoAdmins < 2) {
+        if (adminCount - eliminandoAdmins < 1) {
             AlertDialog.Builder(requireContext())
                 .setTitle("Advertencia")
-                .setMessage("Debes mantener al menos dos administradores en la lista.")
+                .setMessage("Debes conservar almenos un administrador en la lista.")
                 .setPositiveButton("Ok", null)
                 .show()
             return
         }
 
+        // Si la verificación pasa, muestra un cuadro de diálogo de confirmación
         AlertDialog.Builder(requireContext())
             .setTitle("Confirmar Eliminación")
             .setMessage("¿Estás seguro de que deseas eliminar a los usuarios seleccionados?")
@@ -334,6 +330,7 @@ class ListarFragment : Fragment() {
             .setNegativeButton("No", null)
             .show()
     }
+
 
     private fun manejadorBtnCancelar() {
         binding.btnCancelar.setOnClickListener {

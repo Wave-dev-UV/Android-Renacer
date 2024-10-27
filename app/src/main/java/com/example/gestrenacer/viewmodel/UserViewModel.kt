@@ -67,19 +67,22 @@ class UserViewModel @Inject constructor(
             repository.updateUser(user)
         }
     }
-    
-    // Eliminar un usuario
+
     fun eliminarUsuarios(users: List<User>) {
         viewModelScope.launch {
-            _progresState.value = true
             try {
+                // Eliminar usuarios del repositorio
                 repository.eliminarUsuarios(users)
-                Log.d("UserViewModel", "Usuario eliminado con éxito")
-                //getFeligreses()
+                Log.d("UserViewModel", "Usuarios eliminados con éxito")
+
+                // Actualiza la lista de usuarios después de eliminar
+                val updatedList = _listaUsers.value?.filterNot { user ->
+                    users.any { it.firestoreID == user.firestoreID }
+                }
+                _listaUsers.value = updatedList // Actualiza la lista con los usuarios restantes
+
             } catch (e: Exception) {
-                Log.e("UserViewModel", "Error al eliminar el usuario: ${e.message}")
-            } finally {
-                _progresState.value = false
+                Log.e("UserViewModel", "Error al eliminar usuarios: ${e.message}")
             }
         }
     }
