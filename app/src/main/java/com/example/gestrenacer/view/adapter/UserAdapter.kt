@@ -52,9 +52,6 @@ class UserAdapter(
         return count
     }
 
-//    fun getSelectedUsersCount(): Int = selectedUsers.values.count { it }
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return UserViewHolder(binding, navController, rol, usersViewModel, this)
@@ -98,9 +95,8 @@ class UserAdapter(
         val selectedCount = getSelectedUsersCount()
         onSelectedUsersCountChange(selectedCount)
 
-        // Si no hay usuarios seleccionados, actualiza todos los elementos
         if (selectedCount == 0) {
-            notifyDataSetChanged() // Llamar a esto para refrescar todos los elementos
+            notifyDataSetChanged()
         }
     }
 
