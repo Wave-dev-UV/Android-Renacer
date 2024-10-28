@@ -19,6 +19,7 @@ import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.adapter.UserAdapter
+import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
@@ -311,29 +312,26 @@ class ListarFragment : Fragment() {
         if (seleccionados.isEmpty()) return
 
         val adminCount = contarAdministradores()
-
         val eliminandoAdmins = seleccionados.count { it.rol == "Administrador" }
 
         if (adminCount - eliminandoAdmins < 1) {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Advertencia")
-                .setMessage("Debes conservar almenos un administrador en la lista.")
-                .setPositiveButton("Ok", null)
-                .show()
+            DialogUtils.dialogoConfirmacion(
+                context = requireContext(),
+                mensaje = "Debes conservar al menos un administrador en la lista.",
+                onYes = {} // No se realiza ninguna acción si se confirma
+            )
             return
         }
 
-        // Si la verificación pasa, muestra un cuadro de diálogo de confirmación
-        AlertDialog.Builder(requireContext())
-            .setTitle("Confirmar Eliminación")
-            .setMessage("¿Estás seguro de que deseas eliminar a los usuarios seleccionados?")
-            .setPositiveButton("Sí") { _, _ ->
+        DialogUtils.dialogoConfirmacion(
+            context = requireContext(),
+            mensaje = "¿Estás seguro de que deseas eliminar a los usuarios seleccionados?",
+            onYes = {
                 userViewModel.eliminarUsuarios(seleccionados)
                 adapter?.clearSelection()
                 updateSelectedCountDisplay(0)
             }
-            .setNegativeButton("No", null)
-            .show()
+        )
     }
 
 
