@@ -59,49 +59,46 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="gone">
 
-            <ImageView
-                android:id="@+id/iconCancelar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_cancelarx"
-                app:layout_constraintTop_toTopOf="@id/contenedorSeleccionados"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="8dp"
-                />
+                android:gravity="center_vertical">
 
+                <Button
+                    style="?attr/materialIconButtonOutlinedStyle"
+                    android:id="@+id/iconCancelar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/outlined_icon_btn_desc"
+                    app:icon="@drawable/ic_cancelarx" />
 
-        <TextView
-            android:id="@+id/lblSeleccionados"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Seleccionados: 0"
-            android:fontFamily="@font/roboto_regular"
-            android:textSize="18sp"
-            android:textColor="@color/txtResultados"
-            android:layout_marginStart="19dp"
-            android:layout_marginVertical="8dp"
-            app:layout_constraintTop_toBottomOf="@id/iconCancelar"
-            app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:id="@+id/lblSeleccionados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccionados: 0"
+                    android:fontFamily="@font/roboto_regular"
+                    android:textSize="18sp"
+                    android:textColor="@color/txtResultados"
+                    android:layout_marginStart="8dp" />
 
-
-        <CheckBox
-            android:id="@+id/checkbox_select_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Seleccionar Todos"
-            android:fontFamily="@font/roboto_regular"
-            android:textColor="@color/txtResultados"
-            android:layout_margin="8dp"
-            android:textSize="18sp"
-            app:layout_constraintBaseline_toBaselineOf="@id/lblSeleccionados"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/lblSeleccionados"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="visible"/>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <CheckBox
+                    android:id="@+id/checkbox_select_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/checkbox_select_all"
+                    android:fontFamily="@font/roboto_regular"
+                    android:textColor="@color/txtResultados"
+                    android:layout_marginStart="8dp"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/contenedorLista"
