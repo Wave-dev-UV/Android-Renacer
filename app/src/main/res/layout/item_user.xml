@@ -128,7 +128,9 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:id="@+id/add_pending_user"
@@ -142,7 +144,7 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintVertical_bias="0.54"
             app:tint="@color/secondary"
-        />
+            android:visibility="visible"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

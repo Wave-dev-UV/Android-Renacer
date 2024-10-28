@@ -97,6 +97,11 @@ class UserAdapter(
 
         val selectedCount = getSelectedUsersCount()
         onSelectedUsersCountChange(selectedCount)
+
+        // Si no hay usuarios seleccionados, actualiza todos los elementos
+        if (selectedCount == 0) {
+            notifyDataSetChanged() // Llamar a esto para refrescar todos los elementos
+        }
     }
 
     class UserViewHolder(
@@ -115,20 +120,24 @@ class UserAdapter(
             binding.txtEsLider.text = if (user.esLider) "Si" else "No"
 
             binding.checkboxSelect.apply {
-                visibility = if (longPressMode) View.VISIBLE else View.GONE
+                visibility = if (adapter.getSelectedUsersCount() > 0) View.VISIBLE else View.GONE
                 setOnCheckedChangeListener(null)  // Eliminar temporalmente listener
                 isChecked = isSelected
                 setOnCheckedChangeListener { _, isChecked -> onCheckedChange(isChecked) }
             }
 
-            binding.addPendingUser.visibility = if (longPressMode || adapter.getSelectedUsersCount() > 0) View.GONE else View.VISIBLE
-            binding.addPendingUser.setImageResource(
-                if (user.estadoAtencion == "Por Llamar") R.drawable.filled_notifications else R.drawable.notifications
-            )
+            // Configuración de icono y visibilidad de `addPendingUser`
+            binding.addPendingUser.apply {
+                visibility = if (adapter.getSelectedUsersCount() == 0) View.VISIBLE else View.GONE
+                setImageResource(if (user.estadoAtencion == "Por Llamar") R.drawable.filled_notifications else R.drawable.notifications)
+            }
+
 
             manejadorClicCard(user)
             manejadorAnadirPendientes(user)
         }
+
+
 
         private fun manejadorClicCard(user: User) {
             if (rol != "Visualizador") {

@@ -1,6 +1,7 @@
 package com.example.gestrenacer.view.fragment
 
 //import UserAdapter
+
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -32,6 +33,7 @@ class ListarFragment : Fragment() {
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: UserAdapter? = null
     private var userList = listOf<User>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -130,12 +132,18 @@ class ListarFragment : Fragment() {
         binding.checkboxSelectAll.isVisible = selectedCount > 0
         binding.checkboxSelectAll.isChecked = selectedCount == userList.size
 
+        binding.contenedorSeleccionados.isVisible = selectedCount > 0
+
         // Mostrar/ocultar botones según si hay usuarios seleccionados
         val hasSelectedUsers = selectedCount > 0
         binding.btnEliminar.isVisible = hasSelectedUsers
-        binding.btnCancelar.isVisible = hasSelectedUsers
         binding.btnEnviarSms.isVisible = !hasSelectedUsers
         binding.btnAnadirFeligres.isVisible = !hasSelectedUsers
+
+        val shouldHideFiltersAndSearch = hasSelectedUsers
+        binding.contenedorFiltros.isVisible = !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
+        binding.toolbar.root.isVisible = !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
+
 
     }
 
@@ -302,13 +310,10 @@ class ListarFragment : Fragment() {
         val seleccionados = adapter?.getSelectedUsers() ?: return
         if (seleccionados.isEmpty()) return
 
-        // Contar administradores actuales
         val adminCount = contarAdministradores()
 
-        // Contar cuántos administradores se están eliminando
         val eliminandoAdmins = seleccionados.count { it.rol == "Administrador" }
 
-        // Verificar si quedará al menos un administrador
         if (adminCount - eliminandoAdmins < 1) {
             AlertDialog.Builder(requireContext())
                 .setTitle("Advertencia")
@@ -333,7 +338,7 @@ class ListarFragment : Fragment() {
 
 
     private fun manejadorBtnCancelar() {
-        binding.btnCancelar.setOnClickListener {
+        binding.iconCancelar.setOnClickListener {
             adapter?.clearSelection() // Método para deseleccionar
             updateSelectedCountDisplay(0) // Actualizar la visualización a 0 seleccionados
             adapter?.setLongPressMode(false)
