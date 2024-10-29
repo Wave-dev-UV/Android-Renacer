@@ -254,7 +254,6 @@ class EditarUsuarioFragment : Fragment() {
     }
 
 
-
     private fun manejadorBtnEditar() {
         binding.buttonEditar.setOnClickListener {
             DialogUtils.dialogoConfirmacion(requireContext(),
