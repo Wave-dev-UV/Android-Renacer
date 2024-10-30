@@ -57,7 +57,7 @@ class UserRepositorio @Inject constructor() {
     }
 
     suspend fun updateUser(feligres: User) {
-        feligres.firestoreID?.let { id ->
+        feligres.firestoreID.let { id ->
             try {
                 usersCollection.document(id).set(feligres).await()
                 Log.d("FeligresRepositorio", "Documento actualizado con éxito: $id")
@@ -130,13 +130,14 @@ class UserRepositorio @Inject constructor() {
     }
 
     // Método para eliminar uno o varios usuarios
-    suspend fun eliminarUsuarios(users: List<User>) {
+    suspend fun eliminarUsuarios(users: MutableList<User>?) {
         withContext(Dispatchers.IO) {
+            val list = users as MutableList<User>
             try {
-                for (user in users) {
+                for (user in list) {
                     usersCollection.document(user.firestoreID).delete().await()
                 }
-                Log.d("UserRepositorio", "Usuarios eliminados con éxito: ${users.size}")
+                Log.d("UserRepositorio", "Usuarios eliminados con éxito: ${list.size}")
             } catch (e: Exception) {
                 Log.e("UserRepositorio", "Error al eliminar usuarios: ${e.message}")
             }

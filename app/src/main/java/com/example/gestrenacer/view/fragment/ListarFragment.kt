@@ -327,7 +327,7 @@ class ListarFragment : Fragment() {
             context = requireContext(),
             mensaje = "¿Estás seguro de que deseas eliminar a los usuarios seleccionados?",
             onYes = {
-                userViewModel.eliminarUsuarios(seleccionados)
+                userViewModel.eliminarUsuarios(seleccionados.toMutableList())
                 adapter?.clearSelection()
                 updateSelectedCountDisplay(0)
             }
