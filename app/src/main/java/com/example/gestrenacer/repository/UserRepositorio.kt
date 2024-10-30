@@ -103,7 +103,6 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
-
     fun sendVerificationCode(
         phoneNumber: String,
         callback: PhoneAuthProvider.OnVerificationStateChangedCallbacks,
@@ -130,6 +129,21 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
+    // Método para eliminar uno o varios usuarios
+    suspend fun eliminarUsuarios(users: List<User>) {
+        withContext(Dispatchers.IO) {
+            try {
+                for (user in users) {
+                    usersCollection.document(user.firestoreID).delete().await()
+                }
+                Log.d("UserRepositorio", "Usuarios eliminados con éxito: ${users.size}")
+            } catch (e: Exception) {
+                Log.e("UserRepositorio", "Error al eliminar usuarios: ${e.message}")
+            }
+        }
+    }
+
+
     suspend fun borrarUsuario(user: User){
         withContext(Dispatchers.IO){
             try {
@@ -139,4 +153,6 @@ class UserRepositorio @Inject constructor() {
             }
         }
     }
+
+
 }

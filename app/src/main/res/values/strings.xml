@@ -118,4 +118,9 @@
     <string name="lblFiltroDivorciado">Divorciado(a).</string>
     <string name="lblFiltroViudo">Viudo(a).</string>
     <string name="lblFiltroSheet">Filtrar por:</string>
+    <string name="checkbox_select_all">Seleccionar Todos</string>
+    <string name="outlined_icon_btn_desc">Cancelar</string>
+
+
+
 </resources>

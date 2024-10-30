@@ -661,7 +661,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/azulPrincipal"
                 android:text="@string/editar_usuario"
                 tools:textSize="17sp" />

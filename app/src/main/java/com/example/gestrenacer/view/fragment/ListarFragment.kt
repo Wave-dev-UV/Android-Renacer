@@ -1,5 +1,8 @@
 package com.example.gestrenacer.view.fragment
 
+//import UserAdapter
+
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +19,7 @@ import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.adapter.UserAdapter
+import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.view.modal.ModalBottomSheet
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
@@ -23,12 +27,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 import java.util.Date
 
+
 @AndroidEntryPoint
 class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: UserAdapter? = null
     private var userList = mutableListOf<User>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,7 +64,6 @@ class ListarFragment : Fragment() {
             }
         }
 
-
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 activity?.finish()
@@ -76,6 +81,10 @@ class ListarFragment : Fragment() {
         manejadorBtnMensaje()
         manejadorBottomBar()
         manejadorBtnFiltro()
+        manejadorBtnEliminar()
+        manejadorBtnCancelar()
+        setupSelectAllCheckbox()
+
     }
 
     private fun verFeligreses(){
@@ -95,28 +104,48 @@ class ListarFragment : Fragment() {
         userViewModel.colocarRol(data)
     }
 
-    private fun observerListFeligreses(){
-        userViewModel.listaUsers.observe(viewLifecycleOwner){
-            userList = it
+    private fun observerListFeligreses() {
+        userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
+            userList = lista
+            binding.lblResultado.text = "Resultados: ${userList.size}"
+            binding.txtNoResultados.isVisible = userList.isEmpty()
 
             if (adapter == null) {
-                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value, userViewModel)
+                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value, userViewModel,
+                    { isVisible -> binding.btnEliminar.isVisible = isVisible },
+                    { selectedCount -> updateSelectedCountDisplay(selectedCount)
+                    }
+                )
                 binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
                 binding.listaFeligreses.adapter = adapter
+
             } else {
                 adapter?.updateList(userList)
             }
-
-
-            binding.lblResultado.text = "Resultados: ${userList.size}"
-
-
-            if (userList.isEmpty()) {
-                binding.txtNoResultados.visibility = View.VISIBLE
-            } else {
-                binding.txtNoResultados.visibility = View.GONE
-            }
+            // Actualiza la visualización de la selección al cargar la lista
+            updateSelectedCountDisplay(adapter?.getSelectedUsersCount() ?: 0)
         }
+    }
+
+    private fun updateSelectedCountDisplay(selectedCount: Int) {
+        binding.lblSeleccionados.text = "Seleccionados: $selectedCount"
+        binding.lblSeleccionados.isVisible = selectedCount > 0
+        binding.checkboxSelectAll.isVisible = selectedCount > 0
+        binding.checkboxSelectAll.isChecked = selectedCount == userList.size
+
+        binding.contenedorSeleccionados.isVisible = selectedCount > 0
+
+        // Mostrar/ocultar botones según si hay usuarios seleccionados
+        val hasSelectedUsers = selectedCount > 0
+        binding.btnEliminar.isVisible = hasSelectedUsers
+        binding.btnEnviarSms.isVisible = !hasSelectedUsers
+        binding.btnAnadirFeligres.isVisible = !hasSelectedUsers
+
+        val shouldHideFiltersAndSearch = hasSelectedUsers
+        binding.contenedorFiltros.isVisible = !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
+        binding.toolbar.root.isVisible = !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
+
+
     }
 
     private fun observerProgress(){
@@ -135,15 +164,10 @@ class ListarFragment : Fragment() {
 
     private fun observerRol() {
         userViewModel.rol.observe(viewLifecycleOwner) { rol ->
-            if (rol in listOf("Administrador", "Gestor")) {
-                binding.btnAnadirFeligres.visibility = View.VISIBLE
-                binding.contBottomNav.visibility = View.VISIBLE
-                binding.btnEnviarSms.visibility = View.VISIBLE
-            } else if (rol == "Visualizador") {
-                binding.btnAnadirFeligres.visibility = View.GONE
-                binding.contBottomNav.visibility = View.GONE
-                binding.btnEnviarSms.visibility = View.GONE
-            }
+            binding.btnAnadirFeligres.isVisible = rol in listOf("Administrador", "Gestor")
+            binding.contBottomNav.isVisible = rol in listOf("Administrador", "Gestor")
+            binding.btnEnviarSms.isVisible = rol in listOf("Administrador", "Gestor")
+            binding.btnEliminar.isVisible = rol in listOf("Administrador")
         }
     }
 
@@ -258,17 +282,65 @@ class ListarFragment : Fragment() {
 
         adapter?.updateList(filteredList)
         binding.lblResultado.text = "Resultados: ${filteredList.size}"
-
-        if (filteredList.isEmpty()) {
-            binding.txtNoResultados.visibility = View.VISIBLE
-        } else {
-            binding.txtNoResultados.visibility = View.GONE
-        }
+        binding.txtNoResultados.isVisible = filteredList.isEmpty()
     }
 
     private fun forceRecyclerViewUpdate() {
-
         binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
         binding.listaFeligreses.adapter = adapter
     }
+
+    private fun setupSelectAllCheckbox() {
+        binding.checkboxSelectAll.setOnCheckedChangeListener { buttonView, isChecked ->
+            Log.d("YourFragment", "Checkbox 'Seleccionar Todos' presionado.")
+            adapter?.selectAll(isChecked) // Selecciona o deselecciona según el estado del CheckBox
+            binding.lblSeleccionados.text = "Seleccionados: ${adapter?.getSelectedUsersCount() ?: 0}" // Actualiza el texto
+        }
+    }
+    private fun manejadorBtnEliminar() {
+        binding.btnEliminar.setOnClickListener {
+            eliminarSeleccionados()
+        }
+    }
+
+    private fun contarAdministradores(): Int {
+        return userList.count { it.rol == "Administrador" }
+    }
+
+    private fun eliminarSeleccionados() {
+        val seleccionados = adapter?.getSelectedUsers() ?: return
+        if (seleccionados.isEmpty()) return
+
+        val adminCount = contarAdministradores()
+        val eliminandoAdmins = seleccionados.count { it.rol == "Administrador" }
+
+        if (adminCount - eliminandoAdmins < 1) {
+            DialogUtils.dialogoConfirmacion(
+                context = requireContext(),
+                mensaje = "Debes conservar al menos un administrador en la lista.",
+                onYes = {} // No se realiza ninguna acción si se confirma
+            )
+            return
+        }
+
+        DialogUtils.dialogoConfirmacion(
+            context = requireContext(),
+            mensaje = "¿Estás seguro de que deseas eliminar a los usuarios seleccionados?",
+            onYes = {
+                userViewModel.eliminarUsuarios(seleccionados)
+                adapter?.clearSelection()
+                updateSelectedCountDisplay(0)
+            }
+        )
+    }
+
+
+    private fun manejadorBtnCancelar() {
+        binding.iconCancelar.setOnClickListener {
+            adapter?.clearSelection() // Método para deseleccionar
+            updateSelectedCountDisplay(0) // Actualizar la visualización a 0 seleccionados
+            adapter?.setLongPressMode(false)
+        }
+    }
+
 }
