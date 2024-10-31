@@ -21,9 +21,10 @@ import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 import java.util.Date
+import com.example.gestrenacer.view.MainActivity.Recargable
 
 @AndroidEntryPoint
-class PendingFragment : Fragment() {
+class PendingFragment : Fragment(), Recargable {
     private lateinit var binding: FragmentPendingBinding
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: PendingUserAdapter? = null
@@ -67,6 +68,11 @@ class PendingFragment : Fragment() {
         configurarBusqueda()
         manejadorBottomBar()
         manejadorBtnFiltro()
+    }
+
+    override fun recargarDatos() {
+        verFeligreses()
+        forceRecyclerViewUpdate()
     }
 
     private fun verFeligreses(){
