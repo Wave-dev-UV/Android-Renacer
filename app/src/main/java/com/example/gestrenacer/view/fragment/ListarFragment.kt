@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.view.modal.ModalBottomSheet
@@ -26,10 +27,12 @@ import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 import java.util.Date
+import com.example.gestrenacer.view.MainActivity.Recargable
+
 
 
 @AndroidEntryPoint
-class ListarFragment : Fragment() {
+class ListarFragment : Fragment(), Recargable {
     private lateinit var binding: FragmentListarFeligresesBinding
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: UserAdapter? = null
@@ -85,6 +88,11 @@ class ListarFragment : Fragment() {
         manejadorBtnCancelar()
         setupSelectAllCheckbox()
 
+    }
+
+    override fun recargarDatos() {
+        verFeligreses()
+        forceRecyclerViewUpdate()
     }
 
     private fun verFeligreses(){
