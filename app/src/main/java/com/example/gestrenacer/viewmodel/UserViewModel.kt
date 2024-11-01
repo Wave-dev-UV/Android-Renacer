@@ -1,7 +1,6 @@
 package com.example.gestrenacer.viewmodel
 
 import android.util.Log
-import java.text.Normalizer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: UserRepositorio
-): ViewModel() {
+) : ViewModel() {
     private val _listaUsers = MutableLiveData<MutableList<User>>()
     val listaUsers: LiveData<MutableList<User>> = _listaUsers
 
@@ -32,21 +31,27 @@ class UserViewModel @Inject constructor(
     private val _orden = MutableLiveData<List<String>>()
     val orden: LiveData<List<String>> = _orden
 
-    fun getFeligreses(fechaInicial: Timestamp, fechaFinal: Timestamp,
-                      filtroEstcivil: List<String>,
-                      filtroSexo: List<String>,
-                      filtroLlamado: List<String>,
-                      critOrden: String = "nombre", escalaOrden: String = "ascendente") {
+    fun getFeligreses(
+        fechaInicial: Timestamp, fechaFinal: Timestamp,
+        filtroEstcivil: List<String>,
+        filtroSexo: List<String>,
+        filtroLlamado: List<String>,
+        critOrden: String = "nombre", escalaOrden: String = "ascendente"
+    ) {
         viewModelScope.launch {
             _progresState.value = true
             try {
                 val aInicio = fechaInicial.toDate().year.toString()
                 val aFinal = fechaFinal.toDate().year.toString()
-                val users = repository.getUsers(filtroSexo,filtroEstcivil,filtroLlamado,
-                    fechaInicial,fechaFinal,critOrden,escalaOrden)
+                val users = repository.getUsers(
+                    filtroSexo, filtroEstcivil, filtroLlamado,
+                    fechaInicial, fechaFinal, critOrden, escalaOrden
+                )
 
-                _filtros.value = listOf(filtroSexo, filtroEstcivil,
-                    listOf(aInicio,aFinal), filtroLlamado)
+                _filtros.value = listOf(
+                    filtroSexo, filtroEstcivil,
+                    listOf(aInicio, aFinal), filtroLlamado
+                )
                 _orden.value = listOf(critOrden, escalaOrden)
                 _listaUsers.value = users
                 _progresState.value = false
@@ -62,9 +67,13 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun editarUsuario(user: User) {
+    fun editarUsuario(user: User, prevNum: String = "") {
         viewModelScope.launch {
-            repository.updateUser(user)
+            val numAnt = (
+                    if (prevNum.isNotEmpty() && (user.celular != prevNum)) prevNum
+                    else ""
+                )
+            repository.updateUser(user, numAnt)
         }
     }
 
@@ -79,7 +88,8 @@ class UserViewModel @Inject constructor(
                 val updatedList = _listaUsers.value?.filterNot { user ->
                     users?.any { it.firestoreID == user.firestoreID } as Boolean
                 }
-                _listaUsers.value = updatedList?.toMutableList() // Actualiza la lista con los usuarios restantes
+                _listaUsers.value =
+                    updatedList?.toMutableList() // Actualiza la lista con los usuarios restantes
 
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Error al eliminar usuarios: ${e.message}")
@@ -87,11 +97,11 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun colocarRol(rol: String?){
+    fun colocarRol(rol: String?) {
         _rol.value = rol
     }
 
-    fun borrarUsuario(user: User){
+    fun borrarUsuario(user: User) {
         viewModelScope.launch {
             _progresState.value = true
             try {

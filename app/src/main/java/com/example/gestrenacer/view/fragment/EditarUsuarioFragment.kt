@@ -284,10 +284,11 @@ class EditarUsuarioFragment : Fragment() {
             estadoCivil = binding.autoCompleteEstadoCivil.text.toString(),
             fechaNacimiento = fechaNacimientoUser,
             obsevaciones = binding.editTextObsevaciones.text.toString(),
-            fechaCreacion = bundleUser.fechaCreacion
+            fechaCreacion = bundleUser.fechaCreacion,
+            arn = bundleUser.arn
         )
 
-        userViewModel.editarUsuario(feligresActualizado)
+        userViewModel.editarUsuario(feligresActualizado,bundleUser.celular)
 
         findNavController().navigate(R.id.action_editarUsuarioFragment_to_listarFragment,requireArguments())
     }

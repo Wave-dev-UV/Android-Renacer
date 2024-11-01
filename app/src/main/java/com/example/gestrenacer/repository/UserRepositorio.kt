@@ -2,7 +2,13 @@ package com.example.gestrenacer.repository
 
 import android.app.Activity
 import android.util.Log
+import com.example.gestrenacer.models.PeticionDesuscribir
+import com.example.gestrenacer.models.PeticionEnviarSms
+import com.example.gestrenacer.models.PeticionSuscribir
+import com.example.gestrenacer.models.SmsSubsRes
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.utils.Constants.ARN_SMS
+import com.example.gestrenacer.webservices.SmsService
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -16,28 +22,32 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UserRepositorio @Inject constructor() {
+class UserRepositorio @Inject constructor(
+    private val smsService: SmsService
+) {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
 
 
-    suspend fun getUsers(filtroSexo: List<String>,filtroEstCivil: List<String>,
-                         filtroLlamado: List<String>,fechaInicial:Timestamp,
-                         fechaFinal:Timestamp, critOrden: String,
-                         escalaOrden: String): MutableList<User> {
+    suspend fun getUsers(
+        filtroSexo: List<String>, filtroEstCivil: List<String>,
+        filtroLlamado: List<String>, fechaInicial: Timestamp,
+        fechaFinal: Timestamp, critOrden: String,
+        escalaOrden: String
+    ): MutableList<User> {
         val order = (
-            if (escalaOrden == "ascendente") Query.Direction.ASCENDING
-            else Query.Direction.DESCENDING
-        )
+                if (escalaOrden == "ascendente") Query.Direction.ASCENDING
+                else Query.Direction.DESCENDING
+                )
 
-        val snapshot = usersCollection.whereIn("sexo",filtroSexo).
-            whereIn("estadoCivil",filtroEstCivil).
-            whereIn("estadoAtencion",filtroLlamado).
-            whereGreaterThan("fechaNacimiento", fechaInicial).
-            whereLessThan("fechaNacimiento", fechaFinal).
-            orderBy(critOrden, order).get().await()
+        val snapshot =
+            usersCollection.whereIn("sexo", filtroSexo).whereIn("estadoCivil", filtroEstCivil)
+                .whereIn("estadoAtencion", filtroLlamado)
+                .whereGreaterThan("fechaNacimiento", fechaInicial)
+                .whereLessThan("fechaNacimiento", fechaFinal).orderBy(critOrden, order).get()
+                .await()
 
         return snapshot.map { x ->
             val obj = x.toObject(User::class.java)
@@ -46,25 +56,49 @@ class UserRepositorio @Inject constructor() {
         }.toMutableList()
     }
 
-    suspend fun saveUser(user: User) {
+    suspend fun saveUser(user: User): Boolean {
         try {
             val newUser = user.copy(fechaCreacion = Timestamp.now())
+            /*val resSubs = suscribirSms(user.celular)
+
+            if (resSubs.resultado){
+                newUser.arn = resSubs.arn
+                usersCollection.add(newUser).await()
+            }
+            else{
+                throw Exception()
+            }*/
+
             usersCollection.add(newUser).await()
-            Log.d("UserRepositorio", "Usuario agregado con éxito")
+
+            return true
         } catch (e: Exception) {
-            Log.e("UserRepositorio", "Error al agregar el usuario: ${e.message}")
+            return false
         }
     }
 
-    suspend fun updateUser(feligres: User) {
-        feligres.firestoreID.let { id ->
+    suspend fun updateUser(feligres: User, prevNum: String): Boolean {
+        return feligres.firestoreID.let { id ->
             try {
+                /*var arn = SmsSubsRes(false, "")
+
+                if (prevNum.isNotEmpty()) {
+                    val resDesuscribir = desuscribirSms(prevNum)
+
+                    if (resDesuscribir) arn = suscribirSms(feligres.celular)
+                    else throw Exception("No se ha podido desuscribir al usuario.")
+
+                    if (arn.resultado) feligres.arn = arn.arn
+                    else throw Exception("No se ha podido suscribir al usuario")
+                }*/
+
                 usersCollection.document(id).set(feligres).await()
-                Log.d("FeligresRepositorio", "Documento actualizado con éxito: $id")
+                true
             } catch (e: Exception) {
                 Log.e("FeligresRepositorio", "Error al actualizar el documento: ${e.message}")
+                false
             }
-        } ?: Log.w("FeligresRepositorio", "Firestore ID es nulo")
+        }
     }
 
 
@@ -77,7 +111,8 @@ class UserRepositorio @Inject constructor() {
 
             if (!snapshot.isEmpty) {
                 val document = snapshot.documents.first()
-                val rol = document.getString("rol") ?: "Feligrés"  // Rol predeterminado si no se encuentra
+                val rol = document.getString("rol")
+                    ?: "Feligrés"  // Rol predeterminado si no se encuentra
                 if (rol != "Feligrés") {
                     rol
                 } else {
@@ -89,17 +124,6 @@ class UserRepositorio @Inject constructor() {
         } catch (e: Exception) {
             Log.e("UserRepositorio", "Error al obtener usuario: ${e.message}")
             null
-        }
-    }
-
-    suspend fun getPendingUsers(): List<User> {
-        val snapshot = usersCollection
-            .whereEqualTo("estadoAtencion", "Por Llamar")
-            .get().await()
-        return snapshot.map { x ->
-            val obj = x.toObject(User::class.java)
-            obj.firestoreID = x.id
-            obj
         }
     }
 
@@ -130,30 +154,83 @@ class UserRepositorio @Inject constructor() {
     }
 
     // Método para eliminar uno o varios usuarios
-    suspend fun eliminarUsuarios(users: MutableList<User>?) {
-        withContext(Dispatchers.IO) {
+    suspend fun eliminarUsuarios(users: MutableList<User>?): Boolean {
+        return withContext(Dispatchers.IO) {
             val list = users as MutableList<User>
             try {
                 for (user in list) {
+                    /*val res = desuscribirSms(user.arn)
+                    if (res) usersCollection.document(user.firestoreID).delete().await()
+                    else throw Exception("No se podido desuscribir al usuario)*/
                     usersCollection.document(user.firestoreID).delete().await()
                 }
-                Log.d("UserRepositorio", "Usuarios eliminados con éxito: ${list.size}")
+                true
             } catch (e: Exception) {
-                Log.e("UserRepositorio", "Error al eliminar usuarios: ${e.message}")
+                false
             }
         }
     }
 
 
-    suspend fun borrarUsuario(user: User){
-        withContext(Dispatchers.IO){
+    suspend fun borrarUsuario(user: User): Boolean {
+        return withContext(Dispatchers.IO) {
             try {
+                /*val res = desuscribirSms(user.arn)
+                if (res) usersCollection.document(user.firestoreID).delete().await()
+                else throw  Exception()*/
                 usersCollection.document(user.firestoreID).delete().await()
+                true
             } catch (e: Exception) {
-                Log.d("Error", e.toString())
+                false
             }
         }
     }
 
+    suspend fun suscribirSms(numero: String): SmsSubsRes {
+        val token = auth.getAccessToken(true).await().token as String
+        val telefono = auth.currentUser?.phoneNumber as String
+        val body = PeticionSuscribir(telefono, ARN_SMS, numero)
 
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = smsService.suscribirSms(body, token)
+                response
+            } catch (e: Exception) {
+                e.printStackTrace()
+                SmsSubsRes(false, "")
+            }
+        }
+    }
+
+    suspend fun desuscribirSms(arn: String): Boolean {
+        val token = auth.getAccessToken(true).await().token as String
+        val telefono = auth.currentUser?.phoneNumber as String
+        val body = PeticionDesuscribir(arn, telefono)
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = smsService.desuscribirSms(body, token)
+                response.resultado
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
+        }
+    }
+
+    suspend fun enviarSms(mensaje: String, numeros: List<String>): Boolean {
+        val token = auth.getAccessToken(true).await().token as String
+        val telefono = auth.currentUser?.phoneNumber as String
+        val body = PeticionEnviarSms(telefono, mensaje, numeros)
+
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = smsService.enviarSms(body, token)
+                response.resultado
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
+        }
+    }
 }
