@@ -146,14 +146,14 @@ class ListarFragment : Fragment(), Recargable {
         // Mostrar/ocultar botones según si hay usuarios seleccionados
         val hasSelectedUsers = selectedCount > 0
         binding.btnEliminar.isVisible = hasSelectedUsers
-        binding.btnEnviarSms.isVisible = !hasSelectedUsers
-        binding.btnAnadirFeligres.isVisible = !hasSelectedUsers
+        binding.btnEnviarSms.isVisible = !hasSelectedUsers && (userViewModel.rol.value == "Administrador")
+        binding.btnAnadirFeligres.isVisible = !hasSelectedUsers && (userViewModel.rol.value in listOf("Administrador","Gestor"))
 
         val shouldHideFiltersAndSearch = hasSelectedUsers
-        binding.contenedorFiltros.isVisible = !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
-        binding.toolbar.root.isVisible = !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
-
-
+        binding.contenedorFiltros.isVisible =
+            !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
+        binding.toolbar.root.isVisible =
+            !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
     }
 
     private fun observerProgress(){
