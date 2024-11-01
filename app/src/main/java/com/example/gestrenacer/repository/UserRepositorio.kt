@@ -22,27 +22,43 @@ class UserRepositorio @Inject constructor() {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
 
+    suspend fun getUsers(
+        filtroSexo: List<String>,
+        filtroEstCivil: List<String>,
+        filtroLlamado: List<String>,
+        fechaInicial: Timestamp,
+        fechaFinal: Timestamp,
+        critOrden: String,
+        escalaOrden: String
+    ): List<User> {
+        val order = if (escalaOrden == "ascendente") Query.Direction.ASCENDING else Query.Direction.DESCENDING
 
-    suspend fun getUsers(filtroSexo: List<String>,filtroEstCivil: List<String>,
-                         filtroLlamado: List<String>,fechaInicial:Timestamp,
-                         fechaFinal:Timestamp, critOrden: String,
-                         escalaOrden: String): List<User> {
-        val order = (
-            if (escalaOrden == "ascendente") Query.Direction.ASCENDING
-            else Query.Direction.DESCENDING
-        )
+        val snapshot = usersCollection.whereIn("sexo", filtroSexo)
+            .whereIn("estadoCivil", filtroEstCivil)
+            .whereIn("estadoAtencion", filtroLlamado)
+            .whereGreaterThan("fechaNacimiento", fechaInicial)
+            .whereLessThan("fechaNacimiento", fechaFinal)
+            .orderBy(critOrden, order)
+            .get()
+            .await()
 
-        val snapshot = usersCollection.whereIn("sexo",filtroSexo).
-            whereIn("estadoCivil",filtroEstCivil).
-            whereIn("estadoAtencion",filtroLlamado).
-            whereGreaterThan("fechaNacimiento", fechaInicial).
-            whereLessThan("fechaNacimiento", fechaFinal).
-            orderBy(critOrden, order).get().await()
+        return snapshot.map { document ->
+            val user = document.toObject(User::class.java)
+            user.firestoreID = document.id
+            user
+        }
+    }
 
-        return snapshot.map { x ->
-            val obj = x.toObject(User::class.java)
-            obj.firestoreID = x.id
-            obj
+    suspend fun countPendingUsers(): Int {
+        return try {
+            val snapshot = usersCollection
+                .whereEqualTo("estadoAtencion", "Por Llamar")
+                .get()
+                .await()
+            snapshot.size()
+        } catch (e: Exception) {
+            Log.e("UserRepositorio", "Error al obtener el conteo de usuarios 'Por Llamar': ${e.message}")
+            0
         }
     }
 
@@ -67,7 +83,6 @@ class UserRepositorio @Inject constructor() {
         } ?: Log.w("FeligresRepositorio", "Firestore ID es nulo")
     }
 
-
     suspend fun getUserByPhone(phoneNumber: String): String? {
         return try {
             val snapshot = usersCollection
@@ -77,7 +92,7 @@ class UserRepositorio @Inject constructor() {
 
             if (!snapshot.isEmpty) {
                 val document = snapshot.documents.first()
-                val rol = document.getString("rol") ?: "Feligrés"  // Rol predeterminado si no se encuentra
+                val rol = document.getString("rol") ?: "Feligrés"
                 if (rol != "Feligrés") {
                     rol
                 } else {
@@ -96,10 +111,10 @@ class UserRepositorio @Inject constructor() {
         val snapshot = usersCollection
             .whereEqualTo("estadoAtencion", "Por Llamar")
             .get().await()
-        return snapshot.map { x ->
-            val obj = x.toObject(User::class.java)
-            obj.firestoreID = x.id
-            obj
+        return snapshot.map { document ->
+            val user = document.toObject(User::class.java)
+            user.firestoreID = document.id
+            user
         }
     }
 
@@ -118,7 +133,6 @@ class UserRepositorio @Inject constructor() {
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-
     suspend fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential): Boolean {
         return try {
             auth.signInWithCredential(credential).await()
@@ -129,7 +143,6 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
-    // Método para eliminar uno o varios usuarios
     suspend fun eliminarUsuarios(users: List<User>) {
         withContext(Dispatchers.IO) {
             try {
@@ -143,9 +156,8 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
-
-    suspend fun borrarUsuario(user: User){
-        withContext(Dispatchers.IO){
+    suspend fun borrarUsuario(user: User) {
+        withContext(Dispatchers.IO) {
             try {
                 usersCollection.document(user.firestoreID).delete().await()
             } catch (e: Exception) {
@@ -153,6 +165,4 @@ class UserRepositorio @Inject constructor() {
             }
         }
     }
-
-
 }

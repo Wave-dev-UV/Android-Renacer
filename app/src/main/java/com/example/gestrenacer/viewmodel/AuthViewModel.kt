@@ -1,6 +1,8 @@
 package com.example.gestrenacer.viewmodel
 
 import android.app.Activity
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,13 +38,13 @@ class AuthViewModel @Inject constructor(
     private val _rol = MutableLiveData("Feligrés")
     val rol: LiveData<String> = _rol
 
-
     fun checkUserAccess(phoneNumber: String, activity: Activity) {
         _progress.value = true
         viewModelScope.launch {
             val userRole = userRepositorio.getUserByPhone(phoneNumber)
 
             if (userRole != null) {
+                saveUserRole(activity, userRole) // Guarda el rol en SharedPreferences
                 sendVerificationCode(phoneNumber, activity)
                 _rol.value = userRole
             } else {
@@ -53,6 +55,14 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    private fun saveUserRole(context: Context, role: String) {
+        val sharedPreferences = context.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putString("user_role", role)
+            apply()
+        }
+        Log.d("AuthViewModel", "Rol guardado: $role") // Agrega este log para verificar el rol guardado
+    }
 
     private fun sendVerificationCode(phoneNumber: String, activity: Activity) {
         val fullPhoneNumber = "+57$phoneNumber"
