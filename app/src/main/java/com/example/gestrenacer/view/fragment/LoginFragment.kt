@@ -1,5 +1,6 @@
 package com.example.gestrenacer
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.databinding.FragmentLoginBinding
 import com.example.gestrenacer.viewmodel.AuthViewModel
+import com.google.android.material.tabs.TabLayout.Mode
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,8 +36,15 @@ class LoginFragment : Fragment() {
 
         binding.generateCodeButton.setOnClickListener {
             val phoneNumber = binding.phoneNumberInput.text.toString().trim()
+            val preferences = activity?.getSharedPreferences("authInfo", Context.MODE_PRIVATE)?.edit()
+
+            preferences?.putString("numero", phoneNumber)
+            preferences?.apply()
+
             if (phoneNumber.isNotEmpty()) {
+
                 authViewModel.checkUserAccess(phoneNumber, requireActivity())
+
             } else {
                 Toast.makeText(requireContext(), "Introduce un número de teléfono", Toast.LENGTH_SHORT).show()
             }
@@ -51,8 +60,6 @@ class LoginFragment : Fragment() {
         authViewModel.verificationId.observe(viewLifecycleOwner, Observer { verificationId ->
             val bundle = Bundle().apply {
                 putString("verificationId", verificationId)
-                putString("phoneNumber", binding.phoneNumberInput.text.toString())
-                putString("rol", authViewModel.rol.value)
             }
             findNavController().navigate(R.id.action_loginFragment_to_verifyFragment, bundle)
         })

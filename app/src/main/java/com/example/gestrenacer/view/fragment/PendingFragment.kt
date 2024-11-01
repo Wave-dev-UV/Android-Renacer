@@ -1,5 +1,6 @@
 package com.example.gestrenacer.view.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ import java.util.Date
 @AndroidEntryPoint
 class PendingFragment : Fragment() {
     private lateinit var binding: FragmentPendingBinding
+    private lateinit var rol: String
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: PendingUserAdapter? = null
     private var userList = mutableListOf<User>()
@@ -63,7 +65,6 @@ class PendingFragment : Fragment() {
         observerProgress()
         anadirRol()
         bottomNav()
-        observerRol()
         configurarBusqueda()
         manejadorBottomBar()
         manejadorBtnFiltro()
@@ -80,18 +81,10 @@ class PendingFragment : Fragment() {
         )
     }
 
-    private fun anadirRol(){
-        val data = arguments?.getString("rol")
-        userViewModel.colocarRol(data)
-    }
-
-    private fun observerRol() {
-        userViewModel.rol.observe(viewLifecycleOwner) {
-            val data = arguments?.getString("rol")
-            if (data != "Visualizador") {
-                binding.contBottomNav.visibility = View.VISIBLE
-            }
-        }
+    private fun anadirRol() {
+        val pref = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            ?.getString("rol", "Visualizador")
+        rol = pref as String
     }
 
     private fun observerListPendingFeligreses(){
@@ -100,7 +93,7 @@ class PendingFragment : Fragment() {
 
                 if (adapter == null) {
                     adapter = PendingUserAdapter(userList, findNavController(),
-                        userViewModel.rol.value, userViewModel,
+                        rol, userViewModel,
                         this::setResSize, this::showNoContentMsg
                     )
                     binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
@@ -144,18 +137,16 @@ class PendingFragment : Fragment() {
     }
 
     private fun manejadorBottomBar() {
-        val bundle = Bundle()
-        bundle.putString("rol",arguments?.getString("rol"))
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.item_1 -> {
                     Log.d("BottomNavSelect1", "Menú principal seleccionado")
-                    findNavController().navigate(R.id.action_pendingFragment_to_listarFragment, bundle)
+                    findNavController().navigate(R.id.action_pendingFragment_to_listarFragment)
                     true
                 }
                 R.id.item_2 -> {
                     Log.d("BottomNavSelect2", "Reportes seleccionado")
-                    findNavController().navigate(R.id.action_pendingFragment_to_listarFragment, bundle)
+                    findNavController().navigate(R.id.action_pendingFragment_to_listarFragment)
                     true
                 }
                 R.id.item_3 -> {

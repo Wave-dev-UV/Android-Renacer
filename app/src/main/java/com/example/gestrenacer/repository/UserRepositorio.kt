@@ -56,8 +56,9 @@ class UserRepositorio @Inject constructor(
         }.toMutableList()
     }
 
-    suspend fun saveUser(user: User): Boolean {
+    suspend fun saveUser(user: User): Int {
         try {
+            var res = 0
             val newUser = user.copy(fechaCreacion = Timestamp.now())
             /*val resSubs = suscribirSms(user.celular)
 
@@ -68,18 +69,21 @@ class UserRepositorio @Inject constructor(
             else{
                 throw Exception()
             }*/
+            val numRepetido = usersCollection.whereEqualTo("celular", user.celular).get().await()
 
-            usersCollection.add(newUser).await()
+            if (numRepetido.isEmpty) usersCollection.add(newUser).await()
+            else res = 1
 
-            return true
+            return res
         } catch (e: Exception) {
-            return false
+            return 2
         }
     }
 
-    suspend fun updateUser(feligres: User, prevNum: String): Boolean {
+    suspend fun updateUser(feligres: User, prevNum: String): Int {
         return feligres.firestoreID.let { id ->
             try {
+                var res = 0
                 /*var arn = SmsSubsRes(false, "")
 
                 if (prevNum.isNotEmpty()) {
@@ -92,11 +96,14 @@ class UserRepositorio @Inject constructor(
                     else throw Exception("No se ha podido suscribir al usuario")
                 }*/
 
-                usersCollection.document(id).set(feligres).await()
-                true
+                val numRepetido = usersCollection.whereEqualTo("celular", feligres.celular).get().await()
+
+                if (numRepetido.isEmpty) usersCollection.document(id).set(feligres).await()
+                else res = 1
+
+                res
             } catch (e: Exception) {
-                Log.e("FeligresRepositorio", "Error al actualizar el documento: ${e.message}")
-                false
+                2
             }
         }
     }

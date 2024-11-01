@@ -22,6 +22,11 @@ class MainActivity : AppCompatActivity() {
         setupObservers()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        deleteSharedPreferences("auth")
+    }
+
     private fun setupObservers() {
         connectionViewModel.isConnected.observe(this) { isConnected ->
             if (isConnected == false) {

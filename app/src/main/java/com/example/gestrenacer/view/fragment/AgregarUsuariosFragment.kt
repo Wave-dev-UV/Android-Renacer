@@ -1,7 +1,7 @@
 package com.example.gestrenacer.view.fragment
 
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,6 +27,7 @@ import java.util.Calendar
 @AndroidEntryPoint
 class AgregarUsuariosFragment : Fragment() {
     private lateinit var binding: FragmentAgregarUsuariosBinding
+    private lateinit var rol: String
     private val userViewModel: UserViewModel by viewModels()
     private val user = User()
     private var fechaNacimientoUser: Timestamp? = null
@@ -49,8 +50,9 @@ class AgregarUsuariosFragment : Fragment() {
 
     private fun controler() {
         anadirRol()
-        observerRol()
+        menuRol()
         observerProgress()
+        observerOperacion()
         activarBoton()
         confSelTipoId()
         confSelRol()
@@ -92,18 +94,15 @@ class AgregarUsuariosFragment : Fragment() {
         datePickerDialog.show()
     }
 
-    private fun anadirRol(){
-        val data = arguments?.getString("rol")
-        userViewModel.colocarRol(data)
+    private fun anadirRol() {
+        val pref = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            ?.getString("rol", "Visualizador")
+        rol = pref as String
     }
-
-    private fun observerRol(){
-        userViewModel.rol.observe(viewLifecycleOwner){
-            Log.d("rol", it)
-            if (it == "Administrador"){
-                binding.selectRole.visibility = View.VISIBLE
-                binding.txtRol.visibility = View.VISIBLE
-            }
+    private fun menuRol(){
+        if (rol == "Administrador"){
+            binding.selectRole.visibility = View.VISIBLE
+            binding.txtRol.visibility = View.VISIBLE
         }
     }
 
@@ -111,6 +110,28 @@ class AgregarUsuariosFragment : Fragment() {
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
             binding.contPrincipal.isVisible = !it
+        }
+    }
+
+    private fun observerOperacion(){
+        userViewModel.resOperacion.observe(viewLifecycleOwner) {
+            var mensaje = ""
+            when (it) {
+                1 -> mensaje = getString(R.string.txtModalTelRep)
+                2 -> mensaje = getString(R.string.txtModalTelExcep)
+            }
+
+            if (mensaje.isNotEmpty()){
+                DialogUtils.dialogoInformativo(
+                    requireContext(),
+                    getString(R.string.titModalError),
+                    mensaje,
+                    getString(R.string.txtBtnAceptar)
+                ).show()
+            }
+
+            if (it == 0) findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment)
+            else binding.contPrincipal.isVisible = true
         }
     }
 
@@ -178,7 +199,7 @@ class AgregarUsuariosFragment : Fragment() {
 
     private fun manejadorBtnVolver(){
         binding.btnVolver.setOnClickListener {
-            findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment,requireArguments())
+            findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment)
         }
     }
 
@@ -191,7 +212,6 @@ class AgregarUsuariosFragment : Fragment() {
                 newUser.rol = binding.autoCompleteRole.text.toString()
                 newUser.estadoAtencion = "Por Llamar"
                 userViewModel.crearUsuario(newUser)
-                findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment,requireArguments())
             }
 
         }

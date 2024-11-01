@@ -22,14 +22,14 @@ class UserViewModel @Inject constructor(
     private val _progresState = MutableLiveData(false)
     val progresState: LiveData<Boolean> = _progresState
 
-    private val _rol = MutableLiveData("Feligrés")
-    val rol: LiveData<String> = _rol
-
     private val _filtros = MutableLiveData<List<List<String>>>()
     val filtros: LiveData<List<List<String>>> = _filtros
 
     private val _orden = MutableLiveData<List<String>>()
     val orden: LiveData<List<String>> = _orden
+
+    private val _resOperacion = MutableLiveData<Int>()
+    val resOperacion: LiveData<Int> = _resOperacion
 
     fun getFeligreses(
         fechaInicial: Timestamp, fechaFinal: Timestamp,
@@ -64,7 +64,7 @@ class UserViewModel @Inject constructor(
     fun crearUsuario(user: User) {
         viewModelScope.launch {
             _progresState.value = true
-            repository.saveUser(user)
+            _resOperacion.value = repository.saveUser(user)
             _progresState.value = false
         }
     }
@@ -76,7 +76,7 @@ class UserViewModel @Inject constructor(
                     else ""
                 )
             _progresState.value = true
-            repository.updateUser(user, numAnt)
+            _resOperacion.value = repository.updateUser(user, numAnt)
             _progresState.value = false
         }
     }
@@ -99,10 +99,6 @@ class UserViewModel @Inject constructor(
                 Log.e("UserViewModel", "Error al eliminar usuarios: ${e.message}")
             }
         }
-    }
-
-    fun colocarRol(rol: String?) {
-        _rol.value = rol
     }
 
     fun borrarUsuario(user: User) {

@@ -1,11 +1,12 @@
 package com.example.gestrenacer.view.fragment
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
@@ -44,29 +45,33 @@ class VisualizarUsuarioFragment : Fragment() {
         desactivarBtn()
     }
 
-    private fun desactivarBtn(){
-        if (rol !in listOf("Administrador","Gestor")){
-            binding.buttonBorrar.isVisible = false
+    private fun desactivarBtn() {
+        if (rol !in listOf("Administrador", "Gestor")) {
             binding.buttonEditar.isVisible = false
+        }
+
+        if (rol != "Administrador"){
+            binding.buttonBorrar.isVisible = false
         }
     }
 
-    private fun formatearFechas(){
+    private fun formatearFechas() {
         binding.tvFechaNacimiento.text = user.fechaNacimiento?.let { Format.timestampToString(it) }
         binding.tvFechaRegistro.text = user.fechaCreacion?.let { Format.timestampToString(it) }
     }
 
-    private fun observerProgressBar(){
-        viewmodel.progresState.observe(viewLifecycleOwner){
+    private fun observerProgressBar() {
+        viewmodel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
         }
     }
 
-    private fun inicializarImagen(){
-        if (binding.imagenUsuario.drawable == null){
+    private fun inicializarImagen() {
+        if (binding.imagenUsuario.drawable == null) {
             binding.imagenUsuario.isVisible = false
             binding.tvIniciales.isVisible = true
-            val text = "${user.nombre.firstOrNull() ?: ""}${user.apellido.firstOrNull() ?: ""}".uppercase()
+            val text =
+                "${user.nombre.firstOrNull() ?: ""}${user.apellido.firstOrNull() ?: ""}".uppercase()
             binding.tvIniciales.text = text
         } else {
             binding.imagenUsuario.isVisible = true
@@ -74,40 +79,55 @@ class VisualizarUsuarioFragment : Fragment() {
         }
     }
 
-    private fun inicializarVariables(){
+    private fun inicializarVariables() {
         user = arguments?.getSerializable("dataFeligres") as User
-        rol = arguments?.getString("rol") ?: "Visualizador"
+        rol = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            ?.getString("rol", "Visualizador") as String
         binding.user = user
     }
 
-    private fun manejadorBotonEditar(){
+    private fun manejadorBotonEditar() {
         binding.buttonEditar.setOnClickListener {
             val bundle = Bundle().apply {
                 putSerializable("dataFeligres", user)
                 putString("rol", rol)
             }
-            findNavController().navigate(R.id.action_visualizarUsuarioFragment_to_editarUsuarioFragment, bundle)
+            findNavController().navigate(
+                R.id.action_visualizarUsuarioFragment_to_editarUsuarioFragment,
+                bundle
+            )
         }
     }
 
     private fun manejadorBotonBorrar() {
         binding.buttonBorrar.setOnClickListener {
-            DialogUtils.dialogoConfirmacion(requireContext(),
-                "¿Está seguro que deseas borrar al usuario?"){
-                viewmodel.borrarUsuario(user)
-                findNavController().popBackStack()
-                //findNavController().navigate(R.id.action_visualizarUsuarioFragment_to_listarFragment, requireArguments())
+            val preferences = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            val numero = preferences?.getString("numero", "")
+            val numeroVacio = numero?.isNotEmpty() as Boolean
+
+            if (numeroVacio && (numero == user.celular)) {
+                DialogUtils.dialogoInformativo(
+                    requireContext(),
+                    getString(R.string.titModalError),
+                    getString(R.string.txtErrorBorrarTodos),
+                    getString(R.string.txtBtnAceptar)
+                ).show()
+            } else {
+                DialogUtils.dialogoConfirmacion(
+                    requireContext(),
+                    "¿Está seguro que deseas borrar al usuario?"
+                ) {
+                    viewmodel.borrarUsuario(user)
+                    findNavController().popBackStack()
+                }
             }
         }
 
     }
 
-    private fun manejadorBotonVolver(){
-        binding.imageButton.setOnClickListener{
+    private fun manejadorBotonVolver() {
+        binding.imageButton.setOnClickListener {
             findNavController().popBackStack()
-            //findNavController().navigate(R.id.action_visualizarUsuarioFragment_to_listarFragment, requireArguments())
         }
     }
-
-
 }

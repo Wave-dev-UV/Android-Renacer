@@ -1,9 +1,8 @@
 package com.example.gestrenacer.view.fragment
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import android.widget.DatePicker
 import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
@@ -33,7 +33,8 @@ class EditarUsuarioFragment : Fragment() {
 
     private val userViewModel: UserViewModel by viewModels()
     private lateinit var binding: FragmentEditarUsuarioBinding
-    private  lateinit var bundleUser: User
+    private lateinit var bundleUser: User
+    private lateinit var rol: String
     private var fechaNacimientoUser: Timestamp? = null
 
     override fun onCreateView(
@@ -52,10 +53,11 @@ class EditarUsuarioFragment : Fragment() {
 
     private lateinit var firestoreId: String
 
-    private fun controlador(){
+    private fun controlador() {
         anadirRol()
-        observerRol()
+        menuRol()
         observerProgress()
+        observerOperacion()
         inicializarAdaptadores()
         inicializarFeligres()
         activarBoton()
@@ -66,7 +68,7 @@ class EditarUsuarioFragment : Fragment() {
         manejadorFechaNacimiento()
     }
 
-    private fun confSelSexo(){
+    private fun confSelSexo() {
         val adapter = ArrayAdapter.createFromResource(
             this.requireContext(),
             R.array.listaSexos,
@@ -76,7 +78,7 @@ class EditarUsuarioFragment : Fragment() {
         binding.autoCompleteSexo.setAdapter(adapter)
     }
 
-    private fun confSelEstadoCivil(){
+    private fun confSelEstadoCivil() {
         val adapter = ArrayAdapter.createFromResource(
             this.requireContext(),
             R.array.listaEstadoCivil,
@@ -87,7 +89,7 @@ class EditarUsuarioFragment : Fragment() {
     }
 
 
-    private fun manejadorFechaNacimiento(){
+    private fun manejadorFechaNacimiento() {
         binding.editTextFechaNacimiento.setOnClickListener {
             mostrarDatePicker()
         }
@@ -118,28 +120,48 @@ class EditarUsuarioFragment : Fragment() {
         datePickerDialog.show()
     }
 
-    private fun anadirRol(){
-        val data = arguments?.getString("rol")
-        Log.d("rol",data.toString())
-        userViewModel.colocarRol(data)
+    private fun anadirRol() {
+        val pref = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            ?.getString("rol", "Visualizador")
+        rol = pref as String
     }
 
-    private fun observerProgress(){
+    private fun observerProgress() {
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
             binding.contPrincipal.isVisible = !it
         }
     }
 
-    private fun observerRol(){
-        userViewModel.rol.observe(viewLifecycleOwner){
-            if (it == "Administrador"){
-                binding.contRol.visibility = View.VISIBLE
+    private fun observerOperacion() {
+        userViewModel.resOperacion.observe(viewLifecycleOwner) {
+            var mensaje = ""
+            when (it) {
+                1 -> mensaje = getString(R.string.txtModalTelRep)
+                2 -> mensaje = getString(R.string.txtModalTelExcep)
             }
+
+            if (mensaje.isNotEmpty()) {
+                DialogUtils.dialogoInformativo(
+                    requireContext(),
+                    getString(R.string.titModalError),
+                    mensaje,
+                    getString(R.string.txtBtnAceptar)
+                ).show()
+            }
+
+            if (it == 0) findNavController().navigate(R.id.action_editarUsuarioFragment_to_listarFragment)
+            else binding.contPrincipal.isVisible = true
         }
     }
 
-    private fun formatearFecha(timestamp: Timestamp): String{
+    private fun menuRol() {
+        if (rol == "Administrador"){
+            binding.contRol.isVisible = true
+        }
+    }
+
+    private fun formatearFecha(timestamp: Timestamp): String {
         val date: Date = timestamp.toDate()
         val format = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         return format.format(date)
@@ -190,7 +212,6 @@ class EditarUsuarioFragment : Fragment() {
     }
 
 
-
     private fun activarBoton() {
 
         val listTxt = listOf(
@@ -230,14 +251,14 @@ class EditarUsuarioFragment : Fragment() {
         binding.buttonEditar.isEnabled = isFull
     }
 
-    private fun manejadorBtnVolver(){
-        binding.imageButton.setOnClickListener{
+    private fun manejadorBtnVolver() {
+        binding.imageButton.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
 
-    private fun inicializarAdaptadores(){
+    private fun inicializarAdaptadores() {
 
         val adapterDocumento = ArrayAdapter.createFromResource(
             this.requireContext(),
@@ -265,8 +286,10 @@ class EditarUsuarioFragment : Fragment() {
 
     private fun manejadorBtnEditar() {
         binding.buttonEditar.setOnClickListener {
-            DialogUtils.dialogoConfirmacion(requireContext(),
-            "¿Está seguro que desea editar el usuario?") {
+            DialogUtils.dialogoConfirmacion(
+                requireContext(),
+                "¿Está seguro que desea editar el usuario?"
+            ) {
                 updateFeligres()
             }
         }
@@ -297,9 +320,7 @@ class EditarUsuarioFragment : Fragment() {
             arn = bundleUser.arn
         )
 
-        userViewModel.editarUsuario(feligresActualizado,bundleUser.celular)
-
-        findNavController().navigate(R.id.action_editarUsuarioFragment_to_listarFragment,requireArguments())
+        userViewModel.editarUsuario(feligresActualizado, bundleUser.celular)
     }
 
 

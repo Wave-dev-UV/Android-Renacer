@@ -1,6 +1,7 @@
 package com.example.gestrenacer.viewmodel
 
 import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,18 +34,18 @@ class AuthViewModel @Inject constructor(
     private val _progress = MutableLiveData<Boolean>()
     val progress: LiveData<Boolean> = _progress
 
-    private val _rol = MutableLiveData("Feligrés")
-    val rol: LiveData<String> = _rol
-
 
     fun checkUserAccess(phoneNumber: String, activity: Activity) {
         _progress.value = true
         viewModelScope.launch {
             val userRole = userRepositorio.getUserByPhone(phoneNumber)
+            val preferences = activity.getSharedPreferences("auth",Context.MODE_PRIVATE).edit()
+
+            preferences.putString("rol",userRole)
+            preferences.apply()
 
             if (userRole != null) {
                 sendVerificationCode(phoneNumber, activity)
-                _rol.value = userRole
             } else {
                 _accessGranted.value = false
                 _error.value = "El usuario no tiene acceso o no está registrado"
