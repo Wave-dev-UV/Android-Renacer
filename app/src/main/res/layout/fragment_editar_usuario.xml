@@ -3,670 +3,690 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/onSelectedColorBotBar"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:id="@+id/contPrincipal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/azulPrincipal"
-                android:orientation="horizontal"
-                android:paddingVertical="10dp">
-
-
-                <TextView
-                    android:id="@+id/tvTituloEditar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tituloEditarUsuario"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="TextContrastCheck" />
-
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="15dp"
-                    android:backgroundTint="#00FFFFFF"
-                    android:contentDescription="@string/boton_para_retroceder"
-                    android:src="@drawable/ic_arrow_back"
-                    app:tint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ImageContrastCheck" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="27dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="visible">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp">
-                        <TextView
-                            android:id="@+id/tvSeparadorDatos"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/datos_personales"
-                            android:textSize="17sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:textColor="@color/black"/>
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tvSeparadorDatos"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginEnd="7dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            app:layout_constraintStart_toEndOf="@id/tvSeparadorDatos"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginStart="7dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_nombre"
-                        android:textSize="16sp"
-                        android:layout_marginTop="9dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextNombre"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/inserte_su_nombre"
-                        android:textColorHint="@color/secondary"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/apellido_s"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextApellido"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/inserte_su_apellido"
-                        android:textColorHint="@color/secondary"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/fecha_de_nacimiento"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="350dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        >
-
-                        <EditText
-                            android:id="@+id/editTextFechaNacimiento"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/seleccione_fecha_de_nacimiento"
-                            android:autofillHints="none"
-                            android:padding="14dp"
-                            android:inputType="none"
-                            android:focusable="false"
-                            />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/n_mero_de_identificaci_n"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextId"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/digite_su_n_mero_de_id"
-                        android:textColorHint="@color/secondary"
-                        android:inputType="number"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tipo_de_documento"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/selectPrioridad"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="350dp"
-                        android:layout_height="60dp"
-                        android:textColorHint="@color/secondary"
-                        app:boxStrokeColor="@color/azulPrincipal"
-                        app:hintTextColor="@color/azulPrincipal">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteTipoId"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/seleccione_su_tipo_de_documento"
-                            android:importantForAccessibility="yes"
-                            android:inputType="none"
-                             />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sexo"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/selectSexo"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="350dp"
-                        android:layout_height="60dp"
-                        android:textColorHint="@color/secondary"
-                        app:boxStrokeColor="@color/azulPrincipal"
-                        app:hintTextColor="@color/azulPrincipal">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteSexo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/seleccione_el_sexo"
-                            android:importantForAccessibility="yes"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/estado_civil"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/selectEstadoCivil"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="350dp"
-                        android:layout_height="60dp"
-                        android:textColorHint="@color/secondary"
-                        app:boxStrokeColor="@color/azulPrincipal"
-                        app:hintTextColor="@color/azulPrincipal">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteEstadoCivil"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/seleccione_el_estado_civil"
-                            android:importantForAccessibility="yes"
-                            android:inputType="none"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/n_mero_de_celular"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextCelular"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/digite_su_n_mero_de_celular"
-                        android:textColorHint="@color/secondary"
-                        android:inputType="phone"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/direcci_n"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextDireccion"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/inserte_su_direcci_n"
-                        android:textColorHint="@color/secondary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/eps"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextEps"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/inserte_su_eps"
-                        android:textColorHint="@color/secondary" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="25dp">
-
-                        <TextView
-                            android:id="@+id/tvSepararEmergencia"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/contacto_de_emergencia"
-                            android:textSize="17sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:textColor="@color/black"/>
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tvSepararEmergencia"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginEnd="7dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            app:layout_constraintStart_toEndOf="@id/tvSepararEmergencia"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginStart="7dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/nombre_completo"
-                        android:textSize="16sp"
-                        android:layout_marginTop="9dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextNombreContacto"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/inserte_el_nombre_del_contacto"
-                        android:textColorHint="@color/secondary"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/n_mero_de_celular"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextCelularContacto"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/digite_el_celular_de_su_contacto"
-                        android:textColorHint="@color/secondary"
-                        android:inputType="phone"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/parentesco"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextParentescoContacto"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/parentesco_con_su_contacto"
-                        android:textColorHint="@color/secondary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/direccion_emergencia"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextDireccionContacto"
-                        android:layout_width="350dp"
-                        android:layout_height="48dp"
-                        android:hint="@string/direcci_n_de_su_contacto"
-                        android:textColorHint="@color/secondary" />
-
-                </LinearLayout>
+                android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp">
+                    android:background="@color/azulPrincipal"
+                    android:orientation="horizontal"
+                    android:paddingVertical="10dp">
+
+
                     <TextView
-                        android:id="@+id/tvSepararObservaciones"
+                        android:id="@+id/tvTituloEditar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/observaciones"
-                        android:textSize="17sp"
+                        android:text="@string/tituloEditarUsuario"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:textColor="@color/black"/>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/tvSepararObservaciones"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginEnd="7dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        android:background="@color/secondary"/>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        app:layout_constraintStart_toEndOf="@id/tvSepararObservaciones"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginStart="7dp"
+                        tools:ignore="TextContrastCheck" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="15dp"
+                        android:backgroundTint="#00FFFFFF"
+                        android:contentDescription="@string/boton_para_retroceder"
+                        android:src="@drawable/ic_arrow_back"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        android:background="@color/secondary"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/white"
+                        tools:ignore="ImageContrastCheck" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/observaciones"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="160">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextObsevaciones"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
-                        android:minLines="3"
-                        android:gravity="top|start"
-                        android:padding="8dp"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="25dp">
-                        <TextView
-                            android:id="@+id/tvSepararCargo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cargo_en_la_iglesia"
-                            android:textSize="17sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:textColor="@color/black"/>
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tvSepararCargo"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginEnd="7dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            app:layout_constraintStart_toEndOf="@id/tvSepararCargo"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginStart="7dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/es_lider"
-                            android:textSize="17sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switch1"
-                            style="@style/Widget.App.Switch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/el_usuario_es_un_lider"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:thumbTint="@color/white" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:paddingHorizontal="27dp">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp">
-                        <TextView
-                            android:id="@+id/tvSeparadorEstadoAtencion"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/subtituloEstadoDeAtencion"
-                            android:textSize="17sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:textColor="@color/black"/>
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tvSeparadorEstadoAtencion"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginEnd="7dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            app:layout_constraintStart_toEndOf="@id/tvSeparadorEstadoAtencion"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginStart="7dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/estado_de_atencion"
-                        android:textSize="16sp"
-                        android:layout_marginTop="20dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/selectEstadoAtecion"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="350dp"
-                        android:layout_height="60dp"
-                        android:textColorHint="@color/secondary"
-                        app:boxStrokeColor="@color/azulPrincipal"
-                        app:hintTextColor="@color/azulPrincipal">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteEstadoAtencion"
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/selecc_atencion"
-                            android:importantForAccessibility="yes"
-                            android:inputType="none"
-                            />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_marginTop="11dp">
 
-                </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvSeparadorDatos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/datos_personales"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
-                    android:id="@+id/contRol"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginEnd="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/tvSeparadorDatos"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/tvSeparadorDatos"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="9dp"
+                            android:text="@string/label_nombre"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextNombre"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/inserte_su_nombre"
+                            android:textColorHint="@color/secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/apellido_s"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextApellido"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/inserte_su_apellido"
+                            android:textColorHint="@color/secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/fecha_de_nacimiento"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="350dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp">
+
+                            <EditText
+                                android:id="@+id/editTextFechaNacimiento"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autofillHints="none"
+                                android:focusable="false"
+                                android:hint="@string/seleccione_fecha_de_nacimiento"
+                                android:inputType="none"
+                                android:padding="14dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/n_mero_de_identificaci_n"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextId"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/digite_su_n_mero_de_id"
+                            android:inputType="number"
+                            android:textColorHint="@color/secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/tipo_de_documento"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/selectPrioridad"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="350dp"
+                            android:layout_height="60dp"
+                            android:textColorHint="@color/secondary"
+                            app:boxStrokeColor="@color/azulPrincipal"
+                            app:hintTextColor="@color/azulPrincipal">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/autoCompleteTipoId"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/seleccione_su_tipo_de_documento"
+                                android:importantForAccessibility="yes"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/sexo"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/selectSexo"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="350dp"
+                            android:layout_height="60dp"
+                            android:textColorHint="@color/secondary"
+                            app:boxStrokeColor="@color/azulPrincipal"
+                            app:hintTextColor="@color/azulPrincipal">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/autoCompleteSexo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/seleccione_el_sexo"
+                                android:importantForAccessibility="yes"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/estado_civil"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/selectEstadoCivil"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="350dp"
+                            android:layout_height="60dp"
+                            android:textColorHint="@color/secondary"
+                            app:boxStrokeColor="@color/azulPrincipal"
+                            app:hintTextColor="@color/azulPrincipal">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/autoCompleteEstadoCivil"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/seleccione_el_estado_civil"
+                                android:importantForAccessibility="yes"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/n_mero_de_celular"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextCelular"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/digite_su_n_mero_de_celular"
+                            android:inputType="phone"
+                            android:textColorHint="@color/secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/direcci_n"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextDireccion"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/inserte_su_direcci_n"
+                            android:textColorHint="@color/secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/eps"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextEps"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/inserte_su_eps"
+                            android:textColorHint="@color/secondary" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="25dp">
+
+                            <TextView
+                                android:id="@+id/tvSepararEmergencia"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/contacto_de_emergencia"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginEnd="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/tvSepararEmergencia"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/tvSepararEmergencia"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="9dp"
+                            android:text="@string/nombre_completo"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextNombreContacto"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/inserte_el_nombre_del_contacto"
+                            android:textColorHint="@color/secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/n_mero_de_celular"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextCelularContacto"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/digite_el_celular_de_su_contacto"
+                            android:inputType="phone"
+                            android:textColorHint="@color/secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/parentesco"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextParentescoContacto"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/parentesco_con_su_contacto"
+                            android:textColorHint="@color/secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/direccion_emergencia"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextDireccionContacto"
+                            android:layout_width="350dp"
+                            android:layout_height="48dp"
+                            android:hint="@string/direcci_n_de_su_contacto"
+                            android:textColorHint="@color/secondary" />
+
+                    </LinearLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="25dp">
+
                         <TextView
-                            android:id="@+id/tvSepararPermisos"
+                            android:id="@+id/tvSepararObservaciones"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/permisos_en_la_aplicaci_n"
+                            android:text="@string/observaciones"
+                            android:textColor="@color/black"
                             android:textSize="17sp"
                             android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:textColor="@color/black"/>
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <View
                             android:layout_width="0dp"
                             android:layout_height="1dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/tvSepararPermisos"
-                            app:layout_constraintTop_toTopOf="parent"
                             android:layout_marginEnd="7dp"
+                            android:background="@color/secondary"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
+                            app:layout_constraintEnd_toStartOf="@id/tvSepararObservaciones"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <View
                             android:layout_width="0dp"
                             android:layout_height="1dp"
-                            app:layout_constraintStart_toEndOf="@id/tvSepararPermisos"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
                             android:layout_marginStart="7dp"
+                            android:background="@color/secondary"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            android:background="@color/secondary"/>
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/tvSepararObservaciones"
+                            app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/selectRole"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="350dp"
-                        android:layout_height="60dp"
-                        android:textColorHint="@color/secondary"
-                        app:boxStrokeColor="@color/azulPrincipal"
-                        app:hintTextColor="@color/azulPrincipal">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/observaciones"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="160">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/autoCompleteRole"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextObsevaciones"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Selecciones rol a asignar"
-                            android:importantForAccessibility="yes"
-                            android:inputType="none"
-                            android:text="Feligrés"
-                            />
+                            android:gravity="top|start"
+                            android:inputType="textMultiLine"
+                            android:minLines="3"
+                            android:padding="8dp" />
+
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="25dp">
+
+                            <TextView
+                                android:id="@+id/tvSepararCargo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/cargo_en_la_iglesia"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginEnd="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/tvSepararCargo"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/tvSepararCargo"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/es_lider"
+                                android:textSize="17sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switch1"
+                                style="@style/Widget.App.Switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/el_usuario_es_un_lider"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:thumbTint="@color/white" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="11dp">
+
+                            <TextView
+                                android:id="@+id/tvSeparadorEstadoAtencion"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/subtituloEstadoDeAtencion"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginEnd="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/tvSeparadorEstadoAtencion"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/tvSeparadorEstadoAtencion"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/estado_de_atencion"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/selectEstadoAtecion"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="350dp"
+                            android:layout_height="60dp"
+                            android:textColorHint="@color/secondary"
+                            app:boxStrokeColor="@color/azulPrincipal"
+                            app:hintTextColor="@color/azulPrincipal">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/autoCompleteEstadoAtencion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/selecc_atencion"
+                                android:importantForAccessibility="yes"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/contRol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="25dp">
+
+                            <TextView
+                                android:id="@+id/tvSepararPermisos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/permisos_en_la_aplicaci_n"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginEnd="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@id/tvSepararPermisos"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="7dp"
+                                android:background="@color/secondary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/tvSepararPermisos"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/selectRole"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="350dp"
+                            android:layout_height="60dp"
+                            android:textColorHint="@color/secondary"
+                            app:boxStrokeColor="@color/azulPrincipal"
+                            app:hintTextColor="@color/azulPrincipal">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/autoCompleteRole"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Selecciones rol a asignar"
+                                android:importantForAccessibility="yes"
+                                android:inputType="none"
+                                android:text="Feligrés" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/buttonEditar"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:backgroundTint="@color/azulPrincipal"
+                    android:text="@string/editar_usuario"
+                    tools:textSize="17sp" />
 
             </LinearLayout>
-
-            <Button
-                android:id="@+id/buttonEditar"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"
-                android:backgroundTint="@color/azulPrincipal"
-                android:text="@string/editar_usuario"
-                tools:textSize="17sp" />
-
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

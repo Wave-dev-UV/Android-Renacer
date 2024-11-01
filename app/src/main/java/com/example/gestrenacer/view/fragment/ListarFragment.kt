@@ -153,11 +153,7 @@ class ListarFragment : Fragment() {
             binding.progress.isVisible = it
 
             if (!it) {
-                binding.listaFeligreses.visibility = View.VISIBLE
                 reanudarBusqueda()
-            }
-            else{
-                binding.listaFeligreses.visibility = View.INVISIBLE
             }
         }
     }

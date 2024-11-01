@@ -63,7 +63,9 @@ class UserViewModel @Inject constructor(
 
     fun crearUsuario(user: User) {
         viewModelScope.launch {
+            _progresState.value = true
             repository.saveUser(user)
+            _progresState.value = false
         }
     }
 
@@ -73,7 +75,9 @@ class UserViewModel @Inject constructor(
                     if (prevNum.isNotEmpty() && (user.celular != prevNum)) prevNum
                     else ""
                 )
+            _progresState.value = true
             repository.updateUser(user, numAnt)
+            _progresState.value = false
         }
     }
 

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.DatePicker
 import android.widget.EditText
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -54,6 +55,7 @@ class EditarUsuarioFragment : Fragment() {
     private fun controlador(){
         anadirRol()
         observerRol()
+        observerProgress()
         inicializarAdaptadores()
         inicializarFeligres()
         activarBoton()
@@ -120,6 +122,13 @@ class EditarUsuarioFragment : Fragment() {
         val data = arguments?.getString("rol")
         Log.d("rol",data.toString())
         userViewModel.colocarRol(data)
+    }
+
+    private fun observerProgress(){
+        userViewModel.progresState.observe(viewLifecycleOwner) {
+            binding.progress.isVisible = it
+            binding.contPrincipal.isVisible = !it
+        }
     }
 
     private fun observerRol(){
@@ -223,7 +232,7 @@ class EditarUsuarioFragment : Fragment() {
 
     private fun manejadorBtnVolver(){
         binding.imageButton.setOnClickListener{
-            findNavController().navigate(R.id.action_editarUsuarioFragment_to_visualizarUsuarioFragment, requireArguments())
+            findNavController().popBackStack()
         }
     }
 
