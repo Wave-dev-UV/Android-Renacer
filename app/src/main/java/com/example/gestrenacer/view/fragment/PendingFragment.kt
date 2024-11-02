@@ -87,7 +87,7 @@ class PendingFragment : Fragment(), Recargable {
     }
 
     private fun anadirRol() {
-        val pref = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
             ?.getString("rol", "Visualizador")
 
         val roles = pref in listOf("Administrador", "Gestor")

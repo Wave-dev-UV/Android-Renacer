@@ -1,5 +1,6 @@
 package com.example.gestrenacer.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,17 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.ActivityMainBinding
-import com.example.gestrenacer.view.fragment.ListarFragment
 import com.example.gestrenacer.view.fragment.NoConnectionFragment
-import com.example.gestrenacer.view.fragment.PendingFragment
 import com.example.gestrenacer.viewmodel.ConnectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import android.util.Log
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -55,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                         "NoConnectionFragment"
                     )
                     .commit()
-
+                binding.contBottomNav.isVisible = false
                 binding.noConnectionContainer.visibility = View.VISIBLE
             } else {
 
@@ -66,11 +63,22 @@ class MainActivity : AppCompatActivity() {
                 val currentFragment = navHostFragment?.childFragmentManager?.primaryNavigationFragment
 
                 if (currentFragment is Recargable) {
+                    mostrarBottomNav()
                     currentFragment.recargarDatos()
                 }
 
             }
         }
+    }
+
+    private fun mostrarBottomNav(){
+        val pref = getSharedPreferences("auth", Context.MODE_PRIVATE)
+            ?.getString("rol", "Visualizador")
+
+        if (pref in listOf("Adminsitrador","Gestor")){
+            visibilidadBottomBar(true)
+        }
+
     }
 
     private fun setupBottomNav(){

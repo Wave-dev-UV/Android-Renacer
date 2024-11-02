@@ -82,7 +82,7 @@ class VisualizarUsuarioFragment : Fragment() {
 
     private fun inicializarVariables() {
         user = arguments?.getSerializable("dataFeligres") as User
-        rol = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+        rol = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
             ?.getString("rol", "Visualizador") as String
 
         val actividad = activity as MainActivity
@@ -106,7 +106,7 @@ class VisualizarUsuarioFragment : Fragment() {
 
     private fun manejadorBotonBorrar() {
         binding.buttonBorrar.setOnClickListener {
-            val preferences = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            val preferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
             val numero = preferences?.getString("numero", "")
             val numeroVacio = numero?.isNotEmpty() as Boolean
 

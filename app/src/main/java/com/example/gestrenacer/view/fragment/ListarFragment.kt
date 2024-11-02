@@ -74,8 +74,8 @@ class ListarFragment : Fragment(), Recargable {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    activity?.deleteSharedPreferences("auth")
-                    activity?.finish()
+                    requireActivity().deleteSharedPreferences("auth")
+                    requireActivity().finish()
                 }
             })
     }
@@ -170,7 +170,7 @@ class ListarFragment : Fragment(), Recargable {
     }
 
     private fun anadirRol() {
-        val pref = activity?.getSharedPreferences("auth",Context.MODE_PRIVATE)?.getString("rol","Visualizador") as String
+        val pref = requireActivity().getSharedPreferences("auth",Context.MODE_PRIVATE)?.getString("rol","Visualizador") as String
         val roles = pref in listOf("Administrador", "Gestor")
         val actividad = activity as MainActivity
 
@@ -303,7 +303,7 @@ class ListarFragment : Fragment(), Recargable {
     }
 
     private fun verAutoborrado(list: List<User>): Int{
-        val preferences = activity?.getSharedPreferences("auth",Context.MODE_PRIVATE)
+        val preferences = requireActivity().getSharedPreferences("auth",Context.MODE_PRIVATE)
         val tel = preferences?.getString("numero","")
 
         return list.count { it.celular == tel }

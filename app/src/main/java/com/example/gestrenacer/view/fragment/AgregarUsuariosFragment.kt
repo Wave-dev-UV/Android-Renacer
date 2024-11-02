@@ -96,7 +96,7 @@ class AgregarUsuariosFragment : Fragment() {
     }
 
     private fun anadirRol() {
-        val pref = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
             ?.getString("rol", "Visualizador")
         val actividad = activity as MainActivity
         actividad.visibilidadBottomBar(false)
