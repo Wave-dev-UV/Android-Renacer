@@ -1,7 +1,6 @@
 package com.example.gestrenacer
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +59,6 @@ class LoginFragment : Fragment() {
                 putString("phoneNumber", binding.phoneNumberInput.text.toString())
                 putString("rol", authViewModel.rol.value)
             }
-            Log.d("prueba11","rol al verify: ${bundle.get("rol")}")
             findNavController().navigate(R.id.action_loginFragment_to_verifyFragment, bundle)
         })
 
@@ -81,7 +79,7 @@ class LoginFragment : Fragment() {
         val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
-                Toast.makeText(requireContext(), "Error: $errString", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Saliendo de identificación biométrica", Toast.LENGTH_SHORT).show()
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -89,7 +87,6 @@ class LoginFragment : Fragment() {
                 val bundle = Bundle().apply {
                     putString("rol", authViewModel.getUserRole())
                 }
-                Log.d("Prueba33","rol: ${authViewModel.getUserRole()}")
                 findNavController().navigate(R.id.action_loginFragment_to_listarFragment, bundle)
             }
 

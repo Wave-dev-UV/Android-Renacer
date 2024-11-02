@@ -2,7 +2,6 @@ package com.example.gestrenacer.viewmodel
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -87,7 +86,6 @@ class AuthViewModel @Inject constructor(
             if (userRole != null) {
                 sendVerificationCode(phoneNumber, activity)
                 _rol.value = userRole
-                Log.d("Prueba22", "rol en singin: ${userRole}")
                 saveUserRole(userRole)
             } else {
                 _accessGranted.value = false
