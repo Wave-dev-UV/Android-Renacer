@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -30,6 +32,10 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (authViewModel.isUserVerified() && !authViewModel.isReVerificationNeeded()) {
+            showBiometricPrompt()
+        }
 
         binding.generateCodeButton.setOnClickListener {
             val phoneNumber = binding.phoneNumberInput.text.toString().trim()
@@ -66,6 +72,38 @@ class LoginFragment : Fragment() {
         authViewModel.progress.observe(viewLifecycleOwner, Observer { isLoading ->
             binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
         })
+    }
+
+    private fun showBiometricPrompt() {
+        val executor = ContextCompat.getMainExecutor(requireContext())
+        val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                Toast.makeText(requireContext(), "Error: $errString", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                val bundle = Bundle().apply {
+                    putString("rol", authViewModel.getUserRole())
+                }
+
+                findNavController().navigate(R.id.action_loginFragment_to_listarFragment)
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                Toast.makeText(requireContext(), "Autenticación fallida", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Autenticación Biométrica")
+            .setSubtitle("Utiliza tu huella digital para acceder")
+            .setNegativeButtonText("Cancelar")
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
     }
 
     override fun onDestroyView() {
