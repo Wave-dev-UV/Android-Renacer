@@ -265,9 +265,9 @@ class ModalBottomSheet(
         val toggleButton = binding.createGroupToggle
         toggleButton.setOnClickListener {
             if (toggleButton.isChecked) {
-                binding.groupEv.visibility = View.VISIBLE
+                binding.groupEv.isEnabled = true
             } else {
-                binding.groupEv.visibility = View.GONE
+                binding.groupEv.isEnabled = false
             }
         }
 
