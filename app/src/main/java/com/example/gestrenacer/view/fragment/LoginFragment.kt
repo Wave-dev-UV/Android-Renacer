@@ -1,6 +1,7 @@
 package com.example.gestrenacer
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,6 +60,7 @@ class LoginFragment : Fragment() {
                 putString("phoneNumber", binding.phoneNumberInput.text.toString())
                 putString("rol", authViewModel.rol.value)
             }
+            Log.d("prueba11","rol al verify: ${bundle.get("rol")}")
             findNavController().navigate(R.id.action_loginFragment_to_verifyFragment, bundle)
         })
 
@@ -87,8 +89,8 @@ class LoginFragment : Fragment() {
                 val bundle = Bundle().apply {
                     putString("rol", authViewModel.getUserRole())
                 }
-
-                findNavController().navigate(R.id.action_loginFragment_to_listarFragment)
+                Log.d("Prueba33","rol: ${authViewModel.getUserRole()}")
+                findNavController().navigate(R.id.action_loginFragment_to_listarFragment, bundle)
             }
 
             override fun onAuthenticationFailed() {
