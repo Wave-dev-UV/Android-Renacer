@@ -98,7 +98,9 @@ class PendingFragment : Fragment() {
 
     private fun observerListPendingFeligreses(){
             userViewModel.listaUsers.observe(viewLifecycleOwner){
-                userList = it
+                if (it != null) {
+                    userList = it
+                }
 
                 if (adapter == null) {
                     adapter = PendingUserAdapter(userList.toMutableList(), findNavController(), userViewModel.rol.value, userViewModel)
