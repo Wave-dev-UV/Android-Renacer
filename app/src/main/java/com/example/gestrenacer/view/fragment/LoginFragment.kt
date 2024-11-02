@@ -1,13 +1,13 @@
 package com.example.gestrenacer
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -15,6 +15,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.databinding.FragmentLoginBinding
 import com.example.gestrenacer.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Timer
+import java.util.TimerTask
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -22,6 +24,9 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private val authViewModel: AuthViewModel by viewModels()
+
+    private var bloqueado = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +45,12 @@ class LoginFragment : Fragment() {
             btnUsarHuella.visibility = View.VISIBLE
 
             btnUsarHuella.setOnClickListener {
-                showBiometricPrompt()
+                if (bloqueado) {
+                        Toast.makeText(requireContext(), "Demasiados intentos fallidos, prueba luego", Toast.LENGTH_SHORT).show()
+
+                } else {
+                    showBiometricPrompt()
+                }
             }
 
             showBiometricPrompt()
@@ -88,7 +98,9 @@ class LoginFragment : Fragment() {
         val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
-                Toast.makeText(requireContext(), "Saliendo de identificación biométrica", Toast.LENGTH_SHORT).show()
+                Log.d("biometria","error biometría: ${errString} code: $errorCode")
+
+                bloqueado = errorCode == 9
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -99,10 +111,7 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(R.id.action_loginFragment_to_listarFragment, bundle)
             }
 
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                Toast.makeText(requireContext(), "Autenticación fallida", Toast.LENGTH_SHORT).show()
-            }
+
         })
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
