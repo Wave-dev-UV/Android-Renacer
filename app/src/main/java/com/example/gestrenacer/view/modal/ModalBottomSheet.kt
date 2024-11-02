@@ -1,22 +1,28 @@
 package com.example.gestrenacer.view.modal
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.SheetFiltrosBinding
+import com.example.gestrenacer.models.Group
+import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.Timestamp
 import java.util.Calendar
 import java.util.Date
 
-class ModalBottomSheet (
+class ModalBottomSheet(
     val filtrarFuncion: (Timestamp, Timestamp, List<String>, List<String>, List<String>, String, String) -> Unit,
     private val filtros: List<List<String>>,
-    private val orden: List<String>
+    private val orden: List<String>,
+    private val groupViewModel: GroupViewModel,
+    context: Context?
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
 
@@ -122,58 +128,99 @@ class ModalBottomSheet (
 
     private fun manejadorBtnFiltrar(){
         binding.btnAplicarFiltro.setOnClickListener{
-            val listSexo = ArrayList<String>()
-            val listEstado = ArrayList<String>()
-            val listOrden = ArrayList<String>()
-            var fechaInicial = Date().apply {
-                hours = 0
-                minutes = 0
-                seconds = 0
+            val createGroupToggle = binding.createGroupToggle
+            val groupEvName = binding.groupEv.text.toString()
+
+            fun executeFilter() {
+                val listSexo = ArrayList<String>()
+                val listEstado = ArrayList<String>()
+                val listOrden = ArrayList<String>()
+                var fechaInicial = Date().apply {
+                    hours = 0
+                    minutes = 0
+                    seconds = 0
+                }
+                var fechaFinal = Date().apply {
+                    hours = 0
+                    minutes = 0
+                    seconds = 0
+                }
+
+                if (binding.checkFemenino.isChecked) listSexo.add("Femenino")
+                if (binding.checkMasculino.isChecked) listSexo.add("Masculino")
+                if (binding.checkCasado.isChecked) listEstado.add("Casado(a)")
+                if (binding.checkSoltero.isChecked) listEstado.add("Soltero(a)")
+                if (binding.checkDivorciado.isChecked) listEstado.add("Divorciado(a)")
+                if (binding.checkLibre.isChecked) listEstado.add("Unión libre")
+                if (binding.checkViudo.isChecked) listEstado.add("Viudo(a)")
+
+                when (binding.radioGroup.checkedRadioButtonId){
+                    R.id.radioBtnAlfabeticoAsc -> listOrden.addAll(arrayOf("nombre","ascendente"))
+                    R.id.radioBtnAlfabeticoDesc -> listOrden.addAll(arrayOf("nombre","descendente"))
+                    R.id.radioBtnEdadAsc -> listOrden.addAll(arrayOf("fechaNacimiento","ascendente"))
+                    R.id.radioBtnEdadDesc -> listOrden.addAll(arrayOf("fechaNacimiento","descendente"))
+                    R.id.radioBtnAntiguedadAsc -> listOrden.addAll(arrayOf("fechaCreacion","ascendente"))
+                    R.id.radioBtnAntiguedadDesc -> listOrden.addAll(arrayOf("fechaCreacion","descendente"))
+                }
+
+                if (binding.txtEdadFinal.text.isNotEmpty()){
+                    fechaInicial.year -= binding.txtEdadFinal.text.toString().toInt() + 1
+                }
+                else{
+                    fechaInicial.year = 0 //1900
+                    fechaInicial.month = 0 //enero
+                    fechaInicial.date = 1 //1
+                }
+                if (binding.txtEdadInicial.text.isNotEmpty()){
+                    fechaFinal.year -= binding.txtEdadInicial.text.toString().toInt() - 1
+                }
+                else {
+                    fechaFinal.year = 300 //2200
+                    fechaFinal.month = 12 //diciembre
+                    fechaFinal.date = 0 //21
+                }
+
+                Log.d("DEBUG_TAG", "Timestamp(fechaInicial): " + fechaInicial.toString());
+                Log.d("DEBUG_TAG", "Timestamp(fechaFinal): " + fechaFinal.toString());
+                Log.d("DEBUG_TAG", "listEstado: " + listEstado.toString());
+                Log.d("DEBUG_TAG", "listSexo: " + listSexo.toString());
+                Log.d("DEBUG_TAG", "filtros[3]: " + filtros[3].toString());
+                Log.d("DEBUG_TAG", "listOrden[0]: " + listOrden.get(0).toString());
+                Log.d("DEBUG_TAG", "listOrden[1]: " + listOrden.get(1).toString());
+
+                val checkboxFilters: MutableList<String> = mutableListOf()
+
+                for (e in listSexo) {
+                    checkboxFilters.add(e)
+                }
+                for (e in listEstado) {
+                    checkboxFilters.add(e)
+                }
+
+                if (createGroupToggle.isChecked) {
+                    val groupWithFilters = Group(
+                        nombre=groupEvName,
+                        keyvalfilters = listOf(
+                            Pair("fechaInicial", fechaInicial.toString()),
+                            Pair("fechaFinal", fechaFinal.toString())
+                        ),
+                        listfilters = checkboxFilters
+                    )
+
+                    groupViewModel.saveGroup(groupWithFilters)
+                }
+
+                filtrarFuncion(
+                    Timestamp(fechaInicial), Timestamp(fechaFinal),
+                    listEstado, listSexo, filtros[3], listOrden[0], listOrden[1])
+                dismiss()
             }
-            var fechaFinal = Date().apply {
-                hours = 0
-                minutes = 0
-                seconds = 0
+            if (createGroupToggle.isChecked and (groupEvName == "")) {
+                Toast.makeText(context, "Por favor, asigna un nombre al grupo", Toast.LENGTH_LONG).show()
+            } else {
+                executeFilter()
             }
 
-            if (binding.checkFemenino.isChecked) listSexo.add("Femenino")
-            if (binding.checkMasculino.isChecked) listSexo.add("Masculino")
-            if (binding.checkCasado.isChecked) listEstado.add("Casado(a)")
-            if (binding.checkSoltero.isChecked) listEstado.add("Soltero(a)")
-            if (binding.checkDivorciado.isChecked) listEstado.add("Divorciado(a)")
-            if (binding.checkLibre.isChecked) listEstado.add("Unión libre")
-            if (binding.checkViudo.isChecked) listEstado.add("Viudo(a)")
-
-            when (binding.radioGroup.checkedRadioButtonId){
-                R.id.radioBtnAlfabeticoAsc -> listOrden.addAll(arrayOf("nombre","ascendente"))
-                R.id.radioBtnAlfabeticoDesc -> listOrden.addAll(arrayOf("nombre","descendente"))
-                R.id.radioBtnEdadAsc -> listOrden.addAll(arrayOf("fechaNacimiento","ascendente"))
-                R.id.radioBtnEdadDesc -> listOrden.addAll(arrayOf("fechaNacimiento","descendente"))
-                R.id.radioBtnAntiguedadAsc -> listOrden.addAll(arrayOf("fechaCreacion","ascendente"))
-                R.id.radioBtnAntiguedadDesc -> listOrden.addAll(arrayOf("fechaCreacion","descendente"))
-            }
-
-            if (binding.txtEdadFinal.text.isNotEmpty()){
-                fechaInicial.year -= binding.txtEdadFinal.text.toString().toInt() + 1
-            }
-            else{
-                fechaInicial.year = 0 //1900
-                fechaInicial.month = 0 //enero
-                fechaInicial.date = 1 //1
-            }
-            if (binding.txtEdadInicial.text.isNotEmpty()){
-                fechaFinal.year -= binding.txtEdadInicial.text.toString().toInt() - 1
-            }
-            else {
-                fechaFinal.year = 300 //2200
-                fechaFinal.month = 12 //diciembre
-                fechaFinal.date = 0 //21
-            }
-
-            filtrarFuncion(
-                Timestamp(fechaInicial), Timestamp(fechaFinal),
-                listEstado, listSexo, filtros[3], listOrden[0], listOrden[1])
-            dismiss()
         }
     }
 
@@ -217,7 +264,11 @@ class ModalBottomSheet (
     private fun manejadorCreadorDeGrupos(){
         val toggleButton = binding.createGroupToggle
         toggleButton.setOnClickListener {
-            toggleButton.isChecked.also { binding.groupEv.isEnabled = it }
+            if (toggleButton.isChecked) {
+                binding.groupEv.visibility = View.VISIBLE
+            } else {
+                binding.groupEv.visibility = View.GONE
+            }
         }
 
     }

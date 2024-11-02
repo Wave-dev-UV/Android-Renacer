@@ -17,6 +17,7 @@ import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
+import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +28,7 @@ import java.util.Date
 class ListarFragment : Fragment() {
     private lateinit var binding: FragmentListarFeligresesBinding
     private val userViewModel: UserViewModel by viewModels()
+    private val groupViewModel: GroupViewModel by viewModels()
     private var adapter: UserAdapter? = null
     private var userList = listOf<User>()
 
@@ -179,9 +181,15 @@ class ListarFragment : Fragment() {
     private fun manejadorBtnFiltro() {
         binding.btnFiltrar.setOnClickListener{
             val listFiltros = userViewModel.filtros.value as List<List<String>>
+            Log.d("Esto es una prueba", "XD")
+            listFiltros.forEachIndexed { index, innerList ->
+                innerList.forEachIndexed { innerIndex, item ->
+                    Log.d("ListFiltrosLog", "Item at [$index][$innerIndex]: $item")
+                }
+            }
             val listOrden = userViewModel.orden.value as List<String>
             val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
-                listFiltros,listOrden)
+                listFiltros,listOrden, groupViewModel, context)
             modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
         }
     }
