@@ -1,6 +1,7 @@
 package com.example.gestrenacer.viewmodel
 
 import android.util.Log
+import java.text.Normalizer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -64,6 +65,25 @@ class UserViewModel @Inject constructor(
     fun editarUsuario(user: User) {
         viewModelScope.launch {
             repository.updateUser(user)
+        }
+    }
+
+    fun eliminarUsuarios(users: List<User>) {
+        viewModelScope.launch {
+            try {
+                // Eliminar usuarios del repositorio
+                repository.eliminarUsuarios(users)
+                Log.d("UserViewModel", "Usuarios eliminados con éxito")
+
+                // Actualiza la lista de usuarios después de eliminar
+                val updatedList = _listaUsers.value?.filterNot { user ->
+                    users.any { it.firestoreID == user.firestoreID }
+                }
+                _listaUsers.value = updatedList // Actualiza la lista con los usuarios restantes
+
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error al eliminar usuarios: ${e.message}")
+            }
         }
     }
 
