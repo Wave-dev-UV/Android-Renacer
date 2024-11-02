@@ -127,4 +127,12 @@
     <string name="txtModalEliminar">¿Estás seguro de que deseas eliminar a los usuarios seleccionados?</string>
     <string name="txtErrorBorrarAdmin">Debes conservar al menos un administrador en la lista.</string>
     <string name="txtErrorBorrarTodos">No puedes borrar tu propio registro.</string>
+    <string name="txtPlantilla">Plantillas guardadas.</string>
+    <string name="txtGrupos">Grupos.</string>
+    <string name="txtFiltroSms">Filtros aplicados.</string>
+    <string name="lblMensaje">Mensaje</string>
+    <string name="lblNomPlantilla">Nombre plantilla.</string>
+    <string name="lblBtnEnviarSms">Enviar mensaje</string>
+    <string name="lblBtnEnvGuardSms">Enviar y guardar mensaje</string>
+    <string name="txtCrearPlantilla">¿Crear una plantilla a partir de este mensaje?</string>
 </resources>
