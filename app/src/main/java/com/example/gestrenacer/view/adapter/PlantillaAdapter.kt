@@ -8,18 +8,21 @@ import com.example.gestrenacer.models.Plantilla
 
 class PlantillaAdapter(
     private val plantillas: List<Plantilla>,
-    private val onPlantillaClick: (Plantilla) -> Unit // Callback para manejar el clic
+    private val onPlantillaClick: (Plantilla) -> Unit,
+    private val onPlantillaLongClick: (Plantilla) -> Unit
 ) : RecyclerView.Adapter<PlantillaAdapter.PlantillaViewHolder>() {
 
-    // ViewHolder para representar cada item en el RecyclerView
     inner class PlantillaViewHolder(private val binding: ItemPlantillaBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(plantilla: Plantilla) {
             binding.tvNombrePlantilla.text = plantilla.name
-            binding.tvMensajePlantilla.text = plantilla.message
 
-            // Configurar el clic
             binding.root.setOnClickListener {
-                onPlantillaClick(plantilla) // Llamar al callback
+                onPlantillaClick(plantilla)
+            }
+
+            binding.root.setOnLongClickListener {
+                onPlantillaLongClick(plantilla)
+                true
             }
         }
     }
@@ -40,4 +43,5 @@ class PlantillaAdapter(
     override fun getItemCount(): Int {
         return plantillas.size
     }
+
 }

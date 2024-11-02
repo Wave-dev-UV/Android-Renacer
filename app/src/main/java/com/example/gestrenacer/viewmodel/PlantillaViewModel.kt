@@ -60,21 +60,22 @@ class PlantillaViewModel @Inject constructor(
 //        }
 //    }
 //
-//    fun eliminarPlantillas(plantillas: List<Plantilla>) {
-//        viewModelScope.launch {
-//            try {
-//                repository.eliminarPlantillas(plantillas)
-//                Log.d("PlantillaViewModel", "Plantillas eliminadas con éxito")
-//
-//                // Actualiza la lista de plantillas después de la eliminación
-//                val listaActualizada = _plantillas.value?.filterNot { plantilla ->
-//                    plantillas.any { it.id == plantilla.id }
-//                }
-//                _plantillas.value = listaActualizada
-//
-//            } catch (e: Exception) {
-//                Log.e("PlantillaViewModel", "Error al eliminar plantillas: ${e.message}")
-//            }
-//        }
-//    }
+fun eliminarPlantillas(plantillas: List<Plantilla>) {
+    viewModelScope.launch {
+        try {
+            repository.eliminarPlantillas(plantillas)  // Llama al método correcto en el repositorio
+            Log.d("PlantillaViewModel", "Plantillas eliminadas con éxito")
+
+            // Actualiza la lista de plantillas después de la eliminación
+            val listaActualizada = _plantillas.value?.filterNot { plantilla ->
+                plantillas.any { it.id == plantilla.id }  // Compara correctamente los IDs
+            }
+            _plantillas.value = listaActualizada
+
+        } catch (e: Exception) {
+            Log.e("PlantillaViewModel", "Error al eliminar plantillas: ${e.message}")
+        }
+    }
+}
+
 }

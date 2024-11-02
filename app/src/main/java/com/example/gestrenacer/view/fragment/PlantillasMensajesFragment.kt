@@ -1,5 +1,6 @@
 package com.example.gestrenacer.view.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentPlantillasMensajesBinding
@@ -51,19 +53,21 @@ class PlantillasMensajesFragment : Fragment() {
     private fun initializeRecyclerView() {
         listaDePlantillas = mutableListOf()
 
-        // Inicialización del adaptador sin el contexto y con el callback
-        plantillaAdapter = PlantillaAdapter(listaDePlantillas) { plantilla ->
-            onPlantillaClick(plantilla) // Manejar el clic en la plantilla
-        }
+        plantillaAdapter = PlantillaAdapter(listaDePlantillas,
+            onPlantillaClick = { plantilla -> onPlantillaClick(plantilla) },
+            onPlantillaLongClick = { plantilla -> showPlantillaDetailsDialog(plantilla) }
+        )
 
         binding.recyclerViewPlantillas.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewPlantillas.adapter = plantillaAdapter
+
+        val dividerItemDecoration = DividerItemDecoration(binding.recyclerViewPlantillas.context, LinearLayoutManager.VERTICAL)
+        binding.recyclerViewPlantillas.addItemDecoration(dividerItemDecoration)
     }
 
-    // Método para manejar clics en las plantillas
     private fun onPlantillaClick(plantilla: Plantilla) {
-        // Aquí puedes manejar lo que sucede cuando se selecciona una plantilla
-        Toast.makeText(context, "Plantilla seleccionada: ${plantilla.name}", Toast.LENGTH_SHORT).show()
+        binding.etNombrePlantilla.setText(plantilla.name)
+        binding.etMensaje.setText(plantilla.message)
     }
 
     private fun setupObservers() {
@@ -83,12 +87,10 @@ class PlantillasMensajesFragment : Fragment() {
     private fun setupSwitchListener() {
         binding.switchCrearPlantilla.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                // Si el Switch está activado, muestra el botón para crear plantilla
                 binding.etNombrePlantilla.visibility = View.VISIBLE
                 binding.btnCrearPlantilla.visibility = View.VISIBLE
                 binding.btnEnviar.visibility = View.GONE
             } else {
-                // Si el Switch está desactivado, muestra el botón para enviar
                 binding.etNombrePlantilla.visibility = View.GONE
                 binding.btnCrearPlantilla.visibility = View.GONE
                 binding.btnEnviar.visibility = View.VISIBLE
@@ -114,15 +116,26 @@ class PlantillasMensajesFragment : Fragment() {
                 message = mensaje
             )
 
-            // Llamar al ViewModel para agregar la plantilla a la base de datos
             plantillaViewModel.crearPlantilla(nuevaPlantilla)
-
-            // Limpiar campos después de crear la plantilla
             binding.etMensaje.text.clear()
             binding.etNombrePlantilla.text.clear()
         } else {
-            // Mostrar un mensaje de error si los campos están vacíos
             Toast.makeText(context, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showPlantillaDetailsDialog(plantilla: Plantilla) {
+        val dialog = AlertDialog.Builder(requireContext())
+        dialog.setTitle(plantilla.name)
+        dialog.setMessage(plantilla.message)
+        dialog.setNegativeButton("Cancelar", null)
+        dialog.setPositiveButton("Borrar") { _, _ ->
+            // Crear una lista con la plantilla a eliminar
+            val plantillasAEliminar = listOf(plantilla)
+
+            // Lógica para borrar la plantilla
+            plantillaViewModel.eliminarPlantillas(plantillasAEliminar) // Llama al método de eliminar en el ViewModel
+        }
+        dialog.show()
     }
 }
