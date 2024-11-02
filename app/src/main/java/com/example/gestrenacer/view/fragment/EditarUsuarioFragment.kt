@@ -173,6 +173,7 @@ class EditarUsuarioFragment : Fragment() {
         if (receivedBundle != null) {
             bundleUser = receivedBundle.getSerializable("dataFeligres") as User
 
+            fechaNacimientoUser = bundleUser.fechaNacimiento
 
             binding.editTextNombre.setText(bundleUser.nombre)
             binding.editTextApellido.setText(bundleUser.apellido)

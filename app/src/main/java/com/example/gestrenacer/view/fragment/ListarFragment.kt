@@ -27,10 +27,12 @@ import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 import java.util.Date
+import com.example.gestrenacer.view.MainActivity.Recargable
+
 
 
 @AndroidEntryPoint
-class ListarFragment : Fragment() {
+class ListarFragment : Fragment(), Recargable {
     private lateinit var binding: FragmentListarFeligresesBinding
     private lateinit var rol: String
     private val userViewModel: UserViewModel by viewModels()
@@ -92,6 +94,11 @@ class ListarFragment : Fragment() {
 
     }
 
+    override fun recargarDatos() {
+        verFeligreses()
+        forceRecyclerViewUpdate()
+    }
+
     private fun verFeligreses() {
         val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
         val listSexo = resources.getStringArray(R.array.listaSexos).toList()
@@ -150,8 +157,6 @@ class ListarFragment : Fragment() {
             !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
         binding.toolbar.root.isVisible =
             !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
-
-
     }
 
     private fun observerProgress() {
