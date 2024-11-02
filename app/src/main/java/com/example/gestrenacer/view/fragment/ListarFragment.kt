@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.view.modal.ModalBottomSheet
@@ -84,7 +85,6 @@ class ListarFragment : Fragment() {
         configurarBusqueda()
         manejadorBtnAnadir()
         manejadorBtnMensaje()
-        manejadorBottomBar()
         manejadorBtnFiltro()
         manejadorBtnEliminar()
         manejadorBtnCancelar()
@@ -166,39 +166,23 @@ class ListarFragment : Fragment() {
 
     private fun anadirRol() {
         val pref = activity?.getSharedPreferences("auth",Context.MODE_PRIVATE)?.getString("rol","Visualizador") as String
+        val roles = pref in listOf("Administrador", "Gestor")
+        val actividad = activity as MainActivity
 
-        binding.contBottomNav.isVisible = pref in listOf("Administrador", "Gestor")
+        if (roles){
+            actividad.visibilidadBottomBar(true)
+        }
+
+        if (pref == "Gestor"){
+            actividad.modVisItemBottomBar(R.id.item_2,false)
+        }
+
         rol = pref
     }
 
     private fun reanudarBusqueda() {
         if (binding.toolbar.searchView.query.isNotEmpty()) {
             filter(binding.toolbar.searchView.query.toString())
-        }
-    }
-
-    private fun manejadorBottomBar() {
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.item_1 -> {
-                    Log.d("BottomNavSelect1", "Menú principal seleccionado")
-                    true
-                }
-
-                R.id.item_2 -> {
-                    Log.d("BottomNavSelect2", "Reportes seleccionado")
-                    true
-                }
-
-                R.id.item_3 -> {
-                    findNavController().navigate(
-                        R.id.action_listarFragment_to_pendingFragment
-                    )
-                    true
-                }
-
-                else -> false
-            }
         }
     }
 

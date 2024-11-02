@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentAgregarUsuariosBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
@@ -97,6 +98,8 @@ class AgregarUsuariosFragment : Fragment() {
     private fun anadirRol() {
         val pref = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
             ?.getString("rol", "Visualizador")
+        val actividad = activity as MainActivity
+        actividad.visibilidadBottomBar(false)
         rol = pref as String
     }
     private fun menuRol(){

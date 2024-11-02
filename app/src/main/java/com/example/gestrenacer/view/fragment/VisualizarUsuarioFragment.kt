@@ -13,6 +13,7 @@ import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentVisualizarUsuarioBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.utils.Format
+import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,6 +84,10 @@ class VisualizarUsuarioFragment : Fragment() {
         user = arguments?.getSerializable("dataFeligres") as User
         rol = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
             ?.getString("rol", "Visualizador") as String
+
+        val actividad = activity as MainActivity
+        actividad.visibilidadBottomBar(false)
+
         binding.user = user
     }
 

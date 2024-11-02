@@ -69,15 +69,15 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun editarUsuario(user: User, prevNum: String = "") {
+    fun editarUsuario(user: User, prevNum: String = "", llamado: Boolean = false) {
         viewModelScope.launch {
             val numAnt = (
                     if (prevNum.isNotEmpty() && (user.celular != prevNum)) prevNum
                     else ""
                 )
-            _progresState.value = true
-            _resOperacion.value = repository.updateUser(user, numAnt)
-            _progresState.value = false
+            if (!llamado) _progresState.value = true
+            _resOperacion.value = repository.updateUser(user, numAnt, llamado)
+            if (!llamado) _progresState.value = false
         }
     }
 

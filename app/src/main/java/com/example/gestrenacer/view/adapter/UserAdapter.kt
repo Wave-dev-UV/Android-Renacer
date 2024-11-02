@@ -158,7 +158,7 @@ class UserAdapter(
         private fun manejadorAnadirPendientes(user: User) {
             binding.addPendingUser.setOnClickListener {
                 user.estadoAtencion = if (user.estadoAtencion == "Por Llamar") "Llamado" else "Por Llamar"
-                usersViewModel.editarUsuario(user)
+                usersViewModel.editarUsuario(user, llamado = true)
                 adapter.changeStatus(bindingAdapterPosition)
             }
         }

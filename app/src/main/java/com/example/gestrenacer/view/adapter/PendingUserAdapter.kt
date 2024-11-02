@@ -95,7 +95,7 @@ class PendingUserAdapter(
         private fun manejadorEliminarPendientes (user:User) {
             binding.removePendingUser.setOnClickListener {
                 user.estadoAtencion = "Llamado"
-                usersViewModel.editarUsuario(user)
+                usersViewModel.editarUsuario(user, llamado = true)
 
                 val position = absoluteAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {

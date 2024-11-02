@@ -80,7 +80,7 @@ class UserRepositorio @Inject constructor(
         }
     }
 
-    suspend fun updateUser(feligres: User, prevNum: String): Int {
+    suspend fun updateUser(feligres: User, prevNum: String, llamado: Boolean): Int {
         return feligres.firestoreID.let { id ->
             try {
                 var res = 0
@@ -98,7 +98,7 @@ class UserRepositorio @Inject constructor(
 
                 val numRepetido = usersCollection.whereEqualTo("celular", feligres.celular).get().await()
 
-                if (numRepetido.isEmpty) usersCollection.document(id).set(feligres).await()
+                if (numRepetido.isEmpty || llamado) usersCollection.document(id).set(feligres).await()
                 else res = 1
 
                 res
