@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -33,7 +34,15 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val btnUsarHuella = binding.lblUsarHuella
+
         if (authViewModel.isUserVerified() && !authViewModel.isReVerificationNeeded()) {
+            btnUsarHuella.visibility = View.VISIBLE
+
+            btnUsarHuella.setOnClickListener {
+                showBiometricPrompt()
+            }
+
             showBiometricPrompt()
         }
 

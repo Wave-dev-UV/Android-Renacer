@@ -57,6 +57,8 @@
             android:layout_marginVertical="100dp"
             android:text="@string/lbl_Usar_Huella"
             android:textSize="17sp"
-            android:textColor="@color/azulPrincipal"/>
+            android:textColor="@color/azulPrincipal"
+            android:visibility="gone"
+            />
     </LinearLayout>
 </ScrollView>
