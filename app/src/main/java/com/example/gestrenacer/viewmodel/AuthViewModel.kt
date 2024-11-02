@@ -68,7 +68,7 @@ class AuthViewModel @Inject constructor(
         val currentTime = System.currentTimeMillis()
 
 
-        return (currentTime - lastVerification) >  2 * 60 * 1000
+        return (currentTime - lastVerification) >  24 * 60 * 60 * 1000
     }
 
     fun saveLastVerificationTime() {
