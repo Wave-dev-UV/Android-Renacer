@@ -253,7 +253,8 @@ class EditarUsuarioFragment : Fragment() {
     }
 
     private fun manejadorBtnVolver() {
-        binding.imageButton.setOnClickListener {
+        binding.toolbar.lblToolbar.text = getString(R.string.tituloEditarUsuario)
+        binding.toolbar.btnVolver.setOnClickListener {
             findNavController().popBackStack()
         }
     }

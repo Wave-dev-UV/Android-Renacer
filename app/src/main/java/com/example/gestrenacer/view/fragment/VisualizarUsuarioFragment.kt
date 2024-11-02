@@ -131,7 +131,8 @@ class VisualizarUsuarioFragment : Fragment() {
     }
 
     private fun manejadorBotonVolver() {
-        binding.imageButton.setOnClickListener {
+        binding.toolbar.lblToolbar.text = getString(R.string.ver_usuario)
+        binding.toolbar.btnVolver.setOnClickListener {
             findNavController().popBackStack()
         }
     }

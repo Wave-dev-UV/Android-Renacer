@@ -201,7 +201,8 @@ class AgregarUsuariosFragment : Fragment() {
     }
 
     private fun manejadorBtnVolver(){
-        binding.btnVolver.setOnClickListener {
+        binding.toolbar.lblToolbar.text = getString(R.string.ver_usuario)
+        binding.toolbar.btnVolver.setOnClickListener {
             findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment)
         }
     }
