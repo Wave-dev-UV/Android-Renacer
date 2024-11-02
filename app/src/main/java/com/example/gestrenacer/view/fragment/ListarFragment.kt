@@ -106,7 +106,9 @@ class ListarFragment : Fragment() {
 
     private fun observerListFeligreses() {
         userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
-            userList = lista
+            if (lista != null) {
+                userList = lista
+            }
             binding.lblResultado.text = "Resultados: ${userList.size}"
             binding.txtNoResultados.isVisible = userList.isEmpty()
 
@@ -213,6 +215,9 @@ class ListarFragment : Fragment() {
     private fun manejadorBtnMensaje() {
         binding.btnEnviarSms.setOnClickListener {
             Log.d("BtnSMS", "Clic en el botón de SMS")
+            findNavController().navigate(R.id.action_listarFragment_to_plantillasMensajesFragment)
+
+
         }
     }
 

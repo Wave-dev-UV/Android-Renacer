@@ -45,6 +45,9 @@
          <action
              android:id="@+id/action_listarFragment_to_pendingFragment"
              app:destination="@id/pendingFragment" />
+         <action
+             android:id="@+id/action_listarFragment_to_plantillasMensajesFragment"
+             app:destination="@id/plantillasMensajesFragment" />
      </fragment>
 
     <fragment
@@ -99,4 +102,15 @@
             android:id="@+id/action_visualizarUsuarioFragment_to_editarUsuarioFragment"
             app:destination="@id/editarUsuarioFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/plantillasMensajesFragment"
+        android:name="com.example.gestrenacer.view.fragment.PlantillasMensajesFragment"
+        android:label="PlantillasMensajesFragment"
+        tools:layout="@layout/fragment_plantillas_mensajes">
+        <action
+            android:id="@+id/action_plantillasMensajesFragment_to_listarFragment"
+            app:destination="@id/listarFragment" />
+    </fragment>
+
 </navigation>
