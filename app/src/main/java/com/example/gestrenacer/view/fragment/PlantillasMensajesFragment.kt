@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -46,8 +47,7 @@ class PlantillasMensajesFragment : Fragment() {
         setupObservers()
         setupSwitchListener()
         btonCrearplantilla()
-
-
+        BotonVolver()
     }
 
     private fun initializeRecyclerView() {
@@ -101,6 +101,13 @@ class PlantillasMensajesFragment : Fragment() {
     private fun btonCrearplantilla() {
         binding.btnCrearPlantilla.setOnClickListener {
             crearPlantilla()
+        }
+    }
+
+    private fun BotonVolver() {
+        val btnVolver: ImageButton = requireView().findViewById(R.id.btnVolver)
+        btnVolver.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
     }
 
