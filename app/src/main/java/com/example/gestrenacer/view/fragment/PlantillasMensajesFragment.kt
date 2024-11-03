@@ -62,10 +62,16 @@ class PlantillasMensajesFragment : Fragment() {
         setupObservers()
         setupSwitchListener()
         btonCrearplantilla()
-
+        setBackBtnUp()
 
     }
 
+
+    private fun setBackBtnUp() {
+        binding.btnVolver.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
 
 
     private fun formatearFecha(timestamp: Timestamp): String{

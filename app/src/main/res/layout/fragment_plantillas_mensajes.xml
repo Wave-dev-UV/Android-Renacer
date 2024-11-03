@@ -3,18 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/azulPrincipal"
-            android:orientation="horizontal"
             android:paddingVertical="10dp">
-
 
             <TextView
                 android:id="@+id/tvTituloMensajeria"
@@ -45,97 +43,149 @@
                 tools:ignore="ImageContrastCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:padding="16dp">
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/leftBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="start"
+                app:constraint_referenced_ids="guidelineLeft" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/rightBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="end"
+                app:constraint_referenced_ids="guidelineRight" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.03" />
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.97" />
 
             <TextView
                 android:id="@+id/textViewGrupos"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:text="Grupos predeterminados"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <AutoCompleteTextView
                 android:id="@+id/groupsAutoCompleteTv"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Type to search"
-                android:inputType="text" />
+                android:inputType="text"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/textViewGrupos"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
 
             <EditText
                 android:id="@+id/etMensaje"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="100dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/edittext_background"
                 android:gravity="top"
                 android:hint="Escribe un mensaje"
-                android:padding="10dp" />
+                android:padding="10dp"
+                app:layout_constraintTop_toBottomOf="@id/groupsAutoCompleteTv"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvPlantilla"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
+                android:layout_marginTop="16dp"
+                android:text="¿Deseas crear una plantilla de este mensaje?"
+                app:layout_constraintTop_toBottomOf="@id/etMensaje"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toStartOf="@id/switchCrearPlantilla" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="¿Deseas crear una plantilla de este mensaje?" />
-
-                <Switch
-                    android:id="@+id/switchCrearPlantilla"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
+            <Switch
+                android:id="@+id/switchCrearPlantilla"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/tvPlantilla"
+                app:layout_constraintBottom_toBottomOf="@id/tvPlantilla"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
 
             <EditText
                 android:id="@+id/etNombrePlantilla"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Nombre de la plantilla"
-                android:layout_marginBottom="16dp"
-                android:visibility="gone"/>
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/tvPlantilla"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
 
-            <!-- Botón de enviar -->
             <Button
                 android:id="@+id/btnEnviar"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Enviar"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/etNombrePlantilla"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
 
             <Button
                 android:id="@+id/btnCrearPlantilla"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Crear plantilla y enviar"
-                android:layout_marginBottom="24dp"
-                android:visibility="gone"/>
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/btnEnviar"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
 
-            <!-- Lista de plantillas de mensajes -->
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tvTituloPlantillas"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Plantillas de mensajes"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@id/btnCrearPlantilla"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewPlantillas"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/tvTituloPlantillas"
+                app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

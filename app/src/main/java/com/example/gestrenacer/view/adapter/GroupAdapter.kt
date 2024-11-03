@@ -45,6 +45,7 @@ class GroupAdapter(
             group?.let {
                 autoCompleteTextView.setText(it.nombre, false)
                 autoCompleteTextView.dismissDropDown()
+                autoCompleteTextView.setSelection(it.nombre.length)
             }
         }
         view.setOnLongClickListener {
