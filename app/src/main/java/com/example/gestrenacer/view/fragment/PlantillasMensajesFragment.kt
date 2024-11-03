@@ -1,18 +1,19 @@
 package com.example.gestrenacer.view.fragment
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentPlantillasMensajesBinding
 import com.example.gestrenacer.models.Plantilla
 import com.example.gestrenacer.view.adapter.PlantillaAdapter
@@ -56,16 +57,74 @@ class PlantillasMensajesFragment : Fragment() {
 
     }
 
+    class GroupAdapter(
+        context: Context,
+        private val groups: List<String>,
+        private val autoCompleteTextView: AutoCompleteTextView,
+        private val onItemClick: (String) -> Unit,
+        private val onItemLongClick: (String) -> Unit,
+        private val showDetailsDialog: (String) -> Unit
+    ) : ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, groups) {
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = super.getView(position, convertView, parent)
+            val groupName = getItem(position)
+
+            val typedValue = TypedValue()
+            context.theme.resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true)
+            view.setBackgroundResource(typedValue.resourceId)
+
+            view.setOnClickListener {
+                groupName?.let {
+                    onItemClick(it)
+                    autoCompleteTextView.setText(it, false)
+                }
+            }
+
+            view.setOnLongClickListener {
+                groupName?.let { showDetailsDialog(it) }
+                true
+            }
+
+            return view
+        }
+    }
+
     private fun initGroupsAutocomplete() {
         val autoCompleteTextView = binding.groupsAutoCompleteTv
-
-        // Observe listaGroups LiveData to update the adapter whenever the data changes
         groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
-            val groupsList = groups.map { it.nombre }.toMutableList()
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, groupsList)
+            val groupsList = groups.map { it.nombre }
+
+            val showDetailsDialog: (String) -> Unit = { groupName ->
+                val dialog = AlertDialog.Builder(requireContext())
+                dialog.setTitle(groupName)
+                dialog.setMessage("Este grupo incluye las siguientes categorías:")
+                dialog.setNegativeButton("Cancelar", null)
+                dialog.setPositiveButton("Borrar") { _, _ ->
+                    val itemsToDelete = groups.filter { it.nombre == groupName }
+                    groupViewModel.deleteGroup(itemsToDelete[0])
+                    groupViewModel.getGroups()
+                }
+                dialog.show()
+            }
+
+            val adapter = GroupAdapter(
+                context = requireContext(),
+                groups = groupsList,
+                autoCompleteTextView = autoCompleteTextView,
+                onItemClick = { groupName ->
+                    Toast.makeText(requireContext(), "Selected: $groupName", Toast.LENGTH_SHORT).show()
+                },
+                onItemLongClick = { groupName ->
+                    Toast.makeText(requireContext(), "Long pressed: $groupName", Toast.LENGTH_SHORT).show()
+                },
+                showDetailsDialog = showDetailsDialog
+            )
+
             autoCompleteTextView.setAdapter(adapter)
         }
     }
+
 
     private fun initializeRecyclerView() {
         listaDePlantillas = mutableListOf()

@@ -39,4 +39,14 @@ class GroupViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteGroup(group: Group) {
+        viewModelScope.launch {
+            try {
+                repository.deleteGroup(group)
+            } catch (e: Exception) {
+                Log.e("GroupViewModel", "Failed to delete group: ${e.message}", e)
+            }
+        }
+    }
 }

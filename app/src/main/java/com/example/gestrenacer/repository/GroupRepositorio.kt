@@ -31,9 +31,18 @@ class GroupRepositorio @Inject constructor() {
 
     suspend fun saveGroup(group: Group) {
         try {
-            groupsCollection.add(group).await()
+            // Use the group name as the document ID
+            groupsCollection.document(group.nombre).set(group).await()
         } catch (e: Exception) {
             Log.e("GroupRepositorio", "Error adding group: ${e.message}", e)
+        }
+    }
+
+    suspend fun deleteGroup(group: Group) {
+        try {
+            groupsCollection.document(group.nombre).delete().await()
+        } catch (e: Exception) {
+            Log.e("GroupRepositorio", "Error deleting group: ${e.message}", e)
         }
     }
 }
