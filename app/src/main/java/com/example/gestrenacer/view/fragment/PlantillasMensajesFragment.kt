@@ -76,6 +76,11 @@ class PlantillasMensajesFragment : Fragment() {
                 updatePlantillaList(it)
             }
         }
+
+        // Observa el estado de progreso
+        plantillaViewModel.progresState.observe(viewLifecycleOwner) { isLoading ->
+            // Aquí puedes manejar la lógica de mostrar/ocultar un indicador de carga si es necesario
+        }
     }
 
     private fun updatePlantillaList(plantillas: List<Plantilla>) {
@@ -123,9 +128,14 @@ class PlantillasMensajesFragment : Fragment() {
                 message = mensaje
             )
 
-            plantillaViewModel.crearPlantilla(nuevaPlantilla)
-            binding.etMensaje.text.clear()
-            binding.etNombrePlantilla.text.clear()
+            // Comprobar si la plantilla es duplicada antes de crearla
+            if (!plantillaViewModel.plantillaDuplicada(nuevaPlantilla.name)) {
+                plantillaViewModel.crearPlantilla(nuevaPlantilla)
+                binding.etMensaje.text.clear()
+                binding.etNombrePlantilla.text.clear()
+            } else {
+                Toast.makeText(context, "Ya existe una plantilla con ese nombre", Toast.LENGTH_SHORT).show()
+            }
         } else {
             Toast.makeText(context, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
         }
