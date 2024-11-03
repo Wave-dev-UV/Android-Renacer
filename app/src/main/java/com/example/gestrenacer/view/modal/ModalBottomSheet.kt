@@ -21,8 +21,7 @@ class ModalBottomSheet(
     val filtrarFuncion: (Timestamp, Timestamp, List<String>, List<String>, List<String>, String, String) -> Unit,
     private val filtros: List<List<String>>,
     private val orden: List<String>,
-    private val groupViewModel: GroupViewModel,
-    context: Context?
+    private val groupViewModel: GroupViewModel
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
 
@@ -180,14 +179,6 @@ class ModalBottomSheet(
                     fechaFinal.date = 0 //21
                 }
 
-                Log.d("DEBUG_TAG", "Timestamp(fechaInicial): " + fechaInicial.toString());
-                Log.d("DEBUG_TAG", "Timestamp(fechaFinal): " + fechaFinal.toString());
-                Log.d("DEBUG_TAG", "listEstado: " + listEstado.toString());
-                Log.d("DEBUG_TAG", "listSexo: " + listSexo.toString());
-                Log.d("DEBUG_TAG", "filtros[3]: " + filtros[3].toString());
-                Log.d("DEBUG_TAG", "listOrden[0]: " + listOrden.get(0).toString());
-                Log.d("DEBUG_TAG", "listOrden[1]: " + listOrden.get(1).toString());
-
                 val checkboxFilters: MutableList<String> = mutableListOf()
 
                 for (e in listSexo) {
@@ -200,11 +191,11 @@ class ModalBottomSheet(
                 if (createGroupToggle.isChecked) {
                     val groupWithFilters = Group(
                         nombre=groupEvName,
-                        keyvalfilters = listOf(
-                            Pair("fechaInicial", fechaInicial.toString()),
-                            Pair("fechaFinal", fechaFinal.toString())
+                        datesfilters = listOf(
+                           fechaInicial.toString(),
+                            fechaFinal.toString()
                         ),
-                        listfilters = checkboxFilters
+                        checkboxfilters = checkboxFilters
                     )
 
                     groupViewModel.saveGroup(groupWithFilters)

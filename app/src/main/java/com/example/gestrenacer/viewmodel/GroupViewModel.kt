@@ -14,25 +14,28 @@ import javax.inject.Inject
 @HiltViewModel
 class GroupViewModel @Inject constructor(
     private val repository: GroupRepositorio
-): ViewModel() {
+) : ViewModel() {
+
     private val _listaGroups = MutableLiveData<List<Group>>()
     val listaGroups: LiveData<List<Group>> = _listaGroups
 
-//    fun getGroups() {
-//        viewModelScope.launch {}
-//            try {
-//                _listaGroups.value = repository.getGroups()
-//            }  catch (e: Exception) {
-//                Log.d("error: ", e.toString())
-//            }
-//    }
+    fun getGroups() {
+        viewModelScope.launch {
+            try {
+                // Use postValue to set LiveData safely from a background thread
+                _listaGroups.postValue(repository.getGroups())
+            } catch (e: Exception) {
+                Log.e("GroupViewModel", "Failed to fetch groups: ${e.message}", e)
+            }
+        }
+    }
 
     fun saveGroup(group: Group) {
         viewModelScope.launch {
             try {
                 repository.saveGroup(group)
-            }  catch (e: Exception) {
-                Log.d("error: ", e.toString())
+            } catch (e: Exception) {
+                Log.e("GroupViewModel", "Failed to save group: ${e.message}", e)
             }
         }
     }

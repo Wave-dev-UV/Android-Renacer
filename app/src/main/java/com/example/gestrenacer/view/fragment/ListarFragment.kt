@@ -215,7 +215,7 @@ class ListarFragment : Fragment() {
             }
             val listOrden = userViewModel.orden.value as List<String>
             val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
-                listFiltros,listOrden, groupViewModel, context)
+                listFiltros,listOrden, groupViewModel)
             modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
         }
     }

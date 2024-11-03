@@ -59,11 +59,12 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/spinnerGrupos"
+            <AutoCompleteTextView
+                android:id="@+id/groupsAutoCompleteTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp" />
+                android:hint="Type to search"
+                android:inputType="text" />
 
             <EditText
                 android:id="@+id/etMensaje"

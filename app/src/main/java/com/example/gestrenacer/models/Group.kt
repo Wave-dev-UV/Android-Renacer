@@ -4,8 +4,8 @@ import java.io.Serializable
 
 data class Group(
     var nombre: String,
-    var keyvalfilters: List<Pair<String, String>>,
-    var listfilters: List<String>
+    var datesfilters: List<String>,
+    var checkboxfilters: List<String>
 ) : Serializable {
     constructor() : this (
         "",

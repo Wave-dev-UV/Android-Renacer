@@ -2,10 +2,12 @@ package com.example.gestrenacer.view.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,6 +16,7 @@ import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentPlantillasMensajesBinding
 import com.example.gestrenacer.models.Plantilla
 import com.example.gestrenacer.view.adapter.PlantillaAdapter
+import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.PlantillaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
@@ -25,6 +28,7 @@ class PlantillasMensajesFragment : Fragment() {
     private val plantillaViewModel: PlantillaViewModel by viewModels()
     private lateinit var listaDePlantillas: MutableList<Plantilla>
     private lateinit var plantillaAdapter: PlantillaAdapter
+    private val groupViewModel: GroupViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,17 +41,30 @@ class PlantillasMensajesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        groupViewModel.getGroups()
         componentes()
         plantillaViewModel.obtenerPlantillas()
     }
 
     private fun componentes() {
+        initGroupsAutocomplete()
         initializeRecyclerView()
         setupObservers()
         setupSwitchListener()
         btonCrearplantilla()
 
 
+    }
+
+    private fun initGroupsAutocomplete() {
+        val autoCompleteTextView = binding.groupsAutoCompleteTv
+
+        // Observe listaGroups LiveData to update the adapter whenever the data changes
+        groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
+            val groupsList = groups.map { it.nombre }.toMutableList()
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, groupsList)
+            autoCompleteTextView.setAdapter(adapter)
+        }
     }
 
     private fun initializeRecyclerView() {
