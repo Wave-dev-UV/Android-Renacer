@@ -194,8 +194,8 @@ class ModalBottomSheet(
                     val groupWithFilters = Group(
                         nombre=groupEvName,
                         datesfilters = listOf(
-                            fechaInicial.toString(),
-                            fechaFinal.toString()
+                            Timestamp(fechaInicial),
+                            Timestamp(fechaFinal)
                         ),
                         checkboxfilters = checkboxFilters
                     )

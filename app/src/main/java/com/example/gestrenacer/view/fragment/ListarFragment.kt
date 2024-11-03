@@ -207,12 +207,6 @@ class ListarFragment : Fragment() {
     private fun manejadorBtnFiltro() {
         binding.btnFiltrar.setOnClickListener{
             val listFiltros = userViewModel.filtros.value as List<List<String>>
-            Log.d("Esto es una prueba", "XD")
-            listFiltros.forEachIndexed { index, innerList ->
-                innerList.forEachIndexed { innerIndex, item ->
-                    Log.d("ListFiltrosLog", "Item at [$index][$innerIndex]: $item")
-                }
-            }
             val listOrden = userViewModel.orden.value as List<String>
             val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
                 listFiltros,listOrden, groupViewModel)

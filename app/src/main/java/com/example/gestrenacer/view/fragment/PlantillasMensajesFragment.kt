@@ -9,17 +9,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.databinding.FragmentPlantillasMensajesBinding
+import com.example.gestrenacer.models.Group
 import com.example.gestrenacer.models.Plantilla
+import com.example.gestrenacer.view.adapter.GroupAdapter
 import com.example.gestrenacer.view.adapter.PlantillaAdapter
 import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.PlantillaViewModel
+import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.UUID
 
 @AndroidEntryPoint
@@ -57,52 +66,47 @@ class PlantillasMensajesFragment : Fragment() {
 
     }
 
-    class GroupAdapter(
-        context: Context,
-        private val groups: List<String>,
-        private val autoCompleteTextView: AutoCompleteTextView,
-        private val onItemClick: (String) -> Unit,
-        private val onItemLongClick: (String) -> Unit,
-        private val showDetailsDialog: (String) -> Unit
-    ) : ArrayAdapter<String>(context, android.R.layout.simple_dropdown_item_1line, groups) {
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val view = super.getView(position, convertView, parent)
-            val groupName = getItem(position)
 
-            val typedValue = TypedValue()
-            context.theme.resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true)
-            view.setBackgroundResource(typedValue.resourceId)
-
-            view.setOnClickListener {
-                groupName?.let {
-                    onItemClick(it)
-                    autoCompleteTextView.setText(it, false)
-                }
-            }
-
-            view.setOnLongClickListener {
-                groupName?.let { showDetailsDialog(it) }
-                true
-            }
-
-            return view
-        }
+    private fun formatearFecha(timestamp: Timestamp): String{
+        val date: Date = timestamp.toDate()
+        val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        return format.format(date)
     }
 
     private fun initGroupsAutocomplete() {
         val autoCompleteTextView = binding.groupsAutoCompleteTv
-        groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
-            val groupsList = groups.map { it.nombre }
 
-            val showDetailsDialog: (String) -> Unit = { groupName ->
+        groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
+            val showDetailsDialog: (Group) -> Unit = { group ->
                 val dialog = AlertDialog.Builder(requireContext())
-                dialog.setTitle(groupName)
-                dialog.setMessage("Este grupo incluye las siguientes categorías:")
+                dialog.setTitle(group.nombre)
+                var message = "Este grupo incluye las siguientes categorías:"
+                for (c in group.checkboxfilters) {
+                    message += "\n - $c"
+                }
+                message += "\n\nY acota las edades en los siguientes rangos:\n"
+
+                var fechaInicial = "(Sin especificar)"
+                var fechaFinal = "(Sin especificar)"
+
+                val auxFechaInicial = group.datesfilters[0].toDate()
+                val auxFechaFinal = group.datesfilters[1].toDate()
+
+                if ((auxFechaInicial.date != 1) and (auxFechaInicial.month != 0) and (auxFechaInicial.year != 0)) {
+                    fechaInicial = formatearFecha(group.datesfilters[0])
+                }
+
+                if ((auxFechaFinal.date != 0) and (auxFechaFinal.month != 12) and (auxFechaFinal.year != 300)) {
+                    fechaFinal = formatearFecha(group.datesfilters[1])
+                }
+
+                message += "${fechaInicial} hasta ${fechaFinal}"
+
+                dialog.setMessage(message)
                 dialog.setNegativeButton("Cancelar", null)
                 dialog.setPositiveButton("Borrar") { _, _ ->
-                    val itemsToDelete = groups.filter { it.nombre == groupName }
-                    groupViewModel.deleteGroup(itemsToDelete[0])
+                    groupViewModel.deleteGroup(group)
                     groupViewModel.getGroups()
                 }
                 dialog.show()
@@ -110,21 +114,14 @@ class PlantillasMensajesFragment : Fragment() {
 
             val adapter = GroupAdapter(
                 context = requireContext(),
-                groups = groupsList,
+                allGroups = groups,
                 autoCompleteTextView = autoCompleteTextView,
-                onItemClick = { groupName ->
-                    Toast.makeText(requireContext(), "Selected: $groupName", Toast.LENGTH_SHORT).show()
-                },
-                onItemLongClick = { groupName ->
-                    Toast.makeText(requireContext(), "Long pressed: $groupName", Toast.LENGTH_SHORT).show()
-                },
                 showDetailsDialog = showDetailsDialog
             )
 
             autoCompleteTextView.setAdapter(adapter)
         }
     }
-
 
     private fun initializeRecyclerView() {
         listaDePlantillas = mutableListOf()
