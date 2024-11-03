@@ -75,7 +75,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/outlined_icon_btn_desc"
-                    app:icon="@drawable/ic_cancelarx" />
+                    app:icon="@drawable/close"
+                    app:iconTint="@color/secondary"/>
 
                 <TextView
                     android:id="@+id/lblSeleccionados"
@@ -164,7 +165,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
-        android:enabled="false"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.SheetFiltrosBinding
+import com.example.gestrenacer.utils.FechasAux
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.Timestamp
 import java.util.Calendar
@@ -46,10 +47,9 @@ class ModalBottomSheet (
     }
 
     private fun iniciarText(){
-        val anos = filtros[2].map { it.toInt() + 1900 }
-        val anoActual = Calendar.getInstance().get(Calendar.YEAR)
-        val edadFinal = anoActual - anos[0] - 1
-        val edadInicial = anoActual - anos[1] + 1
+        val anos = FechasAux.calcEdadLista(filtros[2])
+        val edadFinal = anos[0]
+        val edadInicial = anos[1]
 
         if (edadInicial > 0) {
             binding.txtEdadInicial.setText(edadInicial.toString())

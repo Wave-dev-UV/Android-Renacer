@@ -135,4 +135,8 @@
     <string name="lblBtnEnviarSms">Enviar mensaje</string>
     <string name="lblBtnEnvGuardSms">Enviar y guardar mensaje</string>
     <string name="txtCrearPlantilla">¿Crear una plantilla a partir de este mensaje?</string>
+    <string name="txtErrorSms">No se podido enviar los SMS, reintenta mas tarde.</string>
+    <string name="txtTodaEdad">Todas las edades.</string>
+    <string name="txtEnvPersonSel">El mensaje se enviará a </string>
+    <string name="lblMensajeria">Mensajería</string>
 </resources>

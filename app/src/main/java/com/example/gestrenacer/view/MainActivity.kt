@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        deleteSharedPreferences("filtros")
+        deleteSharedPreferences("filtrosPending")
         deleteSharedPreferences("auth")
     }
 

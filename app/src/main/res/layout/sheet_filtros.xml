@@ -192,7 +192,7 @@
                                 android:id="@+id/txtEdadFinal"
                                 android:layout_height="50dp"
                                 android:layout_width="90dp"
-                                android:inputType="number"
+                                android:inputType="numberSigned"
                                 android:maxLength="2"
                                 android:textColorHighlight="@color/onSelectedColorBotBar"
                                 android:textAlignment="center"

@@ -16,7 +16,8 @@ class PendingUserAdapter(
     private val rol: String?,
     private val usersViewModel: UserViewModel,
     private val setResSize: (List<User>) -> Unit,
-    private val showNoContent: (List<User>) -> Unit
+    private val showNoContent: (List<User>) -> Unit,
+    private val guardarFiltros: () -> Unit
 ): RecyclerView.Adapter<PendingUserAdapter.UserViewHolder>() {
 
     private var originalList: MutableList<User>? = null
@@ -86,7 +87,7 @@ class PendingUserAdapter(
                 binding.cardPendingFeligres.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putSerializable("dataFeligres",user)
-                    bundle.putString("rol",rol)
+                    adapter.guardarFiltros()
                     navController.navigate(R.id.action_pendingFragment_to_visualizarUsuarioFragment, bundle)
                 }
             }

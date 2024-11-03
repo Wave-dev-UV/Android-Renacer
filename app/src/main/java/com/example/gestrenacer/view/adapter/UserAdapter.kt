@@ -19,7 +19,8 @@ class UserAdapter(
     private val rol: String?,
     private val usersViewModel: UserViewModel,
     private val onDeleteUsers: (Boolean) -> Unit,
-    private val onSelectedUsersCountChange: (Int) -> Unit
+    private val onSelectedUsersCountChange: (Int) -> Unit,
+    private val guardarFiltros: () -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     private val selectedUsers = mutableMapOf<Int, Boolean>()
@@ -148,6 +149,7 @@ class UserAdapter(
                         putSerializable("dataFeligres", user)
                         putString("rol", rol)
                     }
+                    adapter.guardarFiltros()
                     navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
                 } catch (e: Exception) {
                     Log.e("UserAdapter", "Error navigating: ${e.message}")

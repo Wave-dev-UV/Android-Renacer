@@ -24,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 import java.util.Date
 import com.example.gestrenacer.view.MainActivity.Recargable
+import java.util.Calendar
 
 @AndroidEntryPoint
 class PendingFragment : Fragment(), Recargable {
@@ -45,7 +46,7 @@ class PendingFragment : Fragment(), Recargable {
     override fun onResume() {
         super.onResume()
         binding.toolbar.searchView.setQuery("",false)
-        verFeligreses()
+        cargarFiltros()
         forceRecyclerViewUpdate()
     }
 
@@ -56,7 +57,7 @@ class PendingFragment : Fragment(), Recargable {
         parentFragmentManager.setFragmentResultListener("editarUsuario", viewLifecycleOwner) { _, result ->
             val usuarioEditado = result.getBoolean("usuarioEditado", false)
             if (usuarioEditado) {
-                verFeligreses()
+                cargarFiltros()
                 forceRecyclerViewUpdate()
             }
         }
@@ -71,19 +72,8 @@ class PendingFragment : Fragment(), Recargable {
     }
 
     override fun recargarDatos() {
-        verFeligreses()
+        cargarFiltros()
         forceRecyclerViewUpdate()
-    }
-
-    private fun verFeligreses(){
-        val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
-        val listSexo = resources.getStringArray(R.array.listaSexos).toList()
-
-        userViewModel.getFeligreses(
-            Timestamp(Date(0,1,0)),
-            Timestamp(Date(300,12,0)),
-            listEst, listSexo, listOf("Por Llamar")
-        )
     }
 
     private fun anadirRol() {
@@ -111,7 +101,8 @@ class PendingFragment : Fragment(), Recargable {
                 if (adapter == null) {
                     adapter = PendingUserAdapter(userList, findNavController(),
                         rol, userViewModel,
-                        this::setResSize, this::showNoContentMsg
+                        this::setResSize, this::showNoContentMsg,
+                        this::guardarFiltros
                     )
                     binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
                     binding.listaFeligreses.adapter = adapter
@@ -235,5 +226,67 @@ class PendingFragment : Fragment(), Recargable {
 
     private fun setResSize(userList: List<User>){
         binding.lblResultado.text = "Resultados: ${userList.size}"
+    }
+
+    private fun guardarFiltros() {
+        val conjuntoFiltros: MutableSet<String> = mutableSetOf()
+
+        userViewModel.filtros.value?.forEach { x -> conjuntoFiltros.addAll(x) }
+
+        val preferences =
+            requireActivity().getSharedPreferences("filtrosPending", Context.MODE_PRIVATE).edit()
+
+        preferences.putStringSet("filtros", conjuntoFiltros)
+        preferences.putStringSet("orden", userViewModel.orden.value?.toMutableSet())
+
+        preferences.apply()
+    }
+
+    private fun cargarFiltros() {
+        val listEst = resources.getStringArray(R.array.listaEstadoCivil).toSet()
+        val listSexo = resources.getStringArray(R.array.listaSexos).toSet()
+        val listEstado = resources.getStringArray(R.array.listaEstadoAtencion).toSet()
+        try {
+            val preferences =
+                requireActivity().getSharedPreferences("filtrosPending", Context.MODE_PRIVATE)
+            val filtros = preferences.getStringSet("filtros", mutableSetOf()) as MutableSet<String>
+            val orden =
+                cargarOrden(preferences.getStringSet("orden", mutableSetOf()) as MutableSet<String>)
+
+            if (orden == listOf("","")) throw Exception()
+
+            val edades = filtros - listSexo - listEst - listEstado
+            val filtroSexo = filtros - listEst - edades - listEstado
+            val filtroEst = filtros - listSexo - edades - listEstado
+            val calendar = Calendar.getInstance()
+
+            val aux = edades.map { x -> x.toInt() }.sorted()
+
+            userViewModel.getFeligreses(
+                Timestamp(Date(aux[0], calendar.time.month, calendar.time.date)),
+                Timestamp(Date(aux[1], calendar.time.month, calendar.time.date)),
+                filtroEst.toList(), filtroSexo.toList(), listEstado.toList(),
+                orden[0], orden[1]
+            )
+        } catch (e: Exception) {
+            userViewModel.getFeligreses(
+                Timestamp(Date(0, 1, 0)),
+                Timestamp(Date(300, 12, 0)),
+                listEst.toList(), listSexo.toList(), listEstado.toList()
+            )
+
+        }
+    }
+
+    private fun cargarOrden(conjunto: MutableSet<String>): List<String> {
+        val list: MutableList<String> = mutableListOf("", "")
+        for (i in conjunto) {
+            when (i) {
+                "nombre", "fechaNacimiento", "fechaCreacion" -> list[0] = i
+                "ascendente", "descendente" -> list[1] = i
+            }
+        }
+
+        return list
     }
 }
