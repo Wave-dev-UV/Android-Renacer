@@ -2,12 +2,10 @@ package com.example.gestrenacer.view.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -50,6 +48,7 @@ class PlantillasMensajesFragment : Fragment() {
         setupSwitchListener()
         btonCrearplantilla()
         BotonVolver()
+        setupTogglePlantillas()
     }
 
     private fun initializeRecyclerView() {
@@ -79,9 +78,8 @@ class PlantillasMensajesFragment : Fragment() {
             }
         }
 
-        // Observa el estado de progreso
+
         plantillaViewModel.progresState.observe(viewLifecycleOwner) { isLoading ->
-            // Aquí puedes manejar la lógica de mostrar/ocultar un indicador de carga si es necesario
         }
     }
 
@@ -160,4 +158,18 @@ class PlantillasMensajesFragment : Fragment() {
         }
         dialog.show()
     }
+
+    private fun setupTogglePlantillas() {
+        binding.tvPlantillasMensajes.setOnClickListener {
+            if (binding.recyclerViewPlantillas.visibility == View.GONE) {
+                binding.recyclerViewPlantillas.visibility = View.VISIBLE
+                binding.tvPlantillasMensajes.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up, 0)
+            } else {
+                binding.recyclerViewPlantillas.visibility = View.GONE
+                binding.tvPlantillasMensajes.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down, 0)
+            }
+        }
+    }
+
+
 }
