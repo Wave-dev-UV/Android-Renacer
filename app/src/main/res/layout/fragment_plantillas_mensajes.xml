@@ -72,7 +72,7 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/edittext_background"
                 android:gravity="top"
-                android:hint="Escribe un mensaje"
+                android:hint="@string/escriba_un_msm"
                 android:padding="10dp" />
 
             <LinearLayout
@@ -99,7 +99,7 @@
                 android:id="@+id/etNombrePlantilla"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre de la plantilla"
+                android:hint="@string/txt_Nombre_de_la_plantilla"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"/>
 
@@ -108,22 +108,21 @@
                 android:id="@+id/btnEnviar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Enviar"
+                android:text="@string/btn_Enviar"
                 android:layout_marginBottom="24dp"/>
 
             <Button
                 android:id="@+id/btnCrearPlantilla"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Crear plantilla y enviar"
+                android:text="@string/bton_crear_plantilla_Y_enviar"
                 android:layout_marginBottom="24dp"
                 android:visibility="gone"/>
 
-            <!-- Lista de plantillas de mensajes -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Plantillas de mensajes"
+                android:text="@string/plantillas_de_mensajes"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_marginBottom="8dp"/>

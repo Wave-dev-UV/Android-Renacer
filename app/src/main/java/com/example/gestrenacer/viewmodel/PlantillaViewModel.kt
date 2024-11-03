@@ -81,10 +81,6 @@ class PlantillaViewModel @Inject constructor(
         }
     }
 
-//    fun plantillaDuplicada(nombre: String): Boolean {
-//        return _plantillas.value?.any { it.name.equals(nombre, ignoreCase = true) } == true
-//    }
-
     private fun actualizarNombresPlantillas() {
         nombresDePlantillas.clear()
         _plantillas.value?.forEach { nombresDePlantillas.add(it.name) }

@@ -2,6 +2,7 @@ package com.example.gestrenacer.view.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
@@ -109,10 +111,10 @@ class PlantillasMensajesFragment : Fragment() {
         }
     }
 
-    private fun BotonVolver() {
-        val btnVolver: ImageButton = requireView().findViewById(R.id.btnVolver)
-        btnVolver.setOnClickListener {
-            parentFragmentManager.popBackStack()
+    private fun BotonVolver(){
+        binding.btnVolver.setOnClickListener {
+            findNavController().navigate(R.id.action_plantillasMensajesFragment_to_listarFragment)
+
         }
     }
 

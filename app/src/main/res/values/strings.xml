@@ -121,6 +121,13 @@
     <string name="checkbox_select_all">Seleccionar Todos</string>
     <string name="outlined_icon_btn_desc">Cancelar</string>
     <string name="tituloMensajeria">Mensajeria</string>
+    <string name="escriba_un_msm">Escriba un mensaje</string>
+    <string name="bton_crear_plantilla_Y_enviar">Crear Plantilla y enviar</string>
+    <string name="plantillas_de_mensajes">Plantilla de mensajes</string>
+    <string name="btn_Enviar">Enviar</string>
+    <string name="txt_Nombre_de_la_plantilla">Nombre de la plantilla</string>
+    <string name="grupos_predeterminados">Grupos predeterminados</string>
+
 
 
 </resources>
