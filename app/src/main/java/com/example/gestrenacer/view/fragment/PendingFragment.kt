@@ -30,6 +30,7 @@ class PendingFragment : Fragment() {
     private val groupViewModel: GroupViewModel by viewModels()
     private var adapter: PendingUserAdapter? = null
     private var userList = listOf<User>()
+    private var appliedFilters = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -142,7 +143,7 @@ class PendingFragment : Fragment() {
             val listOrden = userViewModel.orden.value as List<String>
             val modalBottomSheet = ModalBottomSheet(
                 userViewModel::getFeligreses, listFiltros,
-                listOrden, groupViewModel
+                listOrden, groupViewModel, setAppliedFilters
             )
             modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
@@ -252,4 +253,6 @@ class PendingFragment : Fragment() {
         binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
         binding.listaFeligreses.adapter = adapter
     }
+
+    val setAppliedFilters: (Boolean) -> Unit = { x -> appliedFilters = x }
 }

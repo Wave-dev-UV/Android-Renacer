@@ -1,12 +1,9 @@
 package com.example.gestrenacer.view.modal
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.example.gestrenacer.R
@@ -22,7 +19,8 @@ class ModalBottomSheet(
     val filtrarFuncion: (Timestamp, Timestamp, List<String>, List<String>, List<String>, String, String) -> Unit,
     private val filtros: List<List<String>>,
     private val orden: List<String>,
-    private val groupViewModel: GroupViewModel
+    private val groupViewModel: GroupViewModel,
+    private val setAppliedFilters: (Boolean) -> Unit
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
 
@@ -207,6 +205,8 @@ class ModalBottomSheet(
                 filtrarFuncion(
                     Timestamp(fechaInicial), Timestamp(fechaFinal),
                     listEstado, listSexo, filtros[3], listOrden[0], listOrden[1])
+
+                setAppliedFilters(true)
                 dismiss()
 
             }

@@ -2,7 +2,6 @@ package com.example.gestrenacer.view.fragment
 
 //import UserAdapter
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -36,6 +35,7 @@ class ListarFragment : Fragment() {
     private val groupViewModel: GroupViewModel by viewModels()
     private var adapter: UserAdapter? = null
     private var userList = listOf<User>()
+    private var appliedFilters = false
 
 
     override fun onCreateView(
@@ -209,15 +209,19 @@ class ListarFragment : Fragment() {
             val listFiltros = userViewModel.filtros.value as List<List<String>>
             val listOrden = userViewModel.orden.value as List<String>
             val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
-                listFiltros,listOrden, groupViewModel)
+                listFiltros,listOrden, groupViewModel, setAppliedFilters
+            )
             modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
         }
     }
 
     private fun manejadorBtnMensaje() {
         binding.btnEnviarSms.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("appliedFilters", if (appliedFilters) "true" else "false")
             Log.d("BtnSMS", "Clic en el botón de SMS")
-            findNavController().navigate(R.id.action_listarFragment_to_plantillasMensajesFragment)
+            findNavController().navigate(R.id.action_listarFragment_to_plantillasMensajesFragment,
+                bundle)
 
 
         }
@@ -349,5 +353,8 @@ class ListarFragment : Fragment() {
             adapter?.setLongPressMode(false)
         }
     }
+
+    val setAppliedFilters: (Boolean) -> Unit = { x -> appliedFilters = x }
+
 
 }

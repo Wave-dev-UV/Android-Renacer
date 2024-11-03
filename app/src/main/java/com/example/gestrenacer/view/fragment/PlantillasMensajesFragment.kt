@@ -1,17 +1,10 @@
 package com.example.gestrenacer.view.fragment
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -81,51 +74,59 @@ class PlantillasMensajesFragment : Fragment() {
     }
 
     private fun initGroupsAutocomplete() {
-        val autoCompleteTextView = binding.groupsAutoCompleteTv
+        if (arguments?.getString("appliedFilters") == "false") {
 
-        groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
-            val showDetailsDialog: (Group) -> Unit = { group ->
-                val dialog = AlertDialog.Builder(requireContext())
-                dialog.setTitle(group.nombre)
-                var message = "Este grupo incluye las siguientes categorías:"
-                for (c in group.checkboxfilters) {
-                    message += "\n - $c"
+            val autoCompleteTextView = binding.textViewGrupos
+            val autoCompleteEditText = binding.groupsAutoCompleteTv
+
+            autoCompleteTextView.visibility = View.VISIBLE
+            autoCompleteEditText.visibility = View.VISIBLE
+
+            groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
+                val showDetailsDialog: (Group) -> Unit = { group ->
+                    val dialog = AlertDialog.Builder(requireContext())
+                    dialog.setTitle(group.nombre)
+                    var message = "Este grupo incluye las siguientes categorías:"
+                    for (c in group.checkboxfilters) {
+                        message += "\n - $c"
+                    }
+                    message += "\n\nY acota las edades en los siguientes rangos:\n"
+
+                    var fechaInicial = "(Sin especificar)"
+                    var fechaFinal = "(Sin especificar)"
+
+                    val auxFechaInicial = group.datesfilters[0].toDate()
+                    val auxFechaFinal = group.datesfilters[1].toDate()
+
+                    if ((auxFechaInicial.date != 1) and (auxFechaInicial.month != 0) and (auxFechaInicial.year != 0)) {
+                        fechaInicial = formatearFecha(group.datesfilters[0])
+                    }
+
+                    if ((auxFechaFinal.date != 0) and (auxFechaFinal.month != 12) and (auxFechaFinal.year != 300)) {
+                        fechaFinal = formatearFecha(group.datesfilters[1])
+                    }
+
+                    message += "${fechaInicial} hasta ${fechaFinal}"
+
+                    dialog.setMessage(message)
+                    dialog.setNegativeButton("Cancelar", null)
+                    dialog.setPositiveButton("Borrar") { _, _ ->
+                        groupViewModel.deleteGroup(group)
+                        groupViewModel.getGroups()
+                    }
+                    dialog.show()
                 }
-                message += "\n\nY acota las edades en los siguientes rangos:\n"
 
-                var fechaInicial = "(Sin especificar)"
-                var fechaFinal = "(Sin especificar)"
+                val adapter = GroupAdapter(
+                    context = requireContext(),
+                    allGroups = groups,
+                    autoCompleteTextView = autoCompleteEditText,
+                    showDetailsDialog = showDetailsDialog
+                )
 
-                val auxFechaInicial = group.datesfilters[0].toDate()
-                val auxFechaFinal = group.datesfilters[1].toDate()
-
-                if ((auxFechaInicial.date != 1) and (auxFechaInicial.month != 0) and (auxFechaInicial.year != 0)) {
-                    fechaInicial = formatearFecha(group.datesfilters[0])
-                }
-
-                if ((auxFechaFinal.date != 0) and (auxFechaFinal.month != 12) and (auxFechaFinal.year != 300)) {
-                    fechaFinal = formatearFecha(group.datesfilters[1])
-                }
-
-                message += "${fechaInicial} hasta ${fechaFinal}"
-
-                dialog.setMessage(message)
-                dialog.setNegativeButton("Cancelar", null)
-                dialog.setPositiveButton("Borrar") { _, _ ->
-                    groupViewModel.deleteGroup(group)
-                    groupViewModel.getGroups()
-                }
-                dialog.show()
+                autoCompleteEditText.setAdapter(adapter)
             }
 
-            val adapter = GroupAdapter(
-                context = requireContext(),
-                allGroups = groups,
-                autoCompleteTextView = autoCompleteTextView,
-                showDetailsDialog = showDetailsDialog
-            )
-
-            autoCompleteTextView.setAdapter(adapter)
         }
     }
 
