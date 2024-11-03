@@ -135,6 +135,9 @@ class PlantillasMensajesFragment : Fragment() {
                 plantillaViewModel.crearPlantilla(nuevaPlantilla)
                 binding.etMensaje.text.clear()
                 binding.etNombrePlantilla.text.clear()
+
+                // Mostrar mensaje de éxito
+                Toast.makeText(context, "Plantilla creada exitosamente", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Ya existe una plantilla con ese nombre", Toast.LENGTH_SHORT).show()
             }
