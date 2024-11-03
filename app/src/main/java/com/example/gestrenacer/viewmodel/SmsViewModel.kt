@@ -50,12 +50,4 @@ class SmsViewModel @Inject constructor(
     fun cambiarGuardado(guardado: Boolean){
         _guardado.value = guardado
     }
-
-    fun verGuardado(): Boolean {
-        return guardado.value as Boolean
-    }
-
-    fun verGrupoActivado():Boolean {
-        return grupoActivado.value as Boolean
-    }
 }

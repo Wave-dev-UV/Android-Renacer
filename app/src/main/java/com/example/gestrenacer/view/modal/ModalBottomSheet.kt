@@ -214,15 +214,22 @@ class ModalBottomSheet (
     }
 
     private fun validarEdad(): Boolean{
-        val txtInicial = binding.txtEdadInicial.text.toString()
-        val txtFinal = binding.txtEdadFinal.text.toString()
-        val vacio = txtInicial.isEmpty() && txtFinal.isEmpty()
-        val ambosLlenosMax = txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtInicial.toInt() <= txtFinal.toInt())
-        val ambosLlenosMin = txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtFinal.toInt() >= txtInicial.toInt())
-        val llenoInicial = txtInicial.isNotEmpty() && txtFinal.isEmpty()
-        val llenoFinal = txtFinal.isNotEmpty() && txtInicial.isEmpty()
+        try {
+            val txtInicial = binding.txtEdadInicial.text.toString()
+            val txtFinal = binding.txtEdadFinal.text.toString()
+            val vacio = txtInicial.isEmpty() && txtFinal.isEmpty()
+            val ambosLlenosMax =
+                txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtInicial.toInt() <= txtFinal.toInt())
+            val ambosLlenosMin =
+                txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtFinal.toInt() >= txtInicial.toInt())
+            val llenoInicial = txtInicial.isNotEmpty() && txtFinal.isEmpty()
+            val llenoFinal = txtFinal.isNotEmpty() && txtInicial.isEmpty()
 
-        return vacio || (ambosLlenosMax && ambosLlenosMin) || llenoInicial || llenoFinal
+            return vacio || (ambosLlenosMax && ambosLlenosMin) || llenoInicial || llenoFinal
+        }
+        catch (e: Exception){
+            return false
+        }
     }
 
     private fun validarDatos(){

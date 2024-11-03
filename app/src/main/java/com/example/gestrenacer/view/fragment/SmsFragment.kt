@@ -43,6 +43,7 @@ class SmsFragment : Fragment() {
         manejadorBtnEnviar()
         manejadorBtnVolver()
         manejadorSwitchGuard()
+        iniciarToolbar()
         iniciarFiltros()
         iniciarCantSms()
         iniciarUsuarios()
@@ -50,6 +51,12 @@ class SmsFragment : Fragment() {
         observerOperacion()
         observerGuardado()
         observerGrupoActivado()
+    }
+
+    private fun iniciarToolbar(){
+        val activity = requireActivity() as MainActivity
+        activity.visibilidadBottomBar(false)
+        binding.toolbar.lblToolbar.text = getString(R.string.lblMensajeria)
     }
 
     private fun iniciarFiltros() {
@@ -88,6 +95,8 @@ class SmsFragment : Fragment() {
         smsViewModel.guardado.observe(viewLifecycleOwner) {
             if (it) binding.btnEnviar.text = getString(R.string.lblBtnEnvGuardSms)
             else binding.btnEnviar.text = getString(R.string.lblBtnEnviarSms)
+
+            validarTexto()
         }
     }
 
@@ -147,25 +156,25 @@ class SmsFragment : Fragment() {
     }
 
     private fun manejadorTxtSms() {
-        val activity = requireActivity() as MainActivity
+        val list = listOf(binding.txtSms,binding.txtPlantilla)
 
-        activity.visibilidadBottomBar(false)
-        binding.toolbar.lblToolbar.text = getString(R.string.lblMensajeria)
-
-        binding.txtSms.addTextChangedListener {
-            val cant = smsViewModel.usuarios.value?.size as Int
-            val grupos = smsViewModel.verGrupoActivado()
-            val plantilla = smsViewModel.verGuardado()
-            val nomPlantilla = binding.txtPlantilla.text.toString().isNotEmpty()
-
-            Log.d("desactivado",nomPlantilla.toString())
-
-            if (binding.txtSms.text.toString().isNotEmpty() && (cant > 0 || grupos) && (!plantilla || (plantilla && nomPlantilla))) {
-                binding.btnEnviar.isEnabled = true
+        list.forEach { i ->
+            i.addTextChangedListener {
+                validarTexto()
             }
-
-            cambiarColorBtnEnviar()
         }
+    }
+
+    private fun validarTexto(){
+        val cant = smsViewModel.usuarios.value?.size as Int
+        val grupos = smsViewModel.grupoActivado.value as Boolean
+        val plantilla = smsViewModel.guardado.value as Boolean
+        val nomPlantilla = binding.txtPlantilla.text.toString().isNotEmpty()
+        val txtSms = binding.txtSms.text.toString().isNotEmpty()
+
+        binding.btnEnviar.isEnabled = (txtSms && (cant > 0 || grupos) && ((plantilla && nomPlantilla) || !plantilla))
+
+        cambiarColorBtnEnviar()
     }
 
     private fun manejadorBtnVolver() {
