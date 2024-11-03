@@ -2,6 +2,7 @@ package com.example.gestrenacer.view
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.activity.viewModels
@@ -28,6 +29,10 @@ class MainActivity : AppCompatActivity() {
 
     private val REQUEST_CODE_POST_NOTIFICATION = 1
 
+    interface Recargable {
+        fun recargarDatos()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,6 +50,14 @@ class MainActivity : AppCompatActivity() {
                 findViewById<FrameLayout>(R.id.noConnectionContainer).visibility = View.VISIBLE
             } else {
                 findViewById<FrameLayout>(R.id.noConnectionContainer).visibility = View.GONE
+
+                val navHostFragment = supportFragmentManager.findFragmentById(R.id.navigationContainer) as? androidx.navigation.fragment.NavHostFragment
+                val currentFragment = navHostFragment?.childFragmentManager?.primaryNavigationFragment
+
+                if (currentFragment is Recargable) {
+                    currentFragment.recargarDatos()
+                }
+
             }
         }
     }
@@ -79,7 +92,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scheduleSimpleNotification() {
-
         userViewModel.updatePendingUsersCount()
         userViewModel.pendingUsersCount.observe(this) { count ->
             val notificationData = Data.Builder()
@@ -92,6 +104,7 @@ class MainActivity : AppCompatActivity() {
                 .build()
 
             WorkManager.getInstance(this).enqueue(notificationRequest)
+            Log.d("MainActivity", "Notification scheduled with count: $count")
         }
     }
 }

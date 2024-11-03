@@ -15,10 +15,10 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: UserRepositorio
-): ViewModel() {
+) : ViewModel() {
 
-    private val _listaUsers = MutableLiveData<List<User>>()
-    val listaUsers: LiveData<List<User>> = _listaUsers
+    private val _listaUsers = MutableLiveData<MutableList<User>>()
+    val listaUsers: LiveData<MutableList<User>> = _listaUsers
 
     private val _progresState = MutableLiveData(false)
     val progresState: LiveData<Boolean> = _progresState
@@ -62,7 +62,7 @@ class UserViewModel @Inject constructor(
                 _filtros.value = listOf(filtroSexo, filtroEstcivil,
                     listOf(aInicio, aFinal), filtroLlamado)
                 _orden.value = listOf(critOrden, escalaOrden)
-                _listaUsers.value = users
+                _listaUsers.value = users.toMutableList()
             } finally {
                 _progresState.value = false
             }
@@ -81,16 +81,17 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun eliminarUsuarios(users: List<User>) {
+    fun eliminarUsuarios(users: MutableList<User>?) {
         viewModelScope.launch {
             try {
                 repository.eliminarUsuarios(users)
                 Log.d("UserViewModel", "Usuarios eliminados con éxito")
 
                 val updatedList = _listaUsers.value?.filterNot { user ->
-                    users.any { it.firestoreID == user.firestoreID }
+                    users?.any { it.firestoreID == user.firestoreID } ?: false
                 }
-                _listaUsers.value = updatedList
+                _listaUsers.value = updatedList?.toMutableList() // Actualiza la lista con los usuarios restantes
+
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Error al eliminar usuarios: ${e.message}")
             }

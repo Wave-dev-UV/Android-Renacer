@@ -73,7 +73,7 @@ class UserRepositorio @Inject constructor() {
     }
 
     suspend fun updateUser(feligres: User) {
-        feligres.firestoreID?.let { id ->
+        feligres.firestoreID.let { id ->
             try {
                 usersCollection.document(id).set(feligres).await()
                 Log.d("FeligresRepositorio", "Documento actualizado con éxito: $id")
@@ -143,6 +143,7 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
+    // Método para eliminar uno o varios usuarios
     suspend fun eliminarUsuarios(users: List<User>) {
         withContext(Dispatchers.IO) {
             try {

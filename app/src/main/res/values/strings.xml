@@ -120,7 +120,7 @@
     <string name="lblFiltroSheet">Filtrar por:</string>
     <string name="checkbox_select_all">Seleccionar Todos</string>
     <string name="outlined_icon_btn_desc">Cancelar</string>
-
+    <string name="lbl_Usar_Huella">Usar Huella</string>>
 
 
 </resources>

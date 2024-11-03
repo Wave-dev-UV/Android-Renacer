@@ -41,6 +41,14 @@ class VisualizarUsuarioFragment : Fragment() {
         manejadorBotonEditar()
         manejadorBotonBorrar()
         manejadorBotonVolver()
+        desactivarBtn()
+    }
+
+    private fun desactivarBtn(){
+        if (rol !in listOf("Administrador","Gestor")){
+            binding.buttonBorrar.isVisible = false
+            binding.buttonEditar.isVisible = false
+        }
     }
 
     private fun formatearFechas(){
@@ -87,7 +95,8 @@ class VisualizarUsuarioFragment : Fragment() {
             DialogUtils.dialogoConfirmacion(requireContext(),
                 "¿Está seguro que deseas borrar al usuario?"){
                 viewmodel.borrarUsuario(user)
-                findNavController().navigate(R.id.action_visualizarUsuarioFragment_to_listarFragment, requireArguments())
+                findNavController().popBackStack()
+                //findNavController().navigate(R.id.action_visualizarUsuarioFragment_to_listarFragment, requireArguments())
             }
         }
 
@@ -95,7 +104,8 @@ class VisualizarUsuarioFragment : Fragment() {
 
     private fun manejadorBotonVolver(){
         binding.imageButton.setOnClickListener{
-            findNavController().navigate(R.id.action_visualizarUsuarioFragment_to_listarFragment, requireArguments())
+            findNavController().popBackStack()
+            //findNavController().navigate(R.id.action_visualizarUsuarioFragment_to_listarFragment, requireArguments())
         }
     }
 
