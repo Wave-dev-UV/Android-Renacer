@@ -78,6 +78,9 @@ dependencies {
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.12.0")
 
+    //Biometría
+    implementation("androidx.biometric:biometric:1.1.0")
+
     //firebase
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-analytics")
