@@ -125,6 +125,8 @@
     <string name="checkbox_select_all">Seleccionar Todos</string>
     <string name="outlined_icon_btn_desc">Cancelar</string>
     <string name="tituloMensajeria">Mensajeria</string>
+    <string name="ya_hay_un_grupo_con_ese_nombre_elige_otro">Ya hay un grupo con ese nombre. Elige otro</string>
+    <string name="por_favor_asigna_un_nombre_al_grupo">Por favor, asigna un nombre al grupo</string>
 
 
 </resources>

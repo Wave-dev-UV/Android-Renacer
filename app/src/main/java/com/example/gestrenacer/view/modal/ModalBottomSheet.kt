@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.example.gestrenacer.R
@@ -36,6 +37,7 @@ class ModalBottomSheet(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        groupViewModel.getGroups()
         iniciarComponentes()
     }
 
@@ -192,26 +194,45 @@ class ModalBottomSheet(
                     val groupWithFilters = Group(
                         nombre=groupEvName,
                         datesfilters = listOf(
-                           fechaInicial.toString(),
+                            fechaInicial.toString(),
                             fechaFinal.toString()
                         ),
                         checkboxfilters = checkboxFilters
                     )
 
                     groupViewModel.saveGroup(groupWithFilters)
+
                 }
 
                 filtrarFuncion(
                     Timestamp(fechaInicial), Timestamp(fechaFinal),
                     listEstado, listSexo, filtros[3], listOrden[0], listOrden[1])
                 dismiss()
-            }
-            if (createGroupToggle.isChecked and (groupEvName == "")) {
-                Toast.makeText(context, "Por favor, asigna un nombre al grupo", Toast.LENGTH_LONG).show()
-            } else {
-                executeFilter()
-            }
 
+            }
+            groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
+                val existingName = groups.any { it.nombre == groupEvName }
+
+                if (createGroupToggle.isChecked ) {
+                    if ((groupEvName == "")) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.por_favor_asigna_un_nombre_al_grupo),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else if (existingName) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.ya_hay_un_grupo_con_ese_nombre_elige_otro),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }  else {
+                        executeFilter()
+                    }
+                } else {
+                    executeFilter()
+                }
+            }
         }
     }
 
