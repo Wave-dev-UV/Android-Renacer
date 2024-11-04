@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gestrenacer.R
@@ -106,7 +107,7 @@ class UserAdapter(
         private val rol: String?,
         private val usersViewModel: UserViewModel,
         private val adapter: UserAdapter
-    ) : RecyclerView.ViewHolder(binding.root) {
+    ): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(user: User, isSelected: Boolean, longPressMode: Boolean, onCheckedChange: (Boolean) -> Unit) {
             binding.lblIniciales.text = "${user.nombre.firstOrNull()}${user.apellido.firstOrNull()}".uppercase()
@@ -131,25 +132,26 @@ class UserAdapter(
 
             manejadorClicCard(user)
             manejadorAnadirPendientes(user)
+            desactivarBtnLlamar()
         }
 
-
+        private fun desactivarBtnLlamar(){
+            if (rol !in listOf("Administrador","Gestor")){
+                binding.addPendingUser.isVisible = false
+            }
+        }
 
         private fun manejadorClicCard(user: User) {
-            if (rol != "Visualizador") {
-                binding.cardFeligres.setOnClickListener {
-                    try {
-                        val bundle = Bundle().apply {
-                            putSerializable("dataFeligres", user)
-                            putString("rol", rol)
-                        }
-                        navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
-                    } catch (e: Exception) {
-                        Log.e("UserAdapter", "Error navigating: ${e.message}")
+            binding.cardFeligres.setOnClickListener {
+                try {
+                    val bundle = Bundle().apply {
+                        putSerializable("dataFeligres", user)
+                        putString("rol", rol)
                     }
+                    navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
+                } catch (e: Exception) {
+                    Log.e("UserAdapter", "Error navigating: ${e.message}")
                 }
-            } else {
-                binding.cardFeligres.setOnClickListener(null)
             }
         }
 

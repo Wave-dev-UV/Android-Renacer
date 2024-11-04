@@ -49,7 +49,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contenedorSeleccionados"
             android:layout_width="match_parent"
@@ -119,17 +118,18 @@
             tools:itemCount="1"
             tools:listitem="@layout/item_user" />
 
-        <TextView
-            android:id="@+id/txtNoResultados"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No se encontraron coincidencias."
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/txtNoResultados"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_hay_elementos_a_mostrar"
+                android:textSize="24sp"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_eliminar"

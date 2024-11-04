@@ -22,15 +22,16 @@ import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 import java.util.Date
+import com.example.gestrenacer.view.MainActivity.Recargable
 
 @AndroidEntryPoint
-class PendingFragment : Fragment() {
+class PendingFragment : Fragment(), Recargable {
     private lateinit var binding: FragmentPendingBinding
     private val userViewModel: UserViewModel by viewModels()
     private val groupViewModel: GroupViewModel by viewModels()
     private var adapter: PendingUserAdapter? = null
-    private var userList = listOf<User>()
     private var appliedFilters = false
+    private var userList = mutableListOf<User>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +73,11 @@ class PendingFragment : Fragment() {
         manejadorBtnFiltro()
     }
 
+    override fun recargarDatos() {
+        verFeligreses()
+        forceRecyclerViewUpdate()
+    }
+
     private fun verFeligreses(){
         val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
         val listSexo = resources.getStringArray(R.array.listaSexos).toList()
@@ -100,26 +106,22 @@ class PendingFragment : Fragment() {
     private fun observerListPendingFeligreses(){
             userViewModel.listaUsers.observe(viewLifecycleOwner){
                 if (it != null) {
-                    userList = it
+                    userList = it as MutableList<User>
                 }
 
                 if (adapter == null) {
-                    adapter = PendingUserAdapter(userList.toMutableList(), findNavController(), userViewModel.rol.value, userViewModel)
+                    adapter = PendingUserAdapter(userList, findNavController(),
+                        userViewModel.rol.value, userViewModel,
+                        this::setResSize, this::showNoContentMsg
+                    )
                     binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
                     binding.listaFeligreses.adapter = adapter
                 } else {
-                    adapter?.updateList(userList.toMutableList())
+                    adapter?.updateList(userList)
                 }
 
-
-                binding.lblResultado.text = "Resultados: ${userList.size}"
-
-
-                if (userList.isEmpty()) {
-                    binding.noDataMessage.visibility = View.VISIBLE
-                } else {
-                    binding.noDataMessage.visibility = View.GONE
-                }
+                setResSize(userList)
+                showNoContentMsg(userList)
         }
     }
 
@@ -199,7 +201,7 @@ class PendingFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrEmpty()) {
-                    adapter?.updateList(userList.toMutableList())
+                    adapter?.updateList(userList)
                     binding.lblResultado.text = "Resultados: ${userList.size}"
                 } else {
                     filter(newText)
@@ -211,6 +213,7 @@ class PendingFragment : Fragment() {
         closeButton?.setOnClickListener {
             searchView.setQuery("",false)
             searchView.clearFocus()
+            showNoContentMsg(userList)
             if (userList.size>0){
                 binding.noDataMessage.visibility = View.GONE
             }
@@ -237,9 +240,9 @@ class PendingFragment : Fragment() {
                         normalizedApellido.contains(term, ignoreCase = true) ||
                         fullName.contains(term, ignoreCase = true)
             }
-        }
+        }.toMutableList()
 
-        adapter?.updateList(filteredList.toMutableList())
+        adapter?.updateList(filteredList,userList)
         binding.lblResultado.text = "Resultados: ${filteredList.size}"
 
         if (filteredList.isEmpty()) {
@@ -256,4 +259,16 @@ class PendingFragment : Fragment() {
     }
 
     val setAppliedFilters: (Boolean) -> Unit = { x -> appliedFilters = x }
+
+    private fun showNoContentMsg(userList: List<User>){
+        if (userList.isEmpty()) {
+            binding.noDataMessage.visibility = View.VISIBLE
+        } else {
+            binding.noDataMessage.visibility = View.GONE
+        }
+    }
+
+    private fun setResSize(userList: List<User>){
+        binding.lblResultado.text = "Resultados: ${userList.size}"
+    }
 }

@@ -14,15 +14,21 @@ class PendingUserAdapter(
     private var listaUsers: MutableList<User>,
     private val navController: NavController,
     private val rol: String?,
-    private val usersViewModel: UserViewModel
+    private val usersViewModel: UserViewModel,
+    private val setResSize: (List<User>) -> Unit,
+    private val showNoContent: (List<User>) -> Unit
 ): RecyclerView.Adapter<PendingUserAdapter.UserViewHolder>() {
+
+    private var originalList: MutableList<User>? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val binding = ItemPendingUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return UserViewHolder(binding, navController, rol, usersViewModel, this)
     }
 
-    fun updateList(newList: MutableList<User>) {
+    fun updateList(newList: MutableList<User>, original: MutableList<User>? = null) {
         listaUsers = newList
+        originalList = original
         notifyDataSetChanged()
     }
 
@@ -38,8 +44,15 @@ class PendingUserAdapter(
 
     fun delete(position: Int) {
         listaUsers.removeAt(position)
+
+        if (originalList!=null){
+            originalList?.removeAt(position)
+        }
+
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, listaUsers.size)
+        setResSize(listaUsers)
+        showNoContent(listaUsers)
     }
 
 

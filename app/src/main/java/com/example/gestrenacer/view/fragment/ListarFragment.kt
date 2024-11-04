@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.view.modal.ModalBottomSheet
@@ -26,15 +27,17 @@ import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 import java.util.Date
+import com.example.gestrenacer.view.MainActivity.Recargable
+
 
 
 @AndroidEntryPoint
-class ListarFragment : Fragment() {
+class ListarFragment : Fragment(), Recargable {
     private lateinit var binding: FragmentListarFeligresesBinding
     private val userViewModel: UserViewModel by viewModels()
-    private val groupViewModel: GroupViewModel by viewModels()
     private var adapter: UserAdapter? = null
-    private var userList = listOf<User>()
+    private var userList = mutableListOf<User>()
+    private val groupViewModel: GroupViewModel by viewModels()
     private var appliedFilters = false
 
 
@@ -89,6 +92,11 @@ class ListarFragment : Fragment() {
 
     }
 
+    override fun recargarDatos() {
+        verFeligreses()
+        forceRecyclerViewUpdate()
+    }
+
     private fun verFeligreses(){
         val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
         val listSexo = resources.getStringArray(R.array.listaSexos).toList()
@@ -109,7 +117,7 @@ class ListarFragment : Fragment() {
     private fun observerListFeligreses() {
         userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
             if (lista != null) {
-                userList = lista
+                userList = lista as MutableList<User>
             }
             binding.lblResultado.text = "Resultados: ${userList.size}"
             binding.txtNoResultados.isVisible = userList.isEmpty()
@@ -142,14 +150,14 @@ class ListarFragment : Fragment() {
         // Mostrar/ocultar botones según si hay usuarios seleccionados
         val hasSelectedUsers = selectedCount > 0
         binding.btnEliminar.isVisible = hasSelectedUsers
-        binding.btnEnviarSms.isVisible = !hasSelectedUsers
-        binding.btnAnadirFeligres.isVisible = !hasSelectedUsers
+        binding.btnEnviarSms.isVisible = !hasSelectedUsers && (userViewModel.rol.value == "Administrador")
+        binding.btnAnadirFeligres.isVisible = !hasSelectedUsers && (userViewModel.rol.value in listOf("Administrador","Gestor"))
 
         val shouldHideFiltersAndSearch = hasSelectedUsers
-        binding.contenedorFiltros.isVisible = !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
-        binding.toolbar.root.isVisible = !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
-
-
+        binding.contenedorFiltros.isVisible =
+            !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
+        binding.toolbar.root.isVisible =
+            !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
     }
 
     private fun observerProgress(){
@@ -340,7 +348,7 @@ class ListarFragment : Fragment() {
             context = requireContext(),
             mensaje = "¿Estás seguro de que deseas eliminar a los usuarios seleccionados?",
             onYes = {
-                userViewModel.eliminarUsuarios(seleccionados)
+                userViewModel.eliminarUsuarios(seleccionados.toMutableList())
                 adapter?.clearSelection()
                 updateSelectedCountDisplay(0)
             }
