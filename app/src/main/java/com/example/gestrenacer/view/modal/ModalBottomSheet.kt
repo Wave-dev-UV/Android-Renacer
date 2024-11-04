@@ -20,7 +20,8 @@ class ModalBottomSheet(
     private val filtros: List<List<String>>,
     private val orden: List<String>,
     private val groupViewModel: GroupViewModel,
-    private val setAppliedFilters: (Boolean) -> Unit
+    private val setAppliedFilters: (Boolean) -> Unit,
+    private val roleMode: String
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
 
@@ -43,12 +44,21 @@ class ModalBottomSheet(
         iniciarCheckbox()
         iniciarText()
         iniciarRadioBtn()
+        iniciarCreadorGrupos()
         manejadorTxt()
         manejadoresCheckBox()
         manejadoresRadioBtn()
         manejadorBtnFiltrar()
         manejadorBtnCerrar()
         manejadorCreadorDeGrupos()
+    }
+
+    private fun iniciarCreadorGrupos() {
+        if (roleMode in listOf("Administrador")) {
+            binding.gruposTv.visibility = View.VISIBLE
+            binding.groupEv.visibility = View.VISIBLE
+            binding.swithGruposContainer.visibility = View.VISIBLE
+        }
     }
 
     private fun iniciarText(){

@@ -53,6 +53,7 @@ class PlantillasMensajesFragment : Fragment() {
     }
 
     private fun componentes() {
+        anadirRol()
         initGroupsAutocomplete()
         initializeRecyclerView()
         setupObservers()
@@ -60,8 +61,13 @@ class PlantillasMensajesFragment : Fragment() {
         btonCrearplantilla()
         btonEnviar()
         setBackBtnUp()
-
     }
+
+    private fun anadirRol() {
+        val data = arguments?.getString("rol")
+        userViewModel.colocarRol(data)
+    }
+
 
 
     private fun setBackBtnUp() {
@@ -78,7 +84,8 @@ class PlantillasMensajesFragment : Fragment() {
     }
 
     private fun initGroupsAutocomplete() {
-        if (arguments?.getString("appliedFilters") == "false") {
+        if ((arguments?.getString("appliedFilters") == "false") and
+            (arguments?.getString("rol") == "Administrador")) {
 
             val autoCompleteTextView = binding.textViewGrupos
             val autoCompleteEditText = binding.groupsAutoCompleteTv
@@ -196,7 +203,8 @@ class PlantillasMensajesFragment : Fragment() {
 
 
     private fun enviarMensaje() {
-        if (arguments?.getString("appliedFilters") == "false") {
+        if ((arguments?.getString("appliedFilters") == "false") and
+            (arguments?.getString("rol") == "Administrador")) {
             // Filtering using groups
             groupViewModel.getGroups()
             val selectedGroupName = binding.groupsAutoCompleteTv.text.toString()

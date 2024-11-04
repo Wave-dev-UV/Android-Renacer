@@ -208,8 +208,9 @@ class ListarFragment : Fragment() {
         binding.btnFiltrar.setOnClickListener{
             val listFiltros = userViewModel.filtros.value as List<List<String>>
             val listOrden = userViewModel.orden.value as List<String>
+            val role = userViewModel.rol.value as String
             val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
-                listFiltros,listOrden, groupViewModel, setAppliedFilters
+                listFiltros,listOrden, groupViewModel, setAppliedFilters, role
             )
             modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
         }
@@ -219,6 +220,7 @@ class ListarFragment : Fragment() {
         binding.btnEnviarSms.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("appliedFilters", if (appliedFilters) "true" else "false")
+            bundle.putString("rol",arguments?.getString("rol"))
             Log.d("BtnSMS", "Clic en el botón de SMS")
             findNavController().navigate(R.id.action_listarFragment_to_plantillasMensajesFragment,
                 bundle)

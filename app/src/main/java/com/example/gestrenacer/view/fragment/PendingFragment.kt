@@ -141,9 +141,10 @@ class PendingFragment : Fragment() {
         binding.btnFiltrar.setOnClickListener{
             val listFiltros = userViewModel.filtros.value as List<List<String>>
             val listOrden = userViewModel.orden.value as List<String>
+            val role = userViewModel.rol.value as String
             val modalBottomSheet = ModalBottomSheet(
                 userViewModel::getFeligreses, listFiltros,
-                listOrden, groupViewModel, setAppliedFilters
+                listOrden, groupViewModel, setAppliedFilters, role
             )
             modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
