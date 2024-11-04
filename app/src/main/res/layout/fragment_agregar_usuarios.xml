@@ -584,7 +584,8 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="40dp"
-                    android:backgroundTint="@color/azulPrincipal"
+                    android:backgroundTint="@color/secondary"
+                    android:textColor="@color/white"
                     android:text="@string/crear_usuario"
                     tools:textSize="17sp" />
 

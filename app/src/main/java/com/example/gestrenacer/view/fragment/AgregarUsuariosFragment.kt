@@ -119,7 +119,8 @@ class AgregarUsuariosFragment : Fragment() {
                 }
 
                 binding.buttonEnviar.isEnabled = isFull
-
+                if (isFull) binding.buttonEnviar.setBackgroundColor(resources.getColor(R.color.azulPrincipal))
+                else binding.buttonEnviar.setBackgroundColor(resources.getColor(R.color.secondary))
             }
         }
     }

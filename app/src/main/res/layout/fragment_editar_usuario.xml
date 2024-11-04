@@ -643,10 +643,10 @@
                             android:id="@+id/autoCompleteRole"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Selecciones rol a asignar"
+                            android:hint="@string/selecciones_rol_a_asignar"
                             android:importantForAccessibility="yes"
                             android:inputType="none"
-                            android:text="Feligrés"
+                            android:text="@string/feligr_s"
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -663,6 +663,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="10dp"
                 android:backgroundTint="@color/azulPrincipal"
+                android:textColor="@color/white"
                 android:text="@string/editar_usuario"
                 tools:textSize="17sp" />
 

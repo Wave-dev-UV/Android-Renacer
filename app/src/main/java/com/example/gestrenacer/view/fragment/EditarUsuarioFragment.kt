@@ -220,6 +220,8 @@ class EditarUsuarioFragment : Fragment() {
         }
 
         binding.buttonEditar.isEnabled = isFull
+        if (isFull) binding.buttonEditar.setBackgroundColor(resources.getColor(R.color.azulPrincipal))
+        else binding.buttonEditar.setBackgroundColor(resources.getColor(R.color.secondary))
     }
 
     private fun manejadorBtnVolver(){
