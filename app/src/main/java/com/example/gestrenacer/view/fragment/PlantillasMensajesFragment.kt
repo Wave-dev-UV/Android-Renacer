@@ -2,6 +2,7 @@ package com.example.gestrenacer.view.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.example.gestrenacer.view.adapter.GroupAdapter
 import com.example.gestrenacer.view.adapter.PlantillaAdapter
 import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.PlantillaViewModel
+import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -32,6 +34,7 @@ class PlantillasMensajesFragment : Fragment() {
     private lateinit var listaDePlantillas: MutableList<Plantilla>
     private lateinit var plantillaAdapter: PlantillaAdapter
     private val groupViewModel: GroupViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +58,7 @@ class PlantillasMensajesFragment : Fragment() {
         setupObservers()
         setupSwitchListener()
         btonCrearplantilla()
+        btonEnviar()
         setBackBtnUp()
 
     }
@@ -178,9 +182,52 @@ class PlantillasMensajesFragment : Fragment() {
         }
     }
 
+    private fun btonEnviar() {
+        binding.btnEnviar.setOnClickListener {
+            enviarMensaje()
+        }
+    }
+
     private fun btonCrearplantilla() {
         binding.btnCrearPlantilla.setOnClickListener {
             crearPlantilla()
+        }
+    }
+
+
+    private fun enviarMensaje() {
+        if (arguments?.getString("appliedFilters") == "false") {
+            // Filtering using groups
+            groupViewModel.getGroups()
+            val selectedGroupName = binding.groupsAutoCompleteTv.text.toString()
+            groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
+                val group = groups.find { e -> selectedGroupName == e.nombre }
+                if (group != null) {
+                    val checkBoxFilters = group.checkboxfilters
+                    val datesFilters = group.datesfilters
+
+                    val sexFilters = checkBoxFilters.filter { it in listOf("Masculino", "Femenino") }
+                    val stateFilters = checkBoxFilters.filter { it in listOf("Casado(a)",
+                        "Soltero(a)", "Divorciado(a)", "Unión libre", "Viudo(a)") }
+                    val pendingFilters = listOf<String>()
+                    val initialDate = datesFilters[0]
+                    val finalDate = datesFilters[1]
+
+                    Log.d("sendMessage - Sex Filters", sexFilters.toString())
+                    Log.d("sendMessage - State Filters", stateFilters.toString())
+                    Log.d("sendMessage - Pending Filters", pendingFilters.toString())
+                    Log.d("sendMessage - Initial Date", initialDate.toString())
+                    Log.d("sendMessage - Final Date", finalDate.toString())
+
+                } else {
+                    Toast.makeText(context, "Ese grupo no existe. Elige uno válido", Toast.LENGTH_SHORT).show()
+                }
+
+                groupViewModel.listaGroups.removeObservers(viewLifecycleOwner)
+            }
+
+        } else {
+            // Filtering using raw filters
         }
     }
 
@@ -199,6 +246,8 @@ class PlantillasMensajesFragment : Fragment() {
             plantillaViewModel.crearPlantilla(nuevaPlantilla)
             binding.etMensaje.text.clear()
             binding.etNombrePlantilla.text.clear()
+
+            enviarMensaje()
         } else {
             Toast.makeText(context, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
         }
@@ -219,3 +268,4 @@ class PlantillasMensajesFragment : Fragment() {
         dialog.show()
     }
 }
+
