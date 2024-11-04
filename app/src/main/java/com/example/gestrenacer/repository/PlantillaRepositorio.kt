@@ -44,16 +44,6 @@ class PlantillaRepositorio @Inject constructor() {
         }
     }
 
-//    suspend fun eliminarPlantilla(plantillaId: String) {
-//        withContext(Dispatchers.IO) {
-//            try {
-//                plantillasCollection.document(plantillaId).delete().await()
-//                Log.d("PlantillaRepository", "Plantilla eliminada: $plantillaId")
-//            } catch (e: Exception) {
-//                Log.e("PlantillaRepository", "Error al eliminar plantilla: ${e.message}")
-//            }
-//        }
-//    }
     suspend fun eliminarPlantillas(plantillas: List<Plantilla>) {
         withContext(Dispatchers.IO) {
             try {

@@ -142,15 +142,17 @@ class UserAdapter(
         }
 
         private fun manejadorClicCard(user: User) {
-            binding.cardFeligres.setOnClickListener {
-                try {
-                    val bundle = Bundle().apply {
-                        putSerializable("dataFeligres", user)
-                        putString("rol", rol)
+            if (rol != "Visualizador") {
+                binding.cardFeligres.setOnClickListener {
+                    try {
+                        val bundle = Bundle().apply {
+                            putSerializable("dataFeligres", user)
+                            putString("rol", rol)
+                        }
+                        navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
+                    } catch (e: Exception) {
+                        Log.e("UserAdapter", "Error navigating: ${e.message}")
                     }
-                    navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
-                } catch (e: Exception) {
-                    Log.e("UserAdapter", "Error navigating: ${e.message}")
                 }
             }
         }

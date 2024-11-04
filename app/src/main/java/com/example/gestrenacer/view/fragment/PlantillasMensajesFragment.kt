@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentPlantillasMensajesBinding
 import com.example.gestrenacer.models.Group
 import com.example.gestrenacer.models.Plantilla
@@ -61,6 +63,7 @@ class PlantillasMensajesFragment : Fragment() {
         btonCrearplantilla()
         btonEnviar()
         setBackBtnUp()
+        setupTogglePlantillas()
     }
 
     private fun anadirRol() {
@@ -167,6 +170,10 @@ class PlantillasMensajesFragment : Fragment() {
                 updatePlantillaList(it)
             }
         }
+
+
+        plantillaViewModel.progresState.observe(viewLifecycleOwner) { isLoading ->
+        }
     }
 
     private fun updatePlantillaList(plantillas: List<Plantilla>) {
@@ -200,6 +207,8 @@ class PlantillasMensajesFragment : Fragment() {
             crearPlantilla()
         }
     }
+
+
 
 
     private fun enviarMensaje() {
@@ -251,11 +260,18 @@ class PlantillasMensajesFragment : Fragment() {
                 message = mensaje
             )
 
-            plantillaViewModel.crearPlantilla(nuevaPlantilla)
-            binding.etMensaje.text.clear()
-            binding.etNombrePlantilla.text.clear()
+            // Comprobar si la plantilla es duplicada antes de crearla
+            if (!plantillaViewModel.plantillaDuplicada(nuevaPlantilla.name)) {
+                plantillaViewModel.crearPlantilla(nuevaPlantilla)
+                binding.etMensaje.text.clear()
+                binding.etNombrePlantilla.text.clear()
 
-            enviarMensaje()
+                enviarMensaje()
+                // Mostrar mensaje de éxito
+                Toast.makeText(context, "Plantilla creada exitosamente", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Ya existe una plantilla con ese nombre", Toast.LENGTH_SHORT).show()
+            }
         } else {
             Toast.makeText(context, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
         }
@@ -275,5 +291,19 @@ class PlantillasMensajesFragment : Fragment() {
         }
         dialog.show()
     }
+
+    private fun setupTogglePlantillas() {
+        binding.tvTituloPlantillas.setOnClickListener {
+            if (binding.recyclerViewPlantillas.visibility == View.GONE) {
+                binding.recyclerViewPlantillas.visibility = View.VISIBLE
+                binding.tvTituloPlantillas.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_up, 0)
+            } else {
+                binding.recyclerViewPlantillas.visibility = View.GONE
+                binding.tvTituloPlantillas.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down, 0)
+            }
+        }
+    }
+
+
 }
 
