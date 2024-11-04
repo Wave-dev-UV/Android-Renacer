@@ -211,9 +211,11 @@ class PlantillasMensajesFragment : Fragment() {
 
 
 
-    private fun enviarMensaje() {
-        if ((arguments?.getString("appliedFilters") == "false") and
-            (arguments?.getString("rol") == "Administrador")) {
+    private fun enviarMensaje():Int{
+        var result = 0
+        if (arguments?.getString("appliedFilters") == "true") {
+            result = 2
+        } else if (arguments?.getString("rol") == "Administrador") {
             // Filtering using groups
             groupViewModel.getGroups()
             val selectedGroupName = binding.groupsAutoCompleteTv.text.toString()
@@ -235,7 +237,7 @@ class PlantillasMensajesFragment : Fragment() {
                     Log.d("sendMessage - Pending Filters", pendingFilters.toString())
                     Log.d("sendMessage - Initial Date", initialDate.toString())
                     Log.d("sendMessage - Final Date", finalDate.toString())
-
+                    result = 1
                 } else {
                     Toast.makeText(context, "Ese grupo no existe. Elige uno válido", Toast.LENGTH_SHORT).show()
                 }
@@ -246,6 +248,7 @@ class PlantillasMensajesFragment : Fragment() {
         } else {
             // Filtering using raw filters
         }
+        return result
     }
 
     private fun crearPlantilla() {
@@ -260,18 +263,21 @@ class PlantillasMensajesFragment : Fragment() {
                 message = mensaje
             )
 
-            // Comprobar si la plantilla es duplicada antes de crearla
-            if (!plantillaViewModel.plantillaDuplicada(nuevaPlantilla.name)) {
-                plantillaViewModel.crearPlantilla(nuevaPlantilla)
-                binding.etMensaje.text.clear()
-                binding.etNombrePlantilla.text.clear()
+            if (enviarMensaje() > 0) {
+                // Comprobar si la plantilla es duplicada antes de crearla
+                if (!plantillaViewModel.plantillaDuplicada(nuevaPlantilla.name)) {
+                    plantillaViewModel.crearPlantilla(nuevaPlantilla)
+                    binding.etMensaje.text.clear()
+                    binding.etNombrePlantilla.text.clear()
 
-                enviarMensaje()
-                // Mostrar mensaje de éxito
-                Toast.makeText(context, "Plantilla creada exitosamente", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, "Ya existe una plantilla con ese nombre", Toast.LENGTH_SHORT).show()
+
+                    // Mostrar mensaje de éxito
+                    Toast.makeText(context, "Plantilla creada exitosamente", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Ya existe una plantilla con ese nombre", Toast.LENGTH_SHORT).show()
+                }
             }
+
         } else {
             Toast.makeText(context, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
         }
