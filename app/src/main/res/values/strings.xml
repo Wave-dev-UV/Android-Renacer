@@ -7,9 +7,9 @@
     <string name="apellido_s">Apellido(s):</string>
     <string name="inserte_su_apellido">Inserte su apellido</string>
     <string name="n_mero_de_identificaci_n">Número de identificación</string>
-    <string name="digite_su_n_mero_de_id">digite su número de ID</string>
+    <string name="digite_su_n_mero_de_id">Digite su número de ID</string>
     <string name="tipo_de_documento">Tipo de documento:</string>
-    <string name="n_mero_de_celular">Celular</string>
+    <string name="n_mero_de_celular">Celular:</string>
     <string name="digite_su_n_mero_de_celular">Digite su número de celular</string>
     <string name="direcci_n">Dirección:</string>
     <string name="inserte_su_direcci_n">Inserte su dirección</string>
@@ -27,11 +27,11 @@
     <string name="inserte_el_nombre_del_contacto">Inserte el nombre del contacto</string>
     <string name="parentesco_con_su_contacto">Parentesco con su contacto</string>
     <string name="contacto_de_emergencia">Contacto de emergencia</string>
-    <string name="boton_para_retroceder">boton para ir a la ventana anterior</string>
+    <string name="boton_para_retroceder">Botón para ir a la ventana anterior</string>
     <string name="permisos_en_la_aplicaci_n">Permisos en la aplicación</string>
     <string name="puede_acceder_a_la_aplicaci_n">¿Puede acceder a la aplicación?</string>
     <string name="crear_usuario">Crear Usuario</string>
-    <string name="el_usuario_es_un_lider">¿El usuario es un lider?</string>
+    <string name="el_usuario_es_un_lider">¿El usuario es un líder?</string>
     <string name="el_usuario_puede_acceder_a_la_aplicaci_n">¿El usuario puede acceder a la aplicación?</string>
     <string name="bottomBarText1">Principal</string>
     <string name="bottomBarText2">Reportes</string>
@@ -57,8 +57,8 @@
     <string name="lblMax">Hasta:</string>
     <string name="lblBtnAplicarFiltro">Filtrar y ordenar</string>
     <string-array name="listaTipoDocumento">
-        <item>Cedula</item>
-        <item>Tajerta de Identidad</item>
+        <item>Cédula</item>
+        <item>Tarjeta de Identidad</item>
         <item>Pasaporte</item>
     </string-array>
     <string name="tituloEditarUsuario">EDITAR USUARIO</string>
@@ -67,8 +67,8 @@
     <string name="estado_de_atencion">Cambiar estado de atención</string>>
     <string name="selecc_atencion">Cambie el estado de atención</string>
     <string name="ver_usuario">Ver Usuario</string>
-    <string name="imagen_de_perfil">imagen de perfil</string>
-    <string name="cedula">Cedula:</string>
+    <string name="imagen_de_perfil">Imagen de perfil</string>
+    <string name="cedula">Cédula:</string>
     <string name="sexo">Sexo:</string>
     <string name="estado_civil">Estado Civil:</string>
     <string name="fecha_nacimiento">Fecha Nacimiento:</string>
@@ -80,7 +80,7 @@
     <string name="bot_n_para_borrar_usuario">Botón para borrar usuario</string>>
     <string name="seleccione_el_sexo">Seleccione el Sexo</string>
     <string name="seleccione_el_estado_civil">Seleccione el estado civil</string>
-    <string name="selecciones_rol_a_asignar">Selecciones rol a asignar</string>
+    <string name="selecciones_rol_a_asignar">Seleccione rol a asignar</string>
     <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
     <string name="seleccione_fecha_de_nacimiento">Seleccione fecha de nacimiento</string>
     <string name="otros_datos">Otros datos</string>>
@@ -120,7 +120,12 @@
     <string name="lblFiltroSheet">Filtrar por:</string>
     <string name="checkbox_select_all">Seleccionar Todos</string>
     <string name="outlined_icon_btn_desc">Cancelar</string>
-    <string name="lbl_Usar_Huella">Usar Huella</string>>
+    <string name="lbl_Usar_Huella">Usar Huella</string>
+    <string name="ingrese_el_c_digo_que_ha_recibido_por_sms">Ingrese el código que ha recibido por SMS</string>
+    <string name="c_digo_sms">Código SMS</string>
+    <string name="verificar_c_digo">Verificar Código</string>
+    <string name="feligr_s">Feligrés</string>
+    >
 
 
 </resources>
