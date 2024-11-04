@@ -133,8 +133,6 @@ class UserAdapter(
             manejadorAnadirPendientes(user)
         }
 
-
-
         private fun manejadorClicCard(user: User) {
             if (rol != "Visualizador") {
                 binding.cardFeligres.setOnClickListener {
