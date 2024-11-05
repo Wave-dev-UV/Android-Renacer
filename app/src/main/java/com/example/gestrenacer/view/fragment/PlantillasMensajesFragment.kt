@@ -170,8 +170,6 @@ class PlantillasMensajesFragment : Fragment() {
                 updatePlantillaList(it)
             }
         }
-
-
         plantillaViewModel.progresState.observe(viewLifecycleOwner) { isLoading ->
         }
     }
@@ -207,9 +205,6 @@ class PlantillasMensajesFragment : Fragment() {
             crearPlantilla()
         }
     }
-
-
-
 
     private fun enviarMensaje():Int{
         var result = 0
@@ -269,7 +264,6 @@ class PlantillasMensajesFragment : Fragment() {
                     plantillaViewModel.crearPlantilla(nuevaPlantilla)
                     binding.etMensaje.text.clear()
                     binding.etNombrePlantilla.text.clear()
-
 
                     // Mostrar mensaje de éxito
                     Toast.makeText(context, "Plantilla creada exitosamente", Toast.LENGTH_SHORT).show()
