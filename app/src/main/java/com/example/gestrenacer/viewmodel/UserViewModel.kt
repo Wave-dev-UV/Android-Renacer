@@ -1,6 +1,7 @@
 package com.example.gestrenacer.viewmodel
 
 import android.util.Log
+import java.text.Normalizer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,8 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: UserRepositorio
-) : ViewModel() {
-
+): ViewModel() {
     private val _listaUsers = MutableLiveData<MutableList<User>>()
     val listaUsers: LiveData<MutableList<User>> = _listaUsers
 
@@ -32,37 +32,24 @@ class UserViewModel @Inject constructor(
     private val _orden = MutableLiveData<List<String>>()
     val orden: LiveData<List<String>> = _orden
 
-    // LiveData para el conteo de usuarios pendientes "Por Llamar"
-    private val _pendingUsersCount = MutableLiveData<Int>()
-    val pendingUsersCount: LiveData<Int> = _pendingUsersCount
-
-    // Método para actualizar el conteo de usuarios "Por Llamar"
-    fun updatePendingUsersCount() {
-        viewModelScope.launch {
-            _pendingUsersCount.value = repository.countPendingUsers()
-        }
-    }
-
-    fun getFeligreses(
-        fechaInicial: Timestamp, fechaFinal: Timestamp,
-        filtroEstcivil: List<String>, filtroSexo: List<String>,
-        filtroLlamado: List<String>, critOrden: String = "nombre",
-        escalaOrden: String = "ascendente"
-    ) {
+    fun getFeligreses(fechaInicial: Timestamp, fechaFinal: Timestamp,
+                      filtroEstcivil: List<String>,
+                      filtroSexo: List<String>,
+                      filtroLlamado: List<String>,
+                      critOrden: String = "nombre", escalaOrden: String = "ascendente") {
         viewModelScope.launch {
             _progresState.value = true
             try {
                 val aInicio = fechaInicial.toDate().year.toString()
                 val aFinal = fechaFinal.toDate().year.toString()
-                val users = repository.getUsers(
-                    filtroSexo, filtroEstcivil, filtroLlamado,
-                    fechaInicial, fechaFinal, critOrden, escalaOrden
-                )
+                val users = repository.getUsers(filtroSexo,filtroEstcivil,filtroLlamado,
+                    fechaInicial,fechaFinal,critOrden,escalaOrden)
 
                 _filtros.value = listOf(filtroSexo, filtroEstcivil,
-                    listOf(aInicio, aFinal), filtroLlamado)
+                    listOf(aInicio,aFinal), filtroLlamado)
                 _orden.value = listOf(critOrden, escalaOrden)
-                _listaUsers.value = users.toMutableList()
+                _listaUsers.value = users
+                _progresState.value = false
             } finally {
                 _progresState.value = false
             }
@@ -84,11 +71,13 @@ class UserViewModel @Inject constructor(
     fun eliminarUsuarios(users: MutableList<User>?) {
         viewModelScope.launch {
             try {
+                // Eliminar usuarios del repositorio
                 repository.eliminarUsuarios(users)
                 Log.d("UserViewModel", "Usuarios eliminados con éxito")
 
+                // Actualiza la lista de usuarios después de eliminar
                 val updatedList = _listaUsers.value?.filterNot { user ->
-                    users?.any { it.firestoreID == user.firestoreID } ?: false
+                    users?.any { it.firestoreID == user.firestoreID } as Boolean
                 }
                 _listaUsers.value = updatedList?.toMutableList() // Actualiza la lista con los usuarios restantes
 
@@ -98,16 +87,17 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun colocarRol(rol: String?) {
+    fun colocarRol(rol: String?){
         _rol.value = rol
     }
 
-    fun borrarUsuario(user: User) {
+    fun borrarUsuario(user: User){
         viewModelScope.launch {
             _progresState.value = true
             try {
                 repository.borrarUsuario(user)
-            } finally {
+                _progresState.value = false
+            } catch (e: Exception) {
                 _progresState.value = false
             }
         }

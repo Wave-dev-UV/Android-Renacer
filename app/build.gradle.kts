@@ -44,6 +44,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
+
     implementation(libs.androidx.annotation)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.auth.ktx)
