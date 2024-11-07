@@ -1,22 +1,27 @@
 package com.example.gestrenacer.view.modal
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.SheetFiltrosBinding
+import com.example.gestrenacer.models.Group
+import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.Timestamp
 import java.util.Calendar
 import java.util.Date
 
-class ModalBottomSheet (
+class ModalBottomSheet(
     val filtrarFuncion: (Timestamp, Timestamp, List<String>, List<String>, List<String>, String, String) -> Unit,
     private val filtros: List<List<String>>,
-    private val orden: List<String>
+    private val orden: List<String>,
+    private val groupViewModel: GroupViewModel,
+    private val setAppliedFilters: (Boolean) -> Unit,
+    private val roleMode: String
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
 
@@ -31,6 +36,7 @@ class ModalBottomSheet (
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        groupViewModel.getGroups()
         iniciarComponentes()
     }
 
@@ -38,11 +44,21 @@ class ModalBottomSheet (
         iniciarCheckbox()
         iniciarText()
         iniciarRadioBtn()
+        iniciarCreadorGrupos()
         manejadorTxt()
         manejadoresCheckBox()
         manejadoresRadioBtn()
         manejadorBtnFiltrar()
         manejadorBtnCerrar()
+        manejadorCreadorDeGrupos()
+    }
+
+    private fun iniciarCreadorGrupos() {
+        if (roleMode in listOf("Administrador")) {
+            binding.gruposTv.visibility = View.VISIBLE
+            binding.groupEv.visibility = View.VISIBLE
+            binding.swithGruposContainer.visibility = View.VISIBLE
+        }
     }
 
     private fun iniciarText(){
@@ -121,58 +137,112 @@ class ModalBottomSheet (
 
     private fun manejadorBtnFiltrar(){
         binding.btnAplicarFiltro.setOnClickListener{
-            val listSexo = ArrayList<String>()
-            val listEstado = ArrayList<String>()
-            val listOrden = ArrayList<String>()
-            var fechaInicial = Date().apply {
-                hours = 0
-                minutes = 0
-                seconds = 0
-            }
-            var fechaFinal = Date().apply {
-                hours = 0
-                minutes = 0
-                seconds = 0
-            }
+            val createGroupToggle = binding.createGroupToggle
+            val groupEvName = binding.groupEv.text.toString()
 
-            if (binding.checkFemenino.isChecked) listSexo.add("Femenino")
-            if (binding.checkMasculino.isChecked) listSexo.add("Masculino")
-            if (binding.checkCasado.isChecked) listEstado.add("Casado(a)")
-            if (binding.checkSoltero.isChecked) listEstado.add("Soltero(a)")
-            if (binding.checkDivorciado.isChecked) listEstado.add("Divorciado(a)")
-            if (binding.checkLibre.isChecked) listEstado.add("Unión libre")
-            if (binding.checkViudo.isChecked) listEstado.add("Viudo(a)")
+            fun executeFilter() {
+                val listSexo = ArrayList<String>()
+                val listEstado = ArrayList<String>()
+                val listOrden = ArrayList<String>()
+                var fechaInicial = Date().apply {
+                    hours = 0
+                    minutes = 0
+                    seconds = 0
+                }
+                var fechaFinal = Date().apply {
+                    hours = 0
+                    minutes = 0
+                    seconds = 0
+                }
 
-            when (binding.radioGroup.checkedRadioButtonId){
-                R.id.radioBtnAlfabeticoAsc -> listOrden.addAll(arrayOf("nombre","ascendente"))
-                R.id.radioBtnAlfabeticoDesc -> listOrden.addAll(arrayOf("nombre","descendente"))
-                R.id.radioBtnEdadAsc -> listOrden.addAll(arrayOf("fechaNacimiento","ascendente"))
-                R.id.radioBtnEdadDesc -> listOrden.addAll(arrayOf("fechaNacimiento","descendente"))
-                R.id.radioBtnAntiguedadAsc -> listOrden.addAll(arrayOf("fechaCreacion","ascendente"))
-                R.id.radioBtnAntiguedadDesc -> listOrden.addAll(arrayOf("fechaCreacion","descendente"))
-            }
+                if (binding.checkFemenino.isChecked) listSexo.add("Femenino")
+                if (binding.checkMasculino.isChecked) listSexo.add("Masculino")
+                if (binding.checkCasado.isChecked) listEstado.add("Casado(a)")
+                if (binding.checkSoltero.isChecked) listEstado.add("Soltero(a)")
+                if (binding.checkDivorciado.isChecked) listEstado.add("Divorciado(a)")
+                if (binding.checkLibre.isChecked) listEstado.add("Unión libre")
+                if (binding.checkViudo.isChecked) listEstado.add("Viudo(a)")
 
-            if (binding.txtEdadFinal.text.isNotEmpty()){
-                fechaInicial.year -= binding.txtEdadFinal.text.toString().toInt() + 1
-            }
-            else{
-                fechaInicial.year = 0 //1900
-                fechaInicial.month = 0 //enero
-                fechaInicial.date = 1 //1
-            }
-            if (binding.txtEdadInicial.text.isNotEmpty()){
-                fechaFinal.year -= binding.txtEdadInicial.text.toString().toInt() - 1
-            }
-            else {
-                fechaFinal.year = 300 //2200
-                fechaFinal.month = 12 //diciembre
-                fechaFinal.date = 0 //21
-            }
+                when (binding.radioGroup.checkedRadioButtonId){
+                    R.id.radioBtnAlfabeticoAsc -> listOrden.addAll(arrayOf("nombre","ascendente"))
+                    R.id.radioBtnAlfabeticoDesc -> listOrden.addAll(arrayOf("nombre","descendente"))
+                    R.id.radioBtnEdadAsc -> listOrden.addAll(arrayOf("fechaNacimiento","ascendente"))
+                    R.id.radioBtnEdadDesc -> listOrden.addAll(arrayOf("fechaNacimiento","descendente"))
+                    R.id.radioBtnAntiguedadAsc -> listOrden.addAll(arrayOf("fechaCreacion","ascendente"))
+                    R.id.radioBtnAntiguedadDesc -> listOrden.addAll(arrayOf("fechaCreacion","descendente"))
+                }
 
-            filtrarFuncion(
-                Timestamp(fechaInicial), Timestamp(fechaFinal),
-                listEstado, listSexo, filtros[3], listOrden[0], listOrden[1])
-            dismiss()
+                if (binding.txtEdadFinal.text.isNotEmpty()){
+                    fechaInicial.year -= binding.txtEdadFinal.text.toString().toInt() + 1
+                }
+                else{
+                    fechaInicial.year = 0 //1900
+                    fechaInicial.month = 0 //enero
+                    fechaInicial.date = 1 //1
+                }
+                if (binding.txtEdadInicial.text.isNotEmpty()){
+                    fechaFinal.year -= binding.txtEdadInicial.text.toString().toInt() - 1
+                }
+                else {
+                    fechaFinal.year = 300 //2200
+                    fechaFinal.month = 12 //diciembre
+                    fechaFinal.date = 0 //21
+                }
+
+                val checkboxFilters: MutableList<String> = mutableListOf()
+
+                for (e in listSexo) {
+                    checkboxFilters.add(e)
+                }
+                for (e in listEstado) {
+                    checkboxFilters.add(e)
+                }
+
+                if (createGroupToggle.isChecked) {
+                    val groupWithFilters = Group(
+                        nombre=groupEvName,
+                        datesfilters = listOf(
+                            Timestamp(fechaInicial),
+                            Timestamp(fechaFinal)
+                        ),
+                        checkboxfilters = checkboxFilters
+                    )
+
+                    groupViewModel.saveGroup(groupWithFilters)
+
+                }
+
+                filtrarFuncion(
+                    Timestamp(fechaInicial), Timestamp(fechaFinal),
+                    listEstado, listSexo, filtros[3], listOrden[0], listOrden[1])
+
+                setAppliedFilters(true)
+                dismiss()
+
+            }
+            groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
+                val existingName = groups.any { it.nombre == groupEvName }
+
+                if (createGroupToggle.isChecked ) {
+                    if ((groupEvName == "")) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.por_favor_asigna_un_nombre_al_grupo),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else if (existingName) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.ya_hay_un_grupo_con_ese_nombre_elige_otro),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }  else {
+                        executeFilter()
+                    }
+                } else {
+                    executeFilter()
+                }
+            }
         }
     }
 
@@ -211,6 +281,18 @@ class ModalBottomSheet (
         binding.btnCerrarFiltros.setOnClickListener{
             dismiss()
         }
+    }
+
+    private fun manejadorCreadorDeGrupos(){
+        val toggleButton = binding.createGroupToggle
+        toggleButton.setOnClickListener {
+            if (toggleButton.isChecked) {
+                binding.groupEv.isEnabled = true
+            } else {
+                binding.groupEv.isEnabled = false
+            }
+        }
+
     }
 
     private fun validarEdad(): Boolean{

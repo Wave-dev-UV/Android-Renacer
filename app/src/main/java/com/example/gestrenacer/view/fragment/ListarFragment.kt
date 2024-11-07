@@ -2,7 +2,6 @@ package com.example.gestrenacer.view.fragment
 
 //import UserAdapter
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,6 +21,7 @@ import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.view.modal.ModalBottomSheet
+import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +37,8 @@ class ListarFragment : Fragment(), Recargable {
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: UserAdapter? = null
     private var userList = mutableListOf<User>()
+    private val groupViewModel: GroupViewModel by viewModels()
+    private var appliedFilters = false
 
 
     override fun onCreateView(
@@ -114,7 +116,9 @@ class ListarFragment : Fragment(), Recargable {
 
     private fun observerListFeligreses() {
         userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
-            userList = lista
+            if (lista != null) {
+                userList = lista as MutableList<User>
+            }
             binding.lblResultado.text = "Resultados: ${userList.size}"
             binding.txtNoResultados.isVisible = userList.isEmpty()
 
@@ -212,15 +216,24 @@ class ListarFragment : Fragment(), Recargable {
         binding.btnFiltrar.setOnClickListener{
             val listFiltros = userViewModel.filtros.value as List<List<String>>
             val listOrden = userViewModel.orden.value as List<String>
+            val role = userViewModel.rol.value as String
             val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
-                listFiltros,listOrden)
+                listFiltros,listOrden, groupViewModel, setAppliedFilters, role
+            )
             modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
         }
     }
 
     private fun manejadorBtnMensaje() {
         binding.btnEnviarSms.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("appliedFilters", if (appliedFilters) "true" else "false")
+            bundle.putString("rol",arguments?.getString("rol"))
             Log.d("BtnSMS", "Clic en el botón de SMS")
+            findNavController().navigate(R.id.action_listarFragment_to_plantillasMensajesFragment,
+                bundle)
+
+
         }
     }
 
@@ -350,5 +363,8 @@ class ListarFragment : Fragment(), Recargable {
             adapter?.setLongPressMode(false)
         }
     }
+
+    val setAppliedFilters: (Boolean) -> Unit = { x -> appliedFilters = x }
+
 
 }
