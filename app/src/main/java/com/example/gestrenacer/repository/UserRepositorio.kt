@@ -1,6 +1,8 @@
 package com.example.gestrenacer.repository
 
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.example.gestrenacer.models.User
 import com.google.firebase.Timestamp
@@ -16,28 +18,45 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UserRepositorio @Inject constructor() {
+class UserRepositorio @Inject constructor(private val context: Context) {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
 
 
-    suspend fun getUsers(filtroSexo: List<String>,filtroEstCivil: List<String>,
-                         filtroLlamado: List<String>,fechaInicial:Timestamp,
-                         fechaFinal:Timestamp, critOrden: String,
-                         escalaOrden: String): MutableList<User> {
-        val order = (
-            if (escalaOrden == "ascendente") Query.Direction.ASCENDING
-            else Query.Direction.DESCENDING
-        )
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
-        val snapshot = usersCollection.whereIn("sexo",filtroSexo).
-            whereIn("estadoCivil",filtroEstCivil).
-            whereIn("estadoAtencion",filtroLlamado).
-            whereGreaterThan("fechaNacimiento", fechaInicial).
-            whereLessThan("fechaNacimiento", fechaFinal).
-            orderBy(critOrden, order).get().await()
+
+    fun saveUserRole(role: String) {
+        sharedPreferences.edit().putString("user_role", role).apply()
+    }
+
+
+    fun getUserRole(): String? {
+        return sharedPreferences.getString("user_role", null)
+    }
+
+
+    fun clearUserRole() {
+        sharedPreferences.edit().remove("user_role").apply()
+    }
+
+
+    suspend fun getUsers(
+        filtroSexo: List<String>, filtroEstCivil: List<String>,
+        filtroLlamado: List<String>, fechaInicial: Timestamp,
+        fechaFinal: Timestamp, critOrden: String,
+        escalaOrden: String
+    ): MutableList<User> {
+        val order = if (escalaOrden == "ascendente") Query.Direction.ASCENDING else Query.Direction.DESCENDING
+
+        val snapshot = usersCollection.whereIn("sexo", filtroSexo)
+            .whereIn("estadoCivil", filtroEstCivil)
+            .whereIn("estadoAtencion", filtroLlamado)
+            .whereGreaterThan("fechaNacimiento", fechaInicial)
+            .whereLessThan("fechaNacimiento", fechaFinal)
+            .orderBy(critOrden, order).get().await()
 
         return snapshot.map { x ->
             val obj = x.toObject(User::class.java)
@@ -45,6 +64,7 @@ class UserRepositorio @Inject constructor() {
             obj
         }.toMutableList()
     }
+
 
     suspend fun saveUser(user: User) {
         try {
@@ -56,15 +76,16 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
+
     suspend fun updateUser(feligres: User) {
-        feligres.firestoreID.let { id ->
+        feligres.firestoreID?.let { id ->
             try {
                 usersCollection.document(id).set(feligres).await()
                 Log.d("FeligresRepositorio", "Documento actualizado con éxito: $id")
             } catch (e: Exception) {
                 Log.e("FeligresRepositorio", "Error al actualizar el documento: ${e.message}")
             }
-        } ?: Log.w("FeligresRepositorio", "Firestore ID es nulo")
+        }
     }
 
 
@@ -77,8 +98,9 @@ class UserRepositorio @Inject constructor() {
 
             if (!snapshot.isEmpty) {
                 val document = snapshot.documents.first()
-                val rol = document.getString("rol") ?: "Feligrés"  // Rol predeterminado si no se encuentra
+                val rol = document.getString("rol") ?: "Feligrés"
                 if (rol != "Feligrés") {
+                    saveUserRole(rol)
                     rol
                 } else {
                     null
@@ -92,6 +114,7 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
+
     suspend fun getPendingUsers(): List<User> {
         val snapshot = usersCollection
             .whereEqualTo("estadoAtencion", "Por Llamar")
@@ -102,6 +125,7 @@ class UserRepositorio @Inject constructor() {
             obj
         }
     }
+
 
     fun sendVerificationCode(
         phoneNumber: String,
@@ -129,7 +153,7 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
-    // Método para eliminar uno o varios usuarios
+
     suspend fun eliminarUsuarios(users: MutableList<User>?) {
         withContext(Dispatchers.IO) {
             val list = users as MutableList<User>
@@ -145,8 +169,8 @@ class UserRepositorio @Inject constructor() {
     }
 
 
-    suspend fun borrarUsuario(user: User){
-        withContext(Dispatchers.IO){
+    suspend fun borrarUsuario(user: User) {
+        withContext(Dispatchers.IO) {
             try {
                 usersCollection.document(user.firestoreID).delete().await()
             } catch (e: Exception) {
@@ -154,6 +178,4 @@ class UserRepositorio @Inject constructor() {
             }
         }
     }
-
-
 }
