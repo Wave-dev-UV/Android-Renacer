@@ -37,6 +37,7 @@ class PlantillasMensajesFragment : Fragment() {
     private lateinit var plantillaAdapter: PlantillaAdapter
     private val groupViewModel: GroupViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
+    private var isProcessingMessage = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -127,6 +128,7 @@ class PlantillasMensajesFragment : Fragment() {
                     dialog.setPositiveButton("Borrar") { _, _ ->
                         groupViewModel.deleteGroup(group)
                         groupViewModel.getGroups()
+                        autoCompleteEditText.text.clear()
                     }
                     dialog.show()
                 }
@@ -170,6 +172,7 @@ class PlantillasMensajesFragment : Fragment() {
                 updatePlantillaList(it)
             }
         }
+
         plantillaViewModel.progresState.observe(viewLifecycleOwner) { isLoading ->
         }
     }
@@ -206,23 +209,33 @@ class PlantillasMensajesFragment : Fragment() {
         }
     }
 
-    private fun enviarMensaje():Int{
+
+
+
+    private fun enviarMensaje(): Int {
+        if (isProcessingMessage) return 0  // Prevent multiple executions
+        isProcessingMessage = true
+
         var result = 0
         if (arguments?.getString("appliedFilters") == "true") {
             result = 2
+            isProcessingMessage = false
         } else if (arguments?.getString("rol") == "Administrador") {
             // Filtering using groups
-            groupViewModel.getGroups()
             val selectedGroupName = binding.groupsAutoCompleteTv.text.toString()
             groupViewModel.listaGroups.observe(viewLifecycleOwner) { groups ->
+                if (!isProcessingMessage) return@observe  // Skip if we're not processing
+
                 val group = groups.find { e -> selectedGroupName == e.nombre }
                 if (group != null) {
                     val checkBoxFilters = group.checkboxfilters
                     val datesFilters = group.datesfilters
 
                     val sexFilters = checkBoxFilters.filter { it in listOf("Masculino", "Femenino") }
-                    val stateFilters = checkBoxFilters.filter { it in listOf("Casado(a)",
-                        "Soltero(a)", "Divorciado(a)", "Unión libre", "Viudo(a)") }
+                    val stateFilters = checkBoxFilters.filter {
+                        it in listOf("Casado(a)", "Soltero(a)", "Divorciado(a)",
+                            "Unión libre", "Viudo(a)")
+                    }
                     val pendingFilters = listOf<String>()
                     val initialDate = datesFilters[0]
                     val finalDate = datesFilters[1]
@@ -234,14 +247,13 @@ class PlantillasMensajesFragment : Fragment() {
                     Log.d("sendMessage - Final Date", finalDate.toString())
                     result = 1
                 } else {
-                    Toast.makeText(context, "Ese grupo no existe. Elige uno válido", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Ese grupo no existe. Elige uno válido",
+                        Toast.LENGTH_SHORT).show()
                 }
-
-                groupViewModel.listaGroups.removeObservers(viewLifecycleOwner)
+                isProcessingMessage = false
             }
-
         } else {
-            // Filtering using raw filters
+            isProcessingMessage = false
         }
         return result
     }
