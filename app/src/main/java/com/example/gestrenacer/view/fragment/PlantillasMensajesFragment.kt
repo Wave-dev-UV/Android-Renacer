@@ -173,7 +173,6 @@ class PlantillasMensajesFragment : Fragment() {
             }
         }
 
-
         plantillaViewModel.progresState.observe(viewLifecycleOwner) { isLoading ->
         }
     }
@@ -264,30 +263,32 @@ class PlantillasMensajesFragment : Fragment() {
         val nombrePlantilla = binding.etNombrePlantilla.text.toString().trim()
 
         if (mensaje.isNotEmpty() && nombrePlantilla.isNotEmpty()) {
+            // Crear objeto Plantilla con un ID único
             val nuevaPlantilla = Plantilla(
-                id = UUID.randomUUID().toString(),
+                id = UUID.randomUUID().toString(), // Genera un ID único
                 name = nombrePlantilla,
                 message = mensaje
             )
 
-            val enviarResult = enviarMensaje()
-            if (enviarResult > 0) {
+            if (enviarMensaje() > 0) {
+                // Comprobar si la plantilla es duplicada antes de crearla
                 if (!plantillaViewModel.plantillaDuplicada(nuevaPlantilla.name)) {
                     plantillaViewModel.crearPlantilla(nuevaPlantilla)
                     binding.etMensaje.text.clear()
                     binding.etNombrePlantilla.text.clear()
-                    Toast.makeText(context, "Plantilla creada exitosamente",
-                        Toast.LENGTH_SHORT).show()
+
+                    // Mostrar mensaje de éxito
+                    Toast.makeText(context, "Plantilla creada exitosamente", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "Ya existe una plantilla con ese nombre",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Ya existe una plantilla con ese nombre", Toast.LENGTH_SHORT).show()
                 }
             }
+
         } else {
-            Toast.makeText(context, "Por favor completa todos los campos",
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun showPlantillaDetailsDialog(plantilla: Plantilla) {
         val dialog = AlertDialog.Builder(requireContext())
         dialog.setTitle(plantilla.name)
@@ -314,6 +315,7 @@ class PlantillasMensajesFragment : Fragment() {
             }
         }
     }
+
 
 }
 
