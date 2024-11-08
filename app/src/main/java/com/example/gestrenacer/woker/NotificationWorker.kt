@@ -57,7 +57,7 @@ class NotificationWorker(appContext: Context, workerParams: WorkerParameters) : 
 
                 val notification = NotificationCompat.Builder(applicationContext, "notification_channel")
                     .setContentTitle("Recordatorio")
-                    .setContentText("Tienes $pendingUsersCount personas pendientes por llamar")
+                    .setContentText("Tienes personas pendientes por llamar")
                     .setSmallIcon(R.drawable.ic_notification_icon)
                     .setContentIntent(pendingIntent)
                     .build()

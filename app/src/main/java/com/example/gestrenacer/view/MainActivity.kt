@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun scheduleNotification() {
         val notificationWork = OneTimeWorkRequestBuilder<NotificationWorker>()
-            .setInitialDelay(1, TimeUnit.SECONDS)
+            .setInitialDelay(8, TimeUnit.HOURS)
             .build()
 
         WorkManager.getInstance(this).enqueue(notificationWork)
