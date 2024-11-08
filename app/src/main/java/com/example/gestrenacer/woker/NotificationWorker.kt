@@ -11,8 +11,8 @@ import androidx.work.WorkerParameters
 import com.example.gestrenacer.R
 import com.example.gestrenacer.view.MainActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 
 class NotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
 
@@ -26,43 +26,46 @@ class NotificationWorker(appContext: Context, workerParams: WorkerParameters) : 
                 getPendingUsersCount()
             }
 
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getActivity(
-                    applicationContext,
-                    0,
-                    intent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
+            // Verificar si el conteo de personas pendientes es mayor a 0
+            if (pendingUsersCount > 0) {
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    PendingIntent.getActivity(
+                        applicationContext,
+                        0,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
+                } else {
+                    PendingIntent.getActivity(
+                        applicationContext,
+                        0,
+                        intent,
+                        0
+                    )
+                }
+
+                val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val channel = NotificationChannel(
+                        "notification_channel",
+                        "App Notification",
+                        NotificationManager.IMPORTANCE_HIGH
+                    )
+                    notificationManager.createNotificationChannel(channel)
+                }
+
+                val notification = NotificationCompat.Builder(applicationContext, "notification_channel")
+                    .setContentTitle("Recordatorio")
+                    .setContentText("Tienes $pendingUsersCount personas pendientes por llamar")
+                    .setSmallIcon(R.drawable.ic_notification_icon)
+                    .setContentIntent(pendingIntent)
+                    .build()
+
+                notificationManager.notify(1, notification)
             } else {
-                PendingIntent.getActivity(
-                    applicationContext,
-                    0,
-                    intent,
-                    0
-                )
+                Log.d("NotificationWorker", "No hay personas pendientes por llamar.")
             }
-
-
-            val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(
-                    "notification_channel",
-                    "App Notification",
-                    NotificationManager.IMPORTANCE_HIGH
-                )
-                notificationManager.createNotificationChannel(channel)
-            }
-
-            val notification = NotificationCompat.Builder(applicationContext, "notification_channel")
-                .setContentTitle("Recordatorio")
-                .setContentText("Tienes $pendingUsersCount personas pendientes por llamar")
-                .setSmallIcon(R.drawable.ic_notification_icon)
-                .setContentIntent(pendingIntent)
-                .build()
-
-
-            notificationManager.notify(1, notification)
             return Result.success()
         } else {
             Log.d("NotificationWorker", "Rol no válido para notificación: $role")
