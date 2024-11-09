@@ -1,5 +1,6 @@
 package com.example.gestrenacer.view.modal
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,8 +22,7 @@ class ModalBottomSheet(
     private val filtros: List<List<String>>,
     private val orden: List<String>,
     private val groupViewModel: GroupViewModel,
-    private val setAppliedFilters: (Boolean) -> Unit,
-    private val roleMode: String
+    private val setAppliedFilters: (Boolean) -> Unit
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
 
@@ -55,7 +55,10 @@ class ModalBottomSheet(
     }
 
     private fun iniciarCreadorGrupos() {
-        if (roleMode in listOf("Administrador")) {
+        val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val roleMode = pref.getString("rol","")
+
+        if (roleMode == "Adminsitrador") {
             binding.gruposTv.visibility = View.VISIBLE
             binding.groupEv.visibility = View.VISIBLE
             binding.swithGruposContainer.visibility = View.VISIBLE

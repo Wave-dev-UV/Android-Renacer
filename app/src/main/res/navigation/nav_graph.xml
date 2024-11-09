@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_loginFragment_to_verifyFragment"
             app:destination="@id/verifyFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_listarFragment"
+            app:destination="@id/listarFragment" />
     </fragment>
 
     <fragment

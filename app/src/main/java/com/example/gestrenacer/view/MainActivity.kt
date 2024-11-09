@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val connectionViewModel: ConnectionViewModel by viewModels()
-    private lateinit var userRepositorio: UserRepositorio
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() } // Instancia de FirebaseAuth
 
     companion object {
@@ -50,11 +49,6 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         setupBottomNav()
-        userRepositorio = UserRepositorio(this)
-
-
-        userRepositorio.clearUserRole()
-
 
         checkNotificationPermission()
 
@@ -70,7 +64,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-
         if (auth.currentUser != null && isRoleValid()) {
             scheduleNotification()
         } else {
@@ -107,8 +100,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isRoleValid(): Boolean {
-        val role = userRepositorio.getUserRole()?.lowercase()
-        return role == "gestor" || role == "administrador"
+        val preferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val role = preferences.getString("rol","Visualizador")
+
+        return role == "Gestor" || role == "Administrador"
     }
 
     private fun scheduleNotification() {
@@ -147,13 +142,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun logout() {
-        userRepositorio.clearUserRole()
-        auth.signOut()
-        Log.d("MainActivity", "Rol eliminado en logout y usuario desconectado")
-
-    }
-
     private fun mostrarBottomNav(){
         val pref = getSharedPreferences("auth", Context.MODE_PRIVATE)
             ?.getString("rol", "Visualizador")
@@ -161,7 +149,6 @@ class MainActivity : AppCompatActivity() {
         if (pref in listOf("Adminsitrador","Gestor")){
             visibilidadBottomBar(true)
         }
-
     }
 
     private fun setupBottomNav(){

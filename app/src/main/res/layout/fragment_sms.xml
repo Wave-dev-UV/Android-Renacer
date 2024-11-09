@@ -5,23 +5,24 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
-
         <ScrollView
             android:id="@+id/contPrincipal"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/lblGuardSms"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/toolbar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lblSms"
@@ -32,7 +33,7 @@
                     app:counterEnabled="true"
                     app:counterMaxLength="160"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/toolbar">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtSms"
@@ -48,7 +49,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:layout_marginEnd="8dp"
                     android:fontFamily="@font/roboto_medium"
                     android:gravity="center_vertical"
                     android:text="@string/txtFiltroSms"
@@ -154,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/roboto_medium"
                     android:gravity="center_vertical"
                     android:text="@string/txtEnvPersonSel"
@@ -168,7 +168,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/roboto_medium"
                     android:gravity="center_vertical"
                     android:text="@string/txtGrupos"
@@ -177,85 +177,107 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/lblPersonas" />
 
+                <AutoCompleteTextView
+                    android:id="@+id/groupsAutoCompleteTv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:hint="@string/escribe_el_nombre_del_grupo"
+                    android:inputType="text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblGrupos" />
+
                 <TextView
                     android:id="@+id/lblPlantillaGuard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/roboto_medium"
                     android:gravity="center_vertical"
                     android:text="@string/txtPlantilla"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lblGrupos" />
+                    app:layout_constraintTop_toBottomOf="@id/groupsAutoCompleteTv" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewPlantillas"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblPlantillaGuard" />
+
+                <TextView
+                    android:id="@+id/lblGuardSms"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_vertical"
+                    android:text="@string/txtCrearPlantilla"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@id/recyclerViewPlantillas"
+                    app:layout_constraintEnd_toStartOf="@id/switchGuardSms"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchGuardSms"
+                    style="@style/Widget.App.Switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginEnd="30dp"
+                    android:checked="false"
+                    android:contentDescription="@string/el_usuario_es_un_lider"
+                    app:layout_constraintTop_toBottomOf="@id/recyclerViewPlantillas"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:thumbTint="@color/white" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lblPlantilla"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="10dp"
+                    android:enabled="false"
+                    android:hint="@string/lblNomPlantilla"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="50"
+                    app:layout_constraintTop_toBottomOf="@id/lblGuardSms"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:maxLength="50"
+                        android:id="@+id/txtPlantilla"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btnEnviar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginVertical="10dp"
+                    android:backgroundTint="@color/btnDesactivado"
+                    android:enabled="false"
+                    android:text="@string/lblBtnEnviarSms"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/lblPlantilla"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
-
-        <TextView
-            android:id="@+id/lblGuardSms"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="@font/roboto_medium"
-            android:gravity="center_vertical"
-            android:text="@string/txtCrearPlantilla"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@id/lblPlantilla"
-            app:layout_constraintEnd_toStartOf="@id/switchGuardSms"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchGuardSms"
-            style="@style/Widget.App.Switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="5dp"
-            android:layout_marginEnd="30dp"
-            android:checked="false"
-            android:contentDescription="@string/el_usuario_es_un_lider"
-            app:layout_constraintBottom_toTopOf="@id/lblPlantilla"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:thumbTint="@color/white" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/lblPlantilla"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="10dp"
-            android:enabled="false"
-            android:hint="@string/lblNomPlantilla"
-            app:counterEnabled="true"
-            app:counterMaxLength="50"
-            app:layout_constraintBottom_toTopOf="@id/btnEnviar"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:maxLength="50"
-                android:id="@+id/txtPlantilla"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/btnEnviar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="10dp"
-            android:backgroundTint="@color/btnDesactivado"
-            android:enabled="false"
-            android:text="@string/lblBtnEnviarSms"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <ProgressBar
             android:id="@+id/progress"

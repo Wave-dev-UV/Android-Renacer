@@ -23,7 +23,6 @@ class PlantillaViewModel @Inject constructor(
 
 
     private val _progresState = MutableLiveData(false)
-    val progresState: LiveData<Boolean> = _progresState
 
     init {
         // Actualiza el Set al iniciar
