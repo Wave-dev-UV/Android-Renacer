@@ -155,4 +155,5 @@
     <string name="grupos_predeterminados">Grupos predeterminados</string>
     <string name="escribe_un_mensaje">Escribe un mensaje</string>
     <string name="enviar">Enviar</string>
+    <string name="txtErrPlantilla">Ya hay una plantilla con ese nombre.</string>
 </resources>

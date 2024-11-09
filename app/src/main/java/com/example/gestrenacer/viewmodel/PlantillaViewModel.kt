@@ -21,6 +21,8 @@ class PlantillaViewModel @Inject constructor(
 
     private val nombresDePlantillas = mutableSetOf<String>()
 
+    private val _guardado = MutableLiveData<Int>(0)
+    val guardado: LiveData<Int> = _guardado
 
     private val _progresState = MutableLiveData(false)
 
@@ -51,11 +53,15 @@ class PlantillaViewModel @Inject constructor(
             try {
                 if (!plantillaDuplicada(plantilla.name)) {
                     repository.savePlantilla(plantilla)
+                    _guardado.value = 1
                     obtenerPlantillas()
+                    _guardado.value = 0
                 } else {
+                    _guardado.value = 2
                     Log.d("PlantillaViewModel", "Nombre de plantilla duplicado: ${plantilla.name}")
                 }
             } catch (e: Exception) {
+                _guardado.value = 2
                 Log.e("PlantillaViewModel", "Error al crear plantilla: ${e.message}")
             }
         }

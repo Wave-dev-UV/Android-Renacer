@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.databinding.FragmentSmsBinding
 import com.example.gestrenacer.models.Group
 import com.example.gestrenacer.models.Plantilla
+import com.example.gestrenacer.utils.FechasAux
 import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.adapter.GroupAdapter
 import com.example.gestrenacer.view.adapter.PlantillaAdapter
@@ -75,6 +75,7 @@ class SmsFragment : Fragment() {
         observerGuardado()
         observerGrupoActivado()
         observerPlantillas()
+        observerGuardPlantilla()
     }
 
     private fun iniciarToolbar() {
@@ -103,6 +104,24 @@ class SmsFragment : Fragment() {
         val cant = requireArguments().getStringArrayList("usuarios")?.size
 
         binding.lblPersonas.text = getString(R.string.txtEnvPersonSel) + " ${cant} personas."
+    }
+
+    private fun observerGuardPlantilla(){
+        plantillaViewModel.guardado.observe(viewLifecycleOwner){
+            when (it){
+                1 -> {
+                    smsViewModel.enviarSms(binding.txtSms.text.toString())
+                }
+                2 -> {
+                    DialogUtils.dialogoInformativo(
+                        requireContext(),
+                        getString(R.string.titModalError),
+                        getString(R.string.txtErrPlantilla),
+                        getString(R.string.txtBtnAceptar)
+                    )
+                }
+            }
+        }
     }
 
     private fun observerGrupoActivado() {
@@ -217,27 +236,16 @@ class SmsFragment : Fragment() {
             val showDetailsDialog: (Group) -> Unit = { group ->
                 val dialog = AlertDialog.Builder(requireContext())
                 dialog.setTitle(group.nombre)
-                var message = "Este grupo incluye las siguientes categorías:"
+                var message = "Este grupo incluye las siguientes categorías:\n"
                 for (c in group.checkboxfilters) {
                     message += "\n - $c"
                 }
-                message += "\n\nY acota las edades en los siguientes rangos:\n"
+                message += "\n\nAbarca "
 
-                var fechaInicial = "(Sin especificar)"
-                var fechaFinal = "(Sin especificar)"
+                val auxFechaFinal = group.datesfilters[0].toDate()
+                val auxFechaInicial = group.datesfilters[1].toDate()
 
-                val auxFechaInicial = group.datesfilters[0].toDate()
-                val auxFechaFinal = group.datesfilters[1].toDate()
-
-                if ((auxFechaInicial.date != 1) and (auxFechaInicial.month != 0) and (auxFechaInicial.year != 0)) {
-                    fechaInicial = formatearFecha(group.datesfilters[0])
-                }
-
-                if ((auxFechaFinal.date != 0) and (auxFechaFinal.month != 12) and (auxFechaFinal.year != 300)) {
-                    fechaFinal = formatearFecha(group.datesfilters[1])
-                }
-
-                message += "${fechaInicial} hasta ${fechaFinal}"
+                message += FechasAux.detTextoEdad(auxFechaInicial.year,auxFechaFinal.year)
 
                 dialog.setMessage(message)
                 dialog.setNegativeButton("Cancelar", null)
@@ -338,7 +346,9 @@ class SmsFragment : Fragment() {
             if (checked) {
                 crearPlantilla()
             }
-            smsViewModel.enviarSms(binding.txtSms.text.toString())
+            else {
+                smsViewModel.enviarSms(binding.txtSms.text.toString())
+            }
         }
     }
 

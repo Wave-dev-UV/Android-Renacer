@@ -56,9 +56,9 @@ class ModalBottomSheet(
 
     private fun iniciarCreadorGrupos() {
         val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
-        val roleMode = pref.getString("rol","")
+        val roleMode = pref.getString("rol","Visualizador")
 
-        if (roleMode == "Adminsitrador") {
+        if (roleMode == "Administrador") {
             binding.gruposTv.visibility = View.VISIBLE
             binding.groupEv.visibility = View.VISIBLE
             binding.swithGruposContainer.visibility = View.VISIBLE
@@ -202,11 +202,12 @@ class ModalBottomSheet(
                 }
 
                 if (createGroupToggle.isChecked) {
+                    //esta alreves, mayor de a menor de
                     val groupWithFilters = Group(
                         nombre=groupEvName,
                         datesfilters = listOf(
-                            Timestamp(fechaInicial),
-                            Timestamp(fechaFinal)
+                            Timestamp(fechaFinal),
+                            Timestamp(fechaInicial)
                         ),
                         checkboxfilters = checkboxFilters
                     )
