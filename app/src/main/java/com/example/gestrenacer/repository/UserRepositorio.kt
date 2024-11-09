@@ -1,6 +1,8 @@
 package com.example.gestrenacer.repository
 
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.example.gestrenacer.models.PeticionDesuscribir
 import com.example.gestrenacer.models.PeticionEnviarSms
@@ -23,13 +25,28 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class UserRepositorio @Inject constructor(
-    private val smsService: SmsService
-) {
+    private val smsService: SmsService,
+    private val context: Context) {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
+
+    fun saveUserRole(role: String) {
+        sharedPreferences.edit().putString("user_role", role).apply()
+    }
+
+
+    fun getUserRole(): String? {
+        return sharedPreferences.getString("user_role", null)
+    }
+
+
+    fun clearUserRole() {
+        sharedPreferences.edit().remove("user_role").apply()
+    }
 
     suspend fun getUsers(
         filtroSexo: List<String>, filtroEstCivil: List<String>,
@@ -105,7 +122,7 @@ class UserRepositorio @Inject constructor(
             } catch (e: Exception) {
                 2
             }
-        }
+        } ?: Log.w("FeligresRepositorio", "Firestore ID es nulo")
     }
 
 
@@ -121,6 +138,7 @@ class UserRepositorio @Inject constructor(
                 val rol = document.getString("rol")
                     ?: "Feligrés"  // Rol predeterminado si no se encuentra
                 if (rol != "Feligrés") {
+                    saveUserRole(rol)
                     rol
                 } else {
                     null

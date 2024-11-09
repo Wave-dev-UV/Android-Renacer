@@ -118,6 +118,10 @@
     <string name="lblFiltroDivorciado">Divorciado(a).</string>
     <string name="lblFiltroViudo">Viudo(a).</string>
     <string name="lblFiltroSheet">Filtrar por:</string>
+    <string name="nombre_del_grupo">Nombre del grupo</string>
+    <string name="deseas_crear_un_grupo_con_estos_filtros">¿Deseas crear un grupo con estos filtros?</string>
+    <string name="off">OFF</string>
+    <string name="on">ON</string>
     <string name="checkbox_select_all">Seleccionar Todos</string>
     <string name="outlined_icon_btn_desc">Cancelar</string>
     <string name="txtModalTelRep">El número de celular ingresado ya está registrado. Reintenta nuevamente con otro.</string>
@@ -139,4 +143,16 @@
     <string name="txtTodaEdad">Todas las edades.</string>
     <string name="txtEnvPersonSel">El mensaje se enviará a </string>
     <string name="lblMensajeria">Mensajería</string>
+    <string name="lbl_Usar_Huella">Usar Huella</string>>
+    <string name="tituloMensajeria">Mensajeria</string>
+    <string name="ya_hay_un_grupo_con_ese_nombre_elige_otro">Ya hay un grupo con ese nombre. Elige otro</string>
+    <string name="por_favor_asigna_un_nombre_al_grupo">Por favor, asigna un nombre al grupo</string>
+    <string name="escribe_el_nombre_del_grupo">Escribe el nombre del grupo</string>
+    <string name="crear_plantilla_y_enviar">Crear plantilla y enviar</string>
+    <string name="plantillas_de_mensajes">Plantillas de mensajes</string>
+    <string name="nombre_de_la_plantilla">Nombre de la plantilla</string>
+    <string name="deseas_crear_una_plantilla_de_este_mensaje">¿Deseas crear una plantilla de este mensaje?</string>
+    <string name="grupos_predeterminados">Grupos predeterminados</string>
+    <string name="escribe_un_mensaje">Escribe un mensaje</string>
+    <string name="enviar">Enviar</string>
 </resources>

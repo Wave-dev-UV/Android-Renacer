@@ -24,6 +24,7 @@ import com.example.gestrenacer.view.MainActivity.Recargable
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.view.modal.ModalBottomSheet
+import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +40,8 @@ class ListarFragment : Fragment(), Recargable {
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: UserAdapter? = null
     private var userList = mutableListOf<User>()
+    private val groupViewModel: GroupViewModel by viewModels()
+    private var appliedFilters = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -201,7 +204,7 @@ class ListarFragment : Fragment(), Recargable {
             val listOrden = userViewModel.orden.value as List<String>
             val modalBottomSheet = ModalBottomSheet(
                 userViewModel::getFeligreses,
-                listFiltros, listOrden
+                listFiltros, listOrden, groupViewModel, setAppliedFilters
             )
             modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
@@ -466,4 +469,6 @@ class ListarFragment : Fragment(), Recargable {
 
         return list
     }
+
+    val setAppliedFilters: (Boolean) -> Unit = { x -> appliedFilters = x }
 }
