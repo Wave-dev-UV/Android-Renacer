@@ -1,10 +1,14 @@
 package com.example.gestrenacer.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gestrenacer.models.Group
+import com.example.gestrenacer.repository.GroupRepositorio
 import com.example.gestrenacer.repository.UserRepositorio
+import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,6 +33,29 @@ class SmsViewModel @Inject constructor(
     private val _grupoActivado= MutableLiveData(false)
     val grupoActivado: LiveData<Boolean> = _grupoActivado
 
+    fun obtenerMiembrosGrupo(
+        fechaInicial: Timestamp, fechaFinal: Timestamp,
+        filtroEstcivil: List<String>,
+        filtroSexo: List<String>,
+        filtroLlamado: List<String>,
+        critOrden: String = "nombre", escalaOrden: String = "ascendente"
+    ){
+        viewModelScope.launch {
+            try {
+                val res = userRepositorio.getUsers(
+                    filtroSexo, filtroEstcivil, filtroLlamado,
+                    fechaInicial, fechaFinal, critOrden, escalaOrden
+                )
+
+                _usuarios.value = res.map { x -> x.celular }.toMutableList()
+                println(_usuarios.value)
+            }
+            catch (e: Exception){
+                println("Errooor $e")
+            }
+        }
+    }
+
     fun enviarSms(texto: String, grupos: Boolean = false) {
         viewModelScope.launch {
             _progress.value = true
@@ -49,5 +76,13 @@ class SmsViewModel @Inject constructor(
 
     fun cambiarGuardado(guardado: Boolean){
         _guardado.value = guardado
+    }
+
+    fun cambiarGrupoActivado(activado: Boolean){
+        _grupoActivado.value = activado
+    }
+
+    fun cambiarOperacion(valor: Int){
+        _operacion.value = valor
     }
 }

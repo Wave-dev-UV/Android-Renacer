@@ -2,7 +2,6 @@ package com.example.gestrenacer
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +16,7 @@ import com.example.gestrenacer.databinding.FragmentSmsBinding
 import com.example.gestrenacer.models.Group
 import com.example.gestrenacer.models.Plantilla
 import com.example.gestrenacer.utils.FechasAux
+import com.example.gestrenacer.utils.FiltrosAux
 import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.adapter.GroupAdapter
 import com.example.gestrenacer.view.adapter.PlantillaAdapter
@@ -24,11 +24,7 @@ import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.PlantillaViewModel
 import com.example.gestrenacer.viewmodel.SmsViewModel
-import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import java.util.UUID
 
 @AndroidEntryPoint
@@ -86,7 +82,6 @@ class SmsFragment : Fragment() {
 
     private fun iniciarFiltros() {
         val filtros = requireArguments().getStringArrayList("filtros") as ArrayList<String>
-        Log.d("filtros sms", filtros.toString())
 
         for (i in filtros) {
             mostrarChip(i)
@@ -96,29 +91,34 @@ class SmsFragment : Fragment() {
     private fun iniciarUsuarios() {
         val lista = requireArguments().getStringArrayList("usuarios")?.toMutableList()
 
-        Log.d("iniciar usuario", lista.toString())
         smsViewModel.iniciarUsuarios(lista as MutableList<String>)
     }
 
     private fun iniciarCantSms() {
-        val cant = requireArguments().getStringArrayList("usuarios")?.size
+        val cant = requireArguments().getStringArrayList("usuarios")?.size as Int
 
-        binding.lblPersonas.text = getString(R.string.txtEnvPersonSel) + " ${cant} personas."
+        if (cant > 0) {
+            binding.lblPersonas.text = getString(R.string.txtEnvPersonSel) + " ${cant} personas."
+        } else {
+            binding.lblPersonas.text = getString(R.string.txtNoPerSms)
+        }
     }
 
-    private fun observerGuardPlantilla(){
-        plantillaViewModel.guardado.observe(viewLifecycleOwner){
-            when (it){
+    private fun observerGuardPlantilla() {
+        plantillaViewModel.guardado.observe(viewLifecycleOwner) {
+            when (it) {
                 1 -> {
                     smsViewModel.enviarSms(binding.txtSms.text.toString())
                 }
+
                 2 -> {
                     DialogUtils.dialogoInformativo(
                         requireContext(),
                         getString(R.string.titModalError),
                         getString(R.string.txtErrPlantilla),
                         getString(R.string.txtBtnAceptar)
-                    )
+                    ).show()
+                    plantillaViewModel.cambiarGuardado(0)
                 }
             }
         }
@@ -126,11 +126,9 @@ class SmsFragment : Fragment() {
 
     private fun observerGrupoActivado() {
         smsViewModel.grupoActivado.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.filtrosCont.isVisible = false
-                binding.lblFiltros.isVisible = false
-                binding.lblPersonas.isVisible = false
-            }
+            binding.filtrosCont.isVisible = !it
+            binding.lblFiltros.isVisible = !it
+            binding.lblPersonas.isVisible = !it
         }
     }
 
@@ -166,8 +164,8 @@ class SmsFragment : Fragment() {
                         getString(R.string.txtErrorSms),
                         getString(R.string.txtBtnAceptar)
                     ).show()
+                    smsViewModel.cambiarOperacion(0)
                 }
-
                 1 -> {
                     findNavController().popBackStack()
                 }
@@ -191,14 +189,15 @@ class SmsFragment : Fragment() {
             "Masculino" -> binding.chipMasculino.isVisible = true
             "Femenino" -> binding.chipFemenino.isVisible = true
             "Soltero(a)" -> binding.chipSoltero.isVisible = true
-            "Unión libre" -> binding.chipLibre.isVisible = true
+            "Unión" -> binding.chipLibre.isVisible = true
+            "Divorciado(a)" -> binding.chipDivorciado.isVisible = true
             "Menor" -> {
-                binding.chipEdadMin.setText("Mayores de ${aux[1]} años.")
+                binding.chipEdadMin.setText("Menores de ${aux[1]} años.")
                 binding.chipEdadMin.isVisible = true
             }
 
             "Mayor" -> {
-                binding.chipEdadMax.setText("Menores de ${aux[1]} años.")
+                binding.chipEdadMax.setText("Mayores de ${aux[1]} años.")
                 binding.chipEdadMax.isVisible = true
             }
 
@@ -222,7 +221,8 @@ class SmsFragment : Fragment() {
         val plantilla = smsViewModel.guardado.value as Boolean
         val nomPlantilla = binding.txtPlantilla.text.toString().isNotEmpty()
         val txtSms = binding.txtSms.text.toString().isNotEmpty()
-        binding.btnEnviar.isEnabled = (txtSms && (cant > 0 || grupos) && ((plantilla && nomPlantilla) || !plantilla))
+        binding.btnEnviar.isEnabled =
+            (txtSms && (cant > 0 || grupos) && ((plantilla && nomPlantilla) || !plantilla))
 
         cambiarColorBtnEnviar()
     }
@@ -245,7 +245,7 @@ class SmsFragment : Fragment() {
                 val auxFechaFinal = group.datesfilters[0].toDate()
                 val auxFechaInicial = group.datesfilters[1].toDate()
 
-                message += FechasAux.detTextoEdad(auxFechaInicial.year,auxFechaFinal.year)
+                message += FechasAux.detTextoEdad(auxFechaInicial.year, auxFechaFinal.year)
 
                 dialog.setMessage(message)
                 dialog.setNegativeButton("Cancelar", null)
@@ -265,6 +265,10 @@ class SmsFragment : Fragment() {
             )
 
             autoCompleteEditText.setAdapter(adapter)
+        }
+
+        autoCompleteEditText.addTextChangedListener {
+            smsViewModel.cambiarGrupoActivado(autoCompleteEditText.text.isNotEmpty())
         }
     }
 
@@ -345,23 +349,55 @@ class SmsFragment : Fragment() {
             val checked = binding.switchGuardSms.isChecked
             if (checked) {
                 crearPlantilla()
-            }
-            else {
-                smsViewModel.enviarSms(binding.txtSms.text.toString())
+            } else {
+                val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
+                    x.nombre == binding.groupsAutoCompleteTv.text.toString()
+                } as List<Group>
+
+                enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
             }
         }
+    }
+
+    private fun enviarSms(lista: List<Group>, grupo: Boolean) {
+        if (grupo && lista.isEmpty()) {
+            DialogUtils.dialogoInformativo(
+                requireContext(),
+                getString(R.string.titModalError),
+                getString(R.string.txtGrupoErrNoEncontrado),
+                getString(R.string.txtBtnAceptar)
+
+            ).show()
+        } else {
+
+            if (grupo) {
+                filtrarGrupo(lista)
+            }
+
+            smsViewModel.enviarSms(binding.txtSms.text.toString())
+        }
+    }
+
+    private fun filtrarGrupo(lista: List<Group>) {
+        val filtros = FiltrosAux.clasificarFiltros(
+            lista[0].checkboxfilters,
+            resources.getStringArray(R.array.listaEstadoCivil).toList(),
+            resources.getStringArray(R.array.listaSexos).toList()
+        )
+
+        smsViewModel.obtenerMiembrosGrupo(
+            lista[0].datesfilters[1], lista[0].datesfilters[0],
+            filtros[1],
+            filtros[0],
+            resources.getStringArray(R.array.listaEstadoAtencion).toList()
+        )
     }
 
     private fun manejadorSwitchGuard() {
         binding.switchGuardSms.setOnCheckedChangeListener { _, it ->
             binding.lblPlantilla.isEnabled = it
+            binding.lblPlantilla.isVisible = it
             smsViewModel.cambiarGuardado(it)
         }
-    }
-
-    private fun formatearFecha(timestamp: Timestamp): String {
-        val date: Date = timestamp.toDate()
-        val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        return format.format(date)
     }
 }

@@ -103,18 +103,6 @@ class ListarFragment : Fragment(), Recargable {
         forceRecyclerViewUpdate()
     }
 
-    private fun verFeligreses() {
-        val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
-        val listSexo = resources.getStringArray(R.array.listaSexos).toList()
-        val listEstado = resources.getStringArray(R.array.listaEstadoAtencion).toList()
-
-        userViewModel.getFeligreses(
-            Timestamp(Date(0, 1, 0)),
-            Timestamp(Date(300, 12, 0)),
-            listEst, listSexo, listEstado
-        )
-    }
-
     private fun observerListFeligreses() {
         userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
             userList = lista
@@ -208,15 +196,13 @@ class ListarFragment : Fragment(), Recargable {
             )
             modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
-    }
+    }//3152179554
 
     private fun manejadorBtnMensaje() {
         binding.btnEnviarSms.setOnClickListener {
             val listFiltros = userViewModel.filtros.value as List<List<String>>
             val edades = FechasAux.calcEdadLista(listFiltros[2])
             val lista = listFiltros[0] + listFiltros[1] + detEdad(edades)
-
-            Log.d("filtros", lista.toString())
 
             val bundle = Bundle().apply {
                 val array1 = ArrayList<String>()
@@ -225,9 +211,7 @@ class ListarFragment : Fragment(), Recargable {
                 array1.addAll(lista)
                 putStringArrayList("filtros", array1)
 
-
                 array2.addAll(anadirFeligresBundle())
-                Log.d("Array", array2.toString())
 
                 putStringArrayList("usuarios", array2)
             }
@@ -314,7 +298,6 @@ class ListarFragment : Fragment(), Recargable {
 
     private fun setupSelectAllCheckbox() {
         binding.checkboxSelectAll.setOnCheckedChangeListener { buttonView, isChecked ->
-            Log.d("YourFragment", "Checkbox 'Seleccionar Todos' presionado.")
             adapter?.selectAll(isChecked) // Selecciona o deselecciona según el estado del CheckBox
             binding.lblSeleccionados.text =
                 "Seleccionados: ${adapter?.getSelectedUsersCount() ?: 0}" // Actualiza el texto
@@ -384,12 +367,11 @@ class ListarFragment : Fragment(), Recargable {
 
     private fun detEdad(edades: List<Int>): MutableList<String> {
         val list: MutableList<String> = mutableListOf()
-        Log.d("edades", list.toString())
-        if (edades[0] < 100 && edades[1] >= 0) {
-            list.add("Menor ${edades[1]}")
+        if (edades[0] < 100) {
+            list.add("Menor ${edades[0]}")
         }
-        if (edades[1] > 0 && edades[0] <= 100) {
-            list.add("Mayor ${edades[0]}")
+        if (edades[1] > 0) {
+            list.add("Mayor ${edades[1]}")
         }
         if (edades[1] <= 0 && edades[0] >= 100) {
             list.add("Todas")

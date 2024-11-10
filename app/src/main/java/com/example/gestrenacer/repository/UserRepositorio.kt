@@ -59,7 +59,7 @@ class UserRepositorio @Inject constructor(
         try {
             var res = 0
             val newUser = user.copy(fechaCreacion = Timestamp.now())
-            /*val resSubs = suscribirSms(user.celular)
+            val resSubs = suscribirSms(user.celular)
 
             if (resSubs.resultado){
                 newUser.arn = resSubs.arn
@@ -67,7 +67,7 @@ class UserRepositorio @Inject constructor(
             }
             else{
                 throw Exception()
-            }*/
+            }
             val numRepetido = usersCollection.whereEqualTo("celular", user.celular).get().await()
 
             if (numRepetido.isEmpty) usersCollection.add(newUser).await()
@@ -83,7 +83,7 @@ class UserRepositorio @Inject constructor(
         return feligres.firestoreID.let { id ->
             try {
                 var res = 0
-                /*var arn = SmsSubsRes(false, "")
+                var arn = SmsSubsRes(false, "")
 
                 if (prevNum.isNotEmpty()) {
                     val resDesuscribir = desuscribirSms(prevNum)
@@ -93,7 +93,7 @@ class UserRepositorio @Inject constructor(
 
                     if (arn.resultado) feligres.arn = arn.arn
                     else throw Exception("No se ha podido suscribir al usuario")
-                }*/
+                }
 
                 val numRepetido = usersCollection.whereEqualTo("celular", feligres.celular).get().await()
 
@@ -104,7 +104,7 @@ class UserRepositorio @Inject constructor(
             } catch (e: Exception) {
                 2
             }
-        } ?: Log.w("FeligresRepositorio", "Firestore ID es nulo")
+        }
     }
 
 
@@ -165,9 +165,13 @@ class UserRepositorio @Inject constructor(
             val list = users as MutableList<User>
             try {
                 for (user in list) {
-                    /*val res = desuscribirSms(user.arn)
-                    if (res) usersCollection.document(user.firestoreID).delete().await()
-                    else throw Exception("No se podido desuscribir al usuario)*/
+                    val res = desuscribirSms(user.arn)
+                    if (res) {
+                        usersCollection.document(user.firestoreID).delete().await()
+                    }
+                    else {
+                        throw Exception("No se podido desuscribir al usuario")
+                    }
                     usersCollection.document(user.firestoreID).delete().await()
                 }
                 true
@@ -181,9 +185,9 @@ class UserRepositorio @Inject constructor(
     suspend fun borrarUsuario(user: User): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                /*val res = desuscribirSms(user.arn)
+                val res = desuscribirSms(user.arn)
                 if (res) usersCollection.document(user.firestoreID).delete().await()
-                else throw  Exception()*/
+                else throw  Exception()
                 usersCollection.document(user.firestoreID).delete().await()
                 true
             } catch (e: Exception) {

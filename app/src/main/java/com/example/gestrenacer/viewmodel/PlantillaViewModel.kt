@@ -95,7 +95,7 @@ class PlantillaViewModel @Inject constructor(
         return plantillas.value?.any { it.name.equals(nombre, ignoreCase = true) } == true
     }
 
-
-
-
+    fun cambiarGuardado(valor: Int){
+        _guardado.value = valor
+    }
 }

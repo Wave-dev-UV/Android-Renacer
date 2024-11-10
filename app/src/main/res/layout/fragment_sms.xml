@@ -33,7 +33,7 @@
                     app:counterEnabled="true"
                     app:counterMaxLength="160"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toolbar">
+                    app:layout_constraintTop_toBottomOf="@id/groupsAutoCompleteTv">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtSms"
@@ -73,6 +73,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/lblFiltroCasado"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
                         android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
@@ -82,6 +84,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/lblFiltroSoltero"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
                         android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
@@ -91,6 +95,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/lblFiltroFemenino"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
                         android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
@@ -100,6 +106,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/lblFiltroMasculino"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
                         android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
@@ -109,6 +117,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/lblFiltroLibre"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
                         android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
@@ -118,6 +128,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/lblFiltroViudo"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
                         android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
@@ -127,6 +139,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/lblMax"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
                         android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
@@ -136,6 +150,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/lblMin"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDivorciado"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroDivorciado"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
                         android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
@@ -145,6 +172,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/txtTodaEdad"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
                         android:visibility="gone" />
 
                 </com.google.android.material.chip.ChipGroup>
@@ -159,7 +188,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/txtEnvPersonSel"
                     android:textSize="16sp"
-                    android:textStyle="italic"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/filtrosCont" />
 
@@ -175,7 +204,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lblPersonas" />
+                    app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
                 <AutoCompleteTextView
                     android:id="@+id/groupsAutoCompleteTv"
@@ -201,7 +230,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/groupsAutoCompleteTv" />
+                    app:layout_constraintTop_toBottomOf="@id/btnEnviar" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewPlantillas"
@@ -224,7 +253,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/txtCrearPlantilla"
                     android:textSize="20sp"
-                    app:layout_constraintTop_toBottomOf="@id/recyclerViewPlantillas"
+                    app:layout_constraintTop_toBottomOf="@id/lblPersonas"
                     app:layout_constraintEnd_toStartOf="@id/switchGuardSms"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -237,7 +266,7 @@
                     android:layout_marginEnd="30dp"
                     android:checked="false"
                     android:contentDescription="@string/el_usuario_es_un_lider"
-                    app:layout_constraintTop_toBottomOf="@id/recyclerViewPlantillas"
+                    app:layout_constraintTop_toBottomOf="@id/lblPersonas"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:thumbTint="@color/white" />
 
@@ -248,6 +277,7 @@
                     android:layout_marginHorizontal="30dp"
                     android:layout_marginTop="10dp"
                     android:enabled="false"
+                    android:visibility="gone"
                     android:hint="@string/lblNomPlantilla"
                     app:counterEnabled="true"
                     app:counterMaxLength="50"
