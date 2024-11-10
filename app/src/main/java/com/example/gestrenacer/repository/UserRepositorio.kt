@@ -243,4 +243,10 @@ class UserRepositorio @Inject constructor(
             }
         }
     }
+
+    suspend fun cerrarSesion(){
+        withContext(Dispatchers.IO) {
+            auth.signOut()
+        }
+    }
 }

@@ -59,11 +59,14 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         deleteSharedPreferences("filtros")
         deleteSharedPreferences("filtrosPending")
-        deleteSharedPreferences("auth")
     }
 
     override fun onStop() {
         super.onStop()
+
+        deleteSharedPreferences("filtros")
+        deleteSharedPreferences("filtrosPending")
+
         if (auth.currentUser != null && isRoleValid()) {
             scheduleNotification()
         } else {

@@ -1,6 +1,7 @@
 package com.example.gestrenacer
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -166,6 +167,7 @@ class SmsFragment : Fragment() {
                     ).show()
                     smsViewModel.cambiarOperacion(0)
                 }
+
                 1 -> {
                     findNavController().popBackStack()
                 }

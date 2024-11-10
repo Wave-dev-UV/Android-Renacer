@@ -78,7 +78,6 @@ class ListarFragment : Fragment(), Recargable {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    requireActivity().deleteSharedPreferences("auth")
                     requireActivity().finish()
                 }
             })

@@ -61,9 +61,9 @@ class LoginFragment : Fragment() {
 
         binding.generateCodeButton.setOnClickListener {
             val phoneNumber = binding.phoneNumberInput.text.toString().trim()
-            val preferences = activity?.getSharedPreferences("authInfo", Context.MODE_PRIVATE)?.edit()
+            val preferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)?.edit()
 
-            preferences?.putString("numero", phoneNumber)
+            preferences?.putString("telefono", phoneNumber)
             preferences?.apply()
 
             if (phoneNumber.isNotEmpty()) {
@@ -114,10 +114,7 @@ class LoginFragment : Fragment() {
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                val bundle = Bundle().apply {
-                    putString("rol", authViewModel.getUserRole())
-                }
-                findNavController().navigate(R.id.action_loginFragment_to_listarFragment, bundle)
+                findNavController().navigate(R.id.action_loginFragment_to_listarFragment)
             }
 
 
