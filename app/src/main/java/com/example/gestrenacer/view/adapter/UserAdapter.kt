@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.ItemUserBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.viewmodel.UserViewModel
+import kotlinx.coroutines.withContext
 
 class UserAdapter(
     private var listaUsers: List<User>,
@@ -110,7 +112,9 @@ class UserAdapter(
     ): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(user: User, isSelected: Boolean, longPressMode: Boolean, onCheckedChange: (Boolean) -> Unit) {
-            binding.lblIniciales.text = "${user.nombre.firstOrNull()}${user.apellido.firstOrNull()}".uppercase()
+            Glide.with(binding.root.context)
+                .load(user.imageUrl)
+                .into(binding.imagePerfil)
             binding.txtNombre.text = "${user.nombre} ${user.apellido}"
             binding.txtCelular.text = user.celular
             binding.txtRol.text = user.rol
