@@ -78,7 +78,6 @@ class VisualizarUsuarioFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         inicializarVariables()
-        //inicializarImagen()
         inicializarUrlImagen()
         formatearFechas()
         observeImageChange()
@@ -219,17 +218,6 @@ class VisualizarUsuarioFragment : Fragment() {
         }
     }
 
-    private fun inicializarImagen(){
-        if (binding.imagenUsuario.drawable == null){
-            binding.imagenUsuario.isVisible = false
-            binding.tvIniciales.isVisible = true
-            val text = "${user.nombre.firstOrNull() ?: ""}${user.apellido.firstOrNull() ?: ""}".uppercase()
-            binding.tvIniciales.text = text
-        } else {
-            binding.imagenUsuario.isVisible = true
-            binding.tvIniciales.isVisible = false
-        }
-    }
 
     private fun inicializarVariables(){
         user = arguments?.getSerializable("dataFeligres") as User

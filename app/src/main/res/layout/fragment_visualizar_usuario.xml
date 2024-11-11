@@ -69,47 +69,25 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardview_imagen_usuario"
-                    android:layout_width="120dp"
-                    android:layout_height="160dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/guide_line"
                     app:layout_constraintBottom_toBottomOf="@id/guide_line"
                     android:layout_marginTop="20dp"
                     app:cardElevation="8dp"
-                    app:cardCornerRadius="8dp">
+                    app:cardCornerRadius="75dp">
 
-                    <LinearLayout
+                    <ImageView
+                        android:id="@+id/imagen_usuario"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:contentDescription="@string/imagen_de_perfil"
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/logo_renacer"
+                        android:visibility="visible"/>
 
-                        <ImageView
-                            android:id="@+id/imagen_usuario"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="8dp"
-                            android:contentDescription="@string/imagen_de_perfil"
-                            android:scaleType="centerCrop"
-                            tools:src="@drawable/logo_renacer"
-                            android:visibility="visible"/>
-
-                        <TextView
-                            android:id="@+id/tvIniciales"
-                            android:layout_height="match_parent"
-                            android:layout_width="match_parent"
-                            android:fontFamily="@font/roboto_bold"
-                            android:textColor="@color/white"
-                            android:textSize="29sp"
-                            android:padding="10dp"
-                            tools:text="LV"
-                            android:gravity="center"
-                            android:background="@color/azulPrincipal"
-                            android:layout_margin="8dp"
-                            android:visibility="gone"
-                            />
-
-                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <ImageButton
@@ -120,7 +98,7 @@
                     android:background="@drawable/button_icon_circle"
                     app:layout_constraintStart_toEndOf="@id/cardview_imagen_usuario"
                     app:layout_constraintBottom_toBottomOf="@id/cardview_imagen_usuario"
-                    android:layout_marginStart="-15dp"
+                    android:layout_marginStart="-25dp"
                     android:elevation="20dp"
                     app:tint="@color/white"/>
 
