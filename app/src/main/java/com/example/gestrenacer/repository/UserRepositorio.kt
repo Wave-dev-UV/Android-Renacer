@@ -28,6 +28,16 @@ class UserRepositorio @Inject constructor(private val context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
 
+    suspend fun getUsers(): MutableList<User>{
+        val snapshot = usersCollection.get().await()
+
+        return snapshot.map { x ->
+            val obj = x.toObject(User::class.java)
+            obj.firestoreID = x.id
+            obj
+        }.toMutableList()
+    }
+
     fun saveUserRole(role: String) {
         sharedPreferences.edit().putString("user_role", role).apply()
     }

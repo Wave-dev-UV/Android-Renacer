@@ -7,15 +7,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.repository.ImagesRepositorio
 import com.example.gestrenacer.repository.UserRepositorio
 import com.google.firebase.Timestamp
+import com.google.type.Expr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val repository: UserRepositorio
+    private val repository: UserRepositorio,
+    private val imageRepository: ImagesRepositorio
 ): ViewModel() {
     private val _listaUsers = MutableLiveData<List<User>?>()
     val listaUsers: MutableLiveData<List<User>?> = _listaUsers
@@ -56,6 +60,12 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    private fun getUsers(){
+        viewModelScope.launch {
+            _listaUsers.value = repository.getUsers()
+        }
+    }
+
     fun crearUsuario(user: User) {
         viewModelScope.launch {
             repository.saveUser(user)
@@ -65,6 +75,7 @@ class UserViewModel @Inject constructor(
     fun editarUsuario(user: User) {
         viewModelScope.launch {
             repository.updateUser(user)
+            getUsers()
         }
     }
 
@@ -98,6 +109,44 @@ class UserViewModel @Inject constructor(
                 repository.borrarUsuario(user)
                 _progresState.value = false
             } catch (e: Exception) {
+                _progresState.value = false
+            }
+        }
+    }
+
+    fun uploadImage(file: File, user: User){
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                imageRepository.deleteFile(user.imageId!!)
+                val imageInfo = imageRepository.uploadImage(file)
+                val newUser = user.copy(
+                    imageId = imageInfo?.get("public_id"),
+                    imageUrl = imageInfo?.get("url")
+                )
+                editarUsuario(newUser)
+            } catch (e: Exception){
+                e.message?.let { Log.e("Error upload Image", it) }
+            } finally {
+                _progresState.value = false
+            }
+
+        }
+    }
+
+    fun deleteImage(publicId: String, user: User){
+        viewModelScope.launch {
+            _progresState.value = true
+            try {
+                imageRepository.deleteFile(publicId)
+                val newUser = user.copy(
+                    imageId = "Renacer/defecto",
+                    imageUrl = "https://res.cloudinary.com/dhrzjndkd/image/upload/v1731290649/Renacer/defecto.jpg"
+                )
+                editarUsuario(newUser)
+            } catch (e: Exception){
+                e.message?.let { Log.e("Error delete Image", it) }
+            } finally {
                 _progresState.value = false
             }
         }

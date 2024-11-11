@@ -112,6 +112,19 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <ImageButton
+                    android:id="@+id/btn_editar_imagen"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_edit"
+                    android:background="@drawable/button_icon_circle"
+                    app:layout_constraintStart_toEndOf="@id/cardview_imagen_usuario"
+                    app:layout_constraintBottom_toBottomOf="@id/cardview_imagen_usuario"
+                    android:layout_marginStart="-15dp"
+                    android:elevation="20dp"
+                    app:tint="@color/white"/>
+
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

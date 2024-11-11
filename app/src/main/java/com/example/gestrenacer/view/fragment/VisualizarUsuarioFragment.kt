@@ -1,11 +1,22 @@
 package com.example.gestrenacer.view.fragment
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
@@ -13,36 +24,182 @@ import com.example.gestrenacer.databinding.FragmentVisualizarUsuarioBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.utils.Format
 import com.example.gestrenacer.view.modal.DialogUtils
+import com.example.gestrenacer.viewmodel.SharedViewModel
 import com.example.gestrenacer.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import com.bumptech.glide.Glide
 
 @AndroidEntryPoint
 class VisualizarUsuarioFragment : Fragment() {
     private lateinit var binding: FragmentVisualizarUsuarioBinding
     private val viewmodel: UserViewModel by viewModels()
+    private val sharedViewmodel: SharedViewModel by activityViewModels()
     private lateinit var user: User
     private lateinit var rol: String
+    private lateinit var pickImageLauncher: ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
+    private lateinit var photoFile: File
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedViewmodel.selectNull()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("Importante", "Creando la ventana")
         binding = FragmentVisualizarUsuarioBinding.inflate(inflater)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        pickImageLauncher = registerForActivityResult(
+            ActivityResultContracts.PickVisualMedia()
+        ) {uploadImage(it)}
+
+        /*
+        takePictureLauncher = registerForActivityResult(
+            ActivityResultContracts.TakePicture()
+        ){activityForTakePicture(it)}
+         */
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         inicializarVariables()
-        inicializarImagen()
+        //inicializarImagen()
+        inicializarUrlImagen()
         formatearFechas()
+        observeImageChange()
+        observeOptions()
         observerProgressBar()
         manejadorBotonEditar()
         manejadorBotonBorrar()
         manejadorBotonVolver()
+        manejadorBotonEditarImagen()
         desactivarBtn()
     }
+
+    private fun inicializarUrlImagen(){
+        Glide.with(requireContext())
+            .load(user.imageUrl)
+            .into(binding.imagenUsuario)
+    }
+
+    private fun observeImageChange(){
+        viewmodel.listaUsers.observe(viewLifecycleOwner){list ->
+            val myUser = list?.find { it.firestoreID == user.firestoreID }
+            Log.d("IMPORTANTE", "CAMBIE A ${myUser?.imageUrl}")
+            Glide.with(requireContext())
+                .load(myUser?.imageUrl)
+                .into(binding.imagenUsuario)
+            if (myUser != null) {
+                user = myUser
+            }
+        }
+    }
+
+    private fun uploadImage(uri: Uri?){
+        if (uri == null) {
+            return Toast.makeText(
+                requireContext(),
+                "No se selecciono ninguna imagen",
+                Toast.LENGTH_SHORT).show()
+        }
+        DialogUtils.dialogoConfirmacion(
+            requireContext(),
+            "¿Deseas cambiar la imagen de perfil?"
+        ){
+            val path = getRealPathFromURI(uri)
+            val file = File(path.toString())
+            viewmodel.uploadImage(file, user)
+        }
+
+    }
+
+    private fun activityForTakePicture(isSuccess: Boolean){
+        if (isSuccess){
+            Log.d("IMPORTANTE", "Andamos subiendo la imagen")
+            viewmodel.uploadImage(photoFile, user)
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "No se tomo ninguna foto",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun getRealPathFromURI(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = requireActivity().contentResolver.query(uri, projection, null, null, null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                return it.getString(columnIndex)
+            }
+        }
+        return null
+    }
+
+    private fun observeOptions(){
+        sharedViewmodel.selectedOption.observe(viewLifecycleOwner){option ->
+            if(option == "gallery"){
+                pickImageLauncher
+                    .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+            /*else if (option == "camera"){
+                try {
+                    photoFile = createImageFile()
+                    val photoUri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "${requireActivity().packageName}.fileprovider",
+                        photoFile)
+                    takePictureLauncher.launch(photoUri)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            } */ else if (option == "delete"){
+                DialogUtils.dialogoConfirmacion(
+                    requireContext(),
+                    "¿Deseas eliminar la imagen de perfil?"
+                ){
+                    user.imageId?.let { viewmodel.deleteImage(it, user) }
+                }
+            }
+
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val storageDir: File = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        )
+    }
+
+    private fun manejadorBotonEditarImagen() {
+        binding.btnEditarImagen.setOnClickListener {
+            val bottomSheet = BottomSheetModalFragment()
+            bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
+        }
+    }
+
 
     private fun desactivarBtn(){
         if (rol !in listOf("Administrador","Gestor")){

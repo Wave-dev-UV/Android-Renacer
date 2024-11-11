@@ -1,7 +1,6 @@
 package com.example.gestrenacer.view.fragment
 
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -58,6 +57,8 @@ class AgregarUsuariosFragment : Fragment() {
         confSelEstadoCivil()
         manejadorFechaNacimiento()
     }
+
+
 
     private fun manejadorFechaNacimiento(){
         binding.editTextFechaNacimiento.setOnClickListener {

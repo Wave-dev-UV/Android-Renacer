@@ -285,7 +285,9 @@ class EditarUsuarioFragment : Fragment() {
             estadoCivil = binding.autoCompleteEstadoCivil.text.toString(),
             fechaNacimiento = fechaNacimientoUser,
             obsevaciones = binding.editTextObsevaciones.text.toString(),
-            fechaCreacion = bundleUser.fechaCreacion
+            fechaCreacion = bundleUser.fechaCreacion,
+            imageUrl = bundleUser.imageUrl,
+            imageId = bundleUser.imageId
         )
 
         userViewModel.editarUsuario(feligresActualizado)
