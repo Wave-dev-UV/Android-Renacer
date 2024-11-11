@@ -16,6 +16,7 @@ import com.example.gestrenacer.databinding.FragmentPendingBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.adapter.PendingUserAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
+import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +28,9 @@ import com.example.gestrenacer.view.MainActivity.Recargable
 class PendingFragment : Fragment(), Recargable {
     private lateinit var binding: FragmentPendingBinding
     private val userViewModel: UserViewModel by viewModels()
+    private val groupViewModel: GroupViewModel by viewModels()
     private var adapter: PendingUserAdapter? = null
+    private var appliedFilters = false
     private var userList = mutableListOf<User>()
 
     override fun onCreateView(
@@ -102,7 +105,9 @@ class PendingFragment : Fragment(), Recargable {
 
     private fun observerListPendingFeligreses(){
             userViewModel.listaUsers.observe(viewLifecycleOwner){
-                userList = it
+                if (it != null) {
+                    userList = it as MutableList<User>
+                }
 
                 if (adapter == null) {
                     adapter = PendingUserAdapter(userList, findNavController(),
@@ -138,7 +143,11 @@ class PendingFragment : Fragment(), Recargable {
         binding.btnFiltrar.setOnClickListener{
             val listFiltros = userViewModel.filtros.value as List<List<String>>
             val listOrden = userViewModel.orden.value as List<String>
-            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,listFiltros,listOrden)
+            val role = userViewModel.rol.value as String
+            val modalBottomSheet = ModalBottomSheet(
+                userViewModel::getFeligreses, listFiltros,
+                listOrden, groupViewModel, setAppliedFilters, role
+            )
             modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
     }
@@ -248,6 +257,8 @@ class PendingFragment : Fragment(), Recargable {
         binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
         binding.listaFeligreses.adapter = adapter
     }
+
+    val setAppliedFilters: (Boolean) -> Unit = { x -> appliedFilters = x }
 
     private fun showNoContentMsg(userList: List<User>){
         if (userList.isEmpty()) {

@@ -2,6 +2,7 @@ package com.example.gestrenacer.viewmodel
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -57,6 +58,7 @@ class AuthViewModel @Inject constructor(
             putString("user_role", role)
             apply()
         }
+        Log.d("AuthViewModel", "Rol guardado: $role") // Registro de log para verificar el rol guardado
     }
 
     fun getUserRole(): String {
@@ -66,9 +68,7 @@ class AuthViewModel @Inject constructor(
     fun isReVerificationNeeded(): Boolean {
         val lastVerification = sharedPref.getLong("last_verification_time", 0)
         val currentTime = System.currentTimeMillis()
-
-
-        return (currentTime - lastVerification) >  24 * 60 * 60 * 1000
+        return (currentTime - lastVerification) > 24 * 60 * 60 * 1000
     }
 
     fun saveLastVerificationTime() {
@@ -84,9 +84,9 @@ class AuthViewModel @Inject constructor(
             val userRole = userRepositorio.getUserByPhone(phoneNumber)
 
             if (userRole != null) {
+                saveUserRole(userRole) // Guarda el rol en SharedPreferences
                 sendVerificationCode(phoneNumber, activity)
                 _rol.value = userRole
-                saveUserRole(userRole)
             } else {
                 _accessGranted.value = false
                 _error.value = "El usuario no tiene acceso o no está registrado"
@@ -94,7 +94,6 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun sendVerificationCode(phoneNumber: String, activity: Activity) {
         val fullPhoneNumber = "+57$phoneNumber"
