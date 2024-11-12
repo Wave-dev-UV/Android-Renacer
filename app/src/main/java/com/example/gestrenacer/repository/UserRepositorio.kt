@@ -1,15 +1,9 @@
 package com.example.gestrenacer.repository
 
 import android.app.Activity
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
-import com.example.gestrenacer.models.PeticionDesuscribir
 import com.example.gestrenacer.models.PeticionEnviarSms
-import com.example.gestrenacer.models.PeticionSuscribir
-import com.example.gestrenacer.models.SmsSubsRes
 import com.example.gestrenacer.models.User
-import com.example.gestrenacer.utils.Constants.ARN_SMS
 import com.example.gestrenacer.webservices.SmsService
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -59,15 +53,6 @@ class UserRepositorio @Inject constructor(
         try {
             var res = 0
             val newUser = user.copy(fechaCreacion = Timestamp.now())
-            val resSubs = suscribirSms(user.celular)
-
-            if (resSubs.resultado){
-                newUser.arn = resSubs.arn
-                usersCollection.add(newUser).await()
-            }
-            else{
-                throw Exception()
-            }
             val numRepetido = usersCollection.whereEqualTo("celular", user.celular).get().await()
 
             if (numRepetido.isEmpty) usersCollection.add(newUser).await()
@@ -79,25 +64,18 @@ class UserRepositorio @Inject constructor(
         }
     }
 
-    suspend fun updateUser(feligres: User, prevNum: String, llamado: Boolean): Int {
+    suspend fun updateUser(feligres: User, prevNumber: String = "", llamado: Boolean): Int {
         return feligres.firestoreID.let { id ->
             try {
                 var res = 0
-                var arn = SmsSubsRes(false, "")
+                var vacio = prevNumber.isEmpty()
 
-                if (prevNum.isNotEmpty()) {
-                    val resDesuscribir = desuscribirSms(prevNum)
-
-                    if (resDesuscribir) arn = suscribirSms(feligres.celular)
-                    else throw Exception("No se ha podido desuscribir al usuario.")
-
-                    if (arn.resultado) feligres.arn = arn.arn
-                    else throw Exception("No se ha podido suscribir al usuario")
+                if (prevNumber.isNotEmpty()) {
+                    vacio = usersCollection.whereEqualTo ("celular", feligres.celular).get().await().isEmpty
                 }
-
-                val numRepetido = usersCollection.whereEqualTo("celular", feligres.celular).get().await()
-
-                if (numRepetido.isEmpty || llamado) usersCollection.document(id).set(feligres).await()
+                if (vacio || llamado) {
+                    usersCollection.document(id).set(feligres).await()
+                }
                 else res = 1
 
                 res
@@ -164,14 +142,7 @@ class UserRepositorio @Inject constructor(
         return withContext(Dispatchers.IO) {
             val list = users as MutableList<User>
             try {
-                for (user in list) {
-                    val res = desuscribirSms(user.arn)
-                    if (res) {
-                        usersCollection.document(user.firestoreID).delete().await()
-                    }
-                    else {
-                        throw Exception("No se podido desuscribir al usuario")
-                    }
+                for (user in list){
                     usersCollection.document(user.firestoreID).delete().await()
                 }
                 true
@@ -185,9 +156,6 @@ class UserRepositorio @Inject constructor(
     suspend fun borrarUsuario(user: User): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val res = desuscribirSms(user.arn)
-                if (res) usersCollection.document(user.firestoreID).delete().await()
-                else throw  Exception()
                 usersCollection.document(user.firestoreID).delete().await()
                 true
             } catch (e: Exception) {
@@ -196,42 +164,10 @@ class UserRepositorio @Inject constructor(
         }
     }
 
-    suspend fun suscribirSms(numero: String): SmsSubsRes {
-        val token = auth.getAccessToken(true).await().token as String
-        val telefono = auth.currentUser?.phoneNumber as String
-        val body = PeticionSuscribir(telefono, ARN_SMS, numero)
-
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = smsService.suscribirSms(body, token)
-                response
-            } catch (e: Exception) {
-                e.printStackTrace()
-                SmsSubsRes(false, "")
-            }
-        }
-    }
-
-    suspend fun desuscribirSms(arn: String): Boolean {
-        val token = auth.getAccessToken(true).await().token as String
-        val telefono = auth.currentUser?.phoneNumber as String
-        val body = PeticionDesuscribir(arn, telefono)
-
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = smsService.desuscribirSms(body, token)
-                response.resultado
-            } catch (e: Exception) {
-                e.printStackTrace()
-                false
-            }
-        }
-    }
-
     suspend fun enviarSms(mensaje: String, numeros: List<String>): Boolean {
         val token = auth.getAccessToken(true).await().token as String
         val telefono = auth.currentUser?.phoneNumber as String
-        val body = PeticionEnviarSms(telefono, mensaje, numeros)
+        val body = PeticionEnviarSms(telefono.split("+57")[1], mensaje, numeros)
 
         return withContext(Dispatchers.IO) {
             try {

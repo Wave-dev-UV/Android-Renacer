@@ -17,6 +17,6 @@ object FiltrosAux {
             }
         }
 
-        return listOf(listaSexo, listaCivil)
+        return listOf(sexo, estado)
     }
 }

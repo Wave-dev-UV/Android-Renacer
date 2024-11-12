@@ -319,7 +319,6 @@ class EditarUsuarioFragment : Fragment() {
             fechaNacimiento = fechaNacimientoUser,
             obsevaciones = binding.editTextObsevaciones.text.toString(),
             fechaCreacion = bundleUser.fechaCreacion,
-            arn = bundleUser.arn
         )
 
         userViewModel.editarUsuario(feligresActualizado, bundleUser.celular)

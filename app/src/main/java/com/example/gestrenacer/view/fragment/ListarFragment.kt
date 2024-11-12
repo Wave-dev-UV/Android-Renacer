@@ -4,7 +4,6 @@ package com.example.gestrenacer.view.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -109,7 +108,8 @@ class ListarFragment : Fragment(), Recargable {
             binding.txtNoResultados.isVisible = userList.isEmpty()
 
             if (adapter == null) {
-                adapter = UserAdapter(userList,
+                adapter = UserAdapter(
+                    userList,
                     findNavController(),
                     rol,
                     userViewModel,
@@ -141,9 +141,16 @@ class ListarFragment : Fragment(), Recargable {
         // Mostrar/ocultar botones según si hay usuarios seleccionados
         val hasSelectedUsers = selectedCount > 0
         binding.btnEliminar.isVisible = hasSelectedUsers
-        binding.btnEnviarSms.isVisible = rol == "Administrador"
-        binding.btnAnadirFeligres.isVisible =
-            !hasSelectedUsers && (rol in listOf("Administrador", "Gestor"))
+        binding.btnEnviarSms.isVisible = (rol == "Administrador") && (selectedCount == 0)
+        binding.btnAnadirFeligres.visibility = (
+                if (!hasSelectedUsers && (rol in listOf("Administrador", "Gestor"))) View.VISIBLE
+                else if (hasSelectedUsers && (rol in listOf(
+                        "Administrador",
+                        "Gestor"
+                    ))
+                ) View.INVISIBLE
+                else View.GONE
+                )
 
         val shouldHideFiltersAndSearch = hasSelectedUsers
         binding.contenedorFiltros.isVisible =
@@ -414,7 +421,7 @@ class ListarFragment : Fragment(), Recargable {
             val orden =
                 cargarOrden(preferences.getStringSet("orden", mutableSetOf()) as MutableSet<String>)
 
-            if (orden == listOf("","")) throw Exception()
+            if (orden == listOf("", "")) throw Exception()
 
             val edades = filtros - listSexo - listEst - listEstado
             val filtroSexo = filtros - listEst - edades - listEstado

@@ -42,15 +42,11 @@ class UserViewModel @Inject constructor(
             _progresState.value = true
             try {
                 val aInicio = fechaInicial.toDate().year.toString()
-                Log.d("1Aca","aca 1")
                 val aFinal = fechaFinal.toDate().year.toString()
-                Log.d("2Aca","aca 2")
                 val users = repository.getUsers(
                     filtroSexo, filtroEstcivil, filtroLlamado,
                     fechaInicial, fechaFinal, critOrden, escalaOrden
                 )
-                Log.d("3Aca","aca 3")
-
                 _filtros.value = listOf(
                     filtroSexo, filtroEstcivil,
                     listOf(aInicio, aFinal), filtroLlamado
@@ -58,8 +54,7 @@ class UserViewModel @Inject constructor(
                 _orden.value = listOf(critOrden, escalaOrden)
                 _listaUsers.value = users
                 _progresState.value = false
-            }
-            finally {
+            } finally {
                 _progresState.value = false
             }
         }
@@ -78,7 +73,7 @@ class UserViewModel @Inject constructor(
             val numAnt = (
                     if (prevNum.isNotEmpty() && (user.celular != prevNum)) prevNum
                     else ""
-                )
+                    )
             if (!llamado) _progresState.value = true
             _resOperacion.value = repository.updateUser(user, numAnt, llamado)
             if (!llamado) _progresState.value = false

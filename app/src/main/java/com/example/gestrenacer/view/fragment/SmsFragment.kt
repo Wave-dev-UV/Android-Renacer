@@ -1,7 +1,6 @@
 package com.example.gestrenacer
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -67,6 +66,7 @@ class SmsFragment : Fragment() {
         iniciarUsuarios()
         initGroupsAutocomplete()
         initializeRecyclerView()
+        observerAwaiting()
         observerProgress()
         observerOperacion()
         observerGuardado()
@@ -105,13 +105,17 @@ class SmsFragment : Fragment() {
         }
     }
 
+    private fun observerAwaiting() {
+        smsViewModel.await.observe(viewLifecycleOwner) {
+            if (it == 1) {
+                smsViewModel.enviarSms(binding.txtSms.text.toString())
+            }
+        }
+    }
+
     private fun observerGuardPlantilla() {
         plantillaViewModel.guardado.observe(viewLifecycleOwner) {
             when (it) {
-                1 -> {
-                    smsViewModel.enviarSms(binding.txtSms.text.toString())
-                }
-
                 2 -> {
                     DialogUtils.dialogoInformativo(
                         requireContext(),
@@ -328,8 +332,6 @@ class SmsFragment : Fragment() {
             message = mensaje
         )
         plantillaViewModel.crearPlantilla(nuevaPlantilla)
-        binding.txtSms.text?.clear()
-        binding.txtPlantilla.text?.clear()
     }
 
     private fun manejadorBtnVolver() {
@@ -349,15 +351,15 @@ class SmsFragment : Fragment() {
     private fun manejadorBtnEnviar() {
         binding.btnEnviar.setOnClickListener {
             val checked = binding.switchGuardSms.isChecked
+
             if (checked) {
                 crearPlantilla()
-            } else {
-                val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
-                    x.nombre == binding.groupsAutoCompleteTv.text.toString()
-                } as List<Group>
-
-                enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
             }
+            val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
+                x.nombre == binding.groupsAutoCompleteTv.text.toString()
+            } as List<Group>
+
+            enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
         }
     }
 
@@ -371,12 +373,11 @@ class SmsFragment : Fragment() {
 
             ).show()
         } else {
-
             if (grupo) {
                 filtrarGrupo(lista)
+            } else {
+                smsViewModel.cambiarAwait(1)
             }
-
-            smsViewModel.enviarSms(binding.txtSms.text.toString())
         }
     }
 

@@ -275,14 +275,14 @@ class PendingFragment : Fragment(), Recargable {
             userViewModel.getFeligreses(
                 Timestamp(Date(aux[0], calendar.time.month, calendar.time.date)),
                 Timestamp(Date(aux[1], calendar.time.month, calendar.time.date)),
-                filtroEst.toList(), filtroSexo.toList(), listEstado.toList(),
+                filtroEst.toList(), filtroSexo.toList(), listOf("Por Llamar"),
                 orden[0], orden[1]
             )
         } catch (e: Exception) {
             userViewModel.getFeligreses(
                 Timestamp(Date(0, 1, 0)),
                 Timestamp(Date(300, 12, 0)),
-                listEst.toList(), listSexo.toList(), listEstado.toList()
+                listEst.toList(), listSexo.toList(), listOf("Por Llamar")
             )
 
         }
