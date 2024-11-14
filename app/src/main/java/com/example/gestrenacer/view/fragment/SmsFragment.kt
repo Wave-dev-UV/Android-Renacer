@@ -66,6 +66,7 @@ class SmsFragment : Fragment() {
         iniciarUsuarios()
         initGroupsAutocomplete()
         initializeRecyclerView()
+        observerExito()
         observerAwaiting()
         observerProgress()
         observerOperacion()
@@ -183,6 +184,19 @@ class SmsFragment : Fragment() {
         plantillaViewModel.plantillas.observe(viewLifecycleOwner) { plantillas ->
             plantillas?.let {
                 updatePlantillaList(it)
+            }
+        }
+    }
+
+    private fun observerExito() {
+        plantillaViewModel.exito.observe(viewLifecycleOwner) {
+            val text = binding.txtSms.text?.isNotEmpty() as Boolean
+            if (it && (plantillaViewModel.guardado.value == 0 && text)) {
+                val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
+                    x.nombre == binding.groupsAutoCompleteTv.text.toString()
+                } as List<Group>
+
+                enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
             }
         }
     }
@@ -354,12 +368,13 @@ class SmsFragment : Fragment() {
 
             if (checked) {
                 crearPlantilla()
-            }
-            val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
-                x.nombre == binding.groupsAutoCompleteTv.text.toString()
-            } as List<Group>
+            } else {
+                val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
+                    x.nombre == binding.groupsAutoCompleteTv.text.toString()
+                } as List<Group>
 
-            enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
+                enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
+            }
         }
     }
 

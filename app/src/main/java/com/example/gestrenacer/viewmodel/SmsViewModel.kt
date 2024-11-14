@@ -62,9 +62,7 @@ class SmsViewModel @Inject constructor(
         viewModelScope.launch {
             _await.value = 2
             _progress.value = true
-            println("aki")
             val res = userRepositorio.enviarSms(texto, usuarios.value as List<String>)
-            println("sms")
             when (res) {
                 true -> _operacion.value = 1
                 false -> _operacion.value = 2

@@ -24,6 +24,9 @@ class PlantillaViewModel @Inject constructor(
     private val _guardado = MutableLiveData<Int>(0)
     val guardado: LiveData<Int> = _guardado
 
+    private val _exito = MutableLiveData(true)
+    val exito:LiveData<Boolean> = _exito
+
     private val _progresState = MutableLiveData(false)
 
     init {
@@ -56,12 +59,15 @@ class PlantillaViewModel @Inject constructor(
                     _guardado.value = 1
                     obtenerPlantillas()
                     _guardado.value = 0
+                    _exito.value = true
                 } else {
                     _guardado.value = 2
+                    _exito.value = false
                     Log.d("PlantillaViewModel", "Nombre de plantilla duplicado: ${plantilla.name}")
                 }
             } catch (e: Exception) {
                 _guardado.value = 2
+                _exito.value = false
                 Log.e("PlantillaViewModel", "Error al crear plantilla: ${e.message}")
             }
         }
