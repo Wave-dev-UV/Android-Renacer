@@ -1,41 +1,52 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ingrese el código que ha recibido por SMS"
-        android:textSize="16sp"
-        android:layout_marginBottom="20dp" />
-
-    <EditText
-        android:id="@+id/verificationCodeInput"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-        android:maxLength="6"
-    android:hint="Código SMS"
-    android:inputType="number"
-    android:padding="10dp" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/verifyButton"
-        android:layout_width="250dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="20dp"
-        android:text="Verificar Código"
-        android:textColor="@android:color/white"
-        android:background="@drawable/button_background"
+    <LinearLayout
+        android:id="@+id/contPrincipal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:textAllCaps="false" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- Indicador de carga -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Ingrese el código que ha recibido por SMS"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/verificationCodeInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Código SMS"
+            android:inputType="number"
+            android:maxLength="6"
+            android:padding="10dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/verifyButton"
+            android:layout_width="250dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_background"
+            android:gravity="center"
+            android:text="Verificar Código"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
     <ProgressBar
-        android:id="@+id/loadingIndicator"
+        android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
-</LinearLayout>
+        android:indeterminateTint="@color/onSelectedColorBotBar"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

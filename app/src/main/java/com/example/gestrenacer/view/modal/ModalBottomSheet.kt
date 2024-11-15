@@ -7,24 +7,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.SheetFiltrosBinding
 import com.example.gestrenacer.models.Group
 import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.utils.FechasAux
+import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.Timestamp
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import java.util.Date
 
-class ModalBottomSheet(
-    val filtrarFuncion: (Timestamp, Timestamp, List<String>, List<String>, List<String>, String, String) -> Unit,
-    private val filtros: List<List<String>>,
-    private val orden: List<String>,
-    private val groupViewModel: GroupViewModel,
-    private val setAppliedFilters: (Boolean) -> Unit
-) : BottomSheetDialogFragment() {
+class ModalBottomSheet : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var groupViewModel: GroupViewModel
+    lateinit var  orden: List<String>
+    lateinit var filtros: List<List<String>>
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,12 +35,16 @@ class ModalBottomSheet(
         savedInstanceState: Bundle?
     ): View {
         binding = SheetFiltrosBinding.inflate(inflater)
+        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
+        groupViewModel = ViewModelProvider(requireActivity()).get(GroupViewModel::class.java)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         groupViewModel.getGroups()
+        orden = userViewModel.orden.value as List<String>
+        filtros = userViewModel.filtros.value as List<List<String>>
         iniciarComponentes()
     }
 
@@ -212,15 +219,14 @@ class ModalBottomSheet(
                         checkboxfilters = checkboxFilters
                     )
 
-                    groupViewModel.saveGroup(groupWithFilters)
+                    //groupViewModel.saveGroup(groupWithFilters)
 
                 }
 
-                filtrarFuncion(
+                userViewModel.getFeligreses(
                     Timestamp(fechaInicial), Timestamp(fechaFinal),
                     listEstado, listSexo, filtros[3], listOrden[0], listOrden[1])
 
-                setAppliedFilters(true)
                 dismiss()
 
             }

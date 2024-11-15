@@ -61,6 +61,7 @@ class SmsFragment : Fragment() {
         manejadorBtnEnviar()
         manejadorBtnVolver()
         manejadorSwitchGuard()
+        manejadorBtnHist()
         iniciarToolbar()
         iniciarFiltros()
         iniciarCantSms()
@@ -247,6 +248,12 @@ class SmsFragment : Fragment() {
             i.addTextChangedListener {
                 validarTexto()
             }
+        }
+    }
+
+    private fun manejadorBtnHist(){
+        binding.btnHistorial.setOnClickListener{
+            findNavController().navigate(R.id.action_smsFragment_to_historialSmsFragment)
         }
     }
 

@@ -121,12 +121,14 @@ class AuthViewModel @Inject constructor(
 
     fun signInWithCredential(credential: PhoneAuthCredential) {
         viewModelScope.launch {
+            _progress.value = true
             val result = userRepositorio.signInWithPhoneAuthCredential(credential)
             if (result) {
                 saveUserVerification()
                 saveLastVerificationTime()
             }
             _authResult.value = result
+            _progress.value = false
         }
     }
 }

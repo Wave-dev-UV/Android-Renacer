@@ -31,6 +31,9 @@ class UserViewModel @Inject constructor(
     private val _resOperacion = MutableLiveData<Int>()
     val resOperacion: LiveData<Int> = _resOperacion
 
+    private val _mostrarFiltros = MutableLiveData(false)
+    val mostrarFiltros: LiveData<Boolean> = _mostrarFiltros
+
     fun getFeligreses(
         fechaInicial: Timestamp, fechaFinal: Timestamp,
         filtroEstcivil: List<String>,
@@ -110,5 +113,9 @@ class UserViewModel @Inject constructor(
                 _progresState.value = false
             }
         }
+    }
+
+    fun cambiarMostFiltros(valor: Boolean){
+        _mostrarFiltros.value = valor
     }
 }

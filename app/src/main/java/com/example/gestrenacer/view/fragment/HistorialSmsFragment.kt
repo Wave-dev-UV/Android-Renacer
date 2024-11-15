@@ -14,7 +14,9 @@ import com.example.gestrenacer.databinding.FragmentHistorialSmsBinding
 import com.example.gestrenacer.view.MainActivity.Recargable
 import com.example.gestrenacer.view.adapter.SmsAdapter
 import com.example.gestrenacer.viewmodel.SmsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HistorialSmsFragment: Fragment(), Recargable {
     private lateinit var binding: FragmentHistorialSmsBinding
     private val smsViewModel: SmsViewModel by viewModels()
