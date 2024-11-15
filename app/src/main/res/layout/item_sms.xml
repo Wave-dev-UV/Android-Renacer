@@ -190,7 +190,7 @@
                 android:id="@+id/chipTodaEdad"
                 android:enabled="false"
                 style="@style/Widget.Material3.Chip.Suggestion"
-                android:layout_width="140dp"
+                android:layout_width="145dp"
                 android:layout_height="36dp"
                 android:text="@string/txtTodaEdad"
                 android:textColor="@color/white"

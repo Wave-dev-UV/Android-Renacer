@@ -34,11 +34,14 @@ class SmsAdapter(
             val filtros = sms.filtros
 
             binding.txtFecha.text = "${fecha[0]}, ${fecha[1]} ${fecha[2]} de ${fecha[5]}."
-            binding.txtMensaje.text = sms.mensaje
+            binding.txtMensaje.text = "${sms.mensaje}."
             binding.txtEnviado.text = sms.enviado
 
             if (filtros.isNotEmpty()) {
                 mostrarChip(filtros)
+            }
+            else{
+                binding.lblFiltro.isVisible = false
             }
         }
 
@@ -46,11 +49,11 @@ class SmsAdapter(
             for (i in filtros) {
                 val aux = i.split(" ")
                 when (aux[0]) {
-                    "Casado(a)." -> binding.chipCasado.isVisible = true
-                    "Viudo(a)." -> binding.chipViudo.isVisible = true
-                    "Masculino." -> binding.chipMasculino.isVisible = true
-                    "Femenino." -> binding.chipFemenino.isVisible = true
-                    "Soltero(a)." -> binding.chipSoltero.isVisible = true
+                    "Casado(a)" -> binding.chipCasado.isVisible = true
+                    "Viudo(a)" -> binding.chipViudo.isVisible = true
+                    "Masculino" -> binding.chipMasculino.isVisible = true
+                    "Femenino" -> binding.chipFemenino.isVisible = true
+                    "Soltero(a)" -> binding.chipSoltero.isVisible = true
                     "Unión" -> binding.chipLibre.isVisible = true
                     "Divorciado(a)." -> binding.chipDivorciado.isVisible = true
                     "Menores" -> {

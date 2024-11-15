@@ -55,6 +55,8 @@ class HistorialSmsFragment: Fragment(), Recargable {
             recyclerView.layoutManager = LinearLayoutManager(context)
             val adapter = SmsAdapter(it)
             recyclerView.adapter = adapter
+
+            binding.txtNoResultados.isVisible = it.isEmpty()
         }
     }
 
