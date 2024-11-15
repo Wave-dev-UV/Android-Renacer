@@ -161,4 +161,5 @@
     <string name="lblMensajeHist">Mensaje.</string>
     <string name="lblEnviadoHist">Enviado a: </string>
     <string name="lblFechaHist">Fecha envío:</string>
+    <string name="lblHistSms">Historial de mensajes</string>
 </resources>

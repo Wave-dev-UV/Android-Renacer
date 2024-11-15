@@ -1,7 +1,5 @@
 package com.example.gestrenacer.view.fragment
 
-//import UserAdapter
-
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater

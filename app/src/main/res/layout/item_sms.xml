@@ -96,7 +96,7 @@
                 android:text="@string/lblFiltroCasado"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipSoltero"
@@ -107,7 +107,7 @@
                 android:text="@string/lblFiltroSoltero"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipFemenino"
@@ -118,7 +118,7 @@
                 android:text="@string/lblFiltroFemenino"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipMasculino"
@@ -129,7 +129,7 @@
                 android:text="@string/lblFiltroMasculino"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipLibre"
@@ -140,7 +140,7 @@
                 android:text="@string/lblFiltroLibre"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipViudo"
@@ -151,7 +151,7 @@
                 android:text="@string/lblFiltroViudo"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipEdadMax"
@@ -162,7 +162,7 @@
                 android:text="@string/lblMax"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipEdadMin"
@@ -173,7 +173,7 @@
                 android:text="@string/lblMin"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipDivorciado"
@@ -184,7 +184,7 @@
                 android:text="@string/lblFiltroDivorciado"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipTodaEdad"
@@ -195,7 +195,7 @@
                 android:text="@string/txtTodaEdad"
                 android:textColor="@color/white"
                 app:chipBackgroundColor="@color/onSelectedColorBotBar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </com.google.android.material.chip.ChipGroup>
 

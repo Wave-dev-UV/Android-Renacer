@@ -34,6 +34,7 @@ class SmsFragment : Fragment() {
     private val smsViewModel: SmsViewModel by viewModels()
     private val plantillaViewModel: PlantillaViewModel by viewModels()
     private val groupViewModel: GroupViewModel by viewModels()
+    private val filtros: MutableList<String> = mutableListOf()
     private lateinit var listaDePlantillas: MutableList<Plantilla>
     private lateinit var plantillaAdapter: PlantillaAdapter
 
@@ -51,8 +52,8 @@ class SmsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         groupViewModel.getGroups()
-        iniciarComponentes()
         plantillaViewModel.obtenerPlantillas()
+        iniciarComponentes()
     }
 
     private fun iniciarComponentes() {
@@ -109,7 +110,11 @@ class SmsFragment : Fragment() {
     private fun observerAwaiting() {
         smsViewModel.await.observe(viewLifecycleOwner) {
             if (it == 1) {
-                smsViewModel.enviarSms(binding.txtSms.text.toString())
+                smsViewModel.enviarSms(
+                    binding.txtSms.text.toString(),
+                    binding.groupsAutoCompleteTv.text.toString(),
+                    filtros
+                )
             }
         }
     }
@@ -203,6 +208,8 @@ class SmsFragment : Fragment() {
 
     private fun mostrarChip(filtro: String) {
         val aux = filtro.split(" ")
+        val lista = listOf("Menor", "Mayor")
+        var text = ""
         when (aux[0]) {
             "Casado(a)" -> binding.chipCasado.isVisible = true
             "Viudo(a)" -> binding.chipViudo.isVisible = true
@@ -214,15 +221,23 @@ class SmsFragment : Fragment() {
             "Menor" -> {
                 binding.chipEdadMin.setText("Menores de ${aux[1]} años.")
                 binding.chipEdadMin.isVisible = true
+                text = "Menores de ${aux[1]} años."
             }
 
             "Mayor" -> {
                 binding.chipEdadMax.setText("Mayores de ${aux[1]} años.")
                 binding.chipEdadMax.isVisible = true
+                text = "Mayores de ${aux[1]} años."
             }
 
             "Todas" -> binding.chipTodaEdad.isVisible = true
         }
+
+        if (aux[0] !in lista) {
+            text = aux[0]
+        }
+
+        filtros.add(text)
     }
 
     private fun manejadorTxtSms() {
