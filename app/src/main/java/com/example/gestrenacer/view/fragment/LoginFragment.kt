@@ -1,11 +1,13 @@
 package com.example.gestrenacer
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -14,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.databinding.FragmentLoginBinding
 import com.example.gestrenacer.viewmodel.AuthViewModel
+import com.google.android.material.tabs.TabLayout.Mode
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
 import java.util.TimerTask
@@ -58,8 +61,15 @@ class LoginFragment : Fragment() {
 
         binding.generateCodeButton.setOnClickListener {
             val phoneNumber = binding.phoneNumberInput.text.toString().trim()
+            val preferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)?.edit()
+
+            preferences?.putString("telefono", phoneNumber)
+            preferences?.apply()
+
             if (phoneNumber.isNotEmpty()) {
+
                 authViewModel.checkUserAccess(phoneNumber, requireActivity())
+
             } else {
                 Toast.makeText(requireContext(), "Introduce un número de teléfono", Toast.LENGTH_SHORT).show()
             }
@@ -75,8 +85,6 @@ class LoginFragment : Fragment() {
         authViewModel.verificationId.observe(viewLifecycleOwner, Observer { verificationId ->
             val bundle = Bundle().apply {
                 putString("verificationId", verificationId)
-                putString("phoneNumber", binding.phoneNumberInput.text.toString())
-                putString("rol", authViewModel.rol.value)
             }
             findNavController().navigate(R.id.action_loginFragment_to_verifyFragment, bundle)
         })
@@ -89,7 +97,8 @@ class LoginFragment : Fragment() {
         })
 
         authViewModel.progress.observe(viewLifecycleOwner, Observer { isLoading ->
-            binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.loadingIndicator.isVisible = isLoading
+            binding.contPrincipal.isVisible = !isLoading
         })
     }
 
@@ -105,10 +114,7 @@ class LoginFragment : Fragment() {
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                val bundle = Bundle().apply {
-                    putString("rol", authViewModel.getUserRole())
-                }
-                findNavController().navigate(R.id.action_loginFragment_to_listarFragment, bundle)
+                findNavController().navigate(R.id.action_loginFragment_to_listarFragment)
             }
 
 

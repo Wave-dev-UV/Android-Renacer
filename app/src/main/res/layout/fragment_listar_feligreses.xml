@@ -56,7 +56,7 @@
             app:layout_constraintTop_toBottomOf="@+id/contenedorFiltros"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="gone">
+            android:visibility="invisible">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -75,7 +75,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/outlined_icon_btn_desc"
-                    app:icon="@drawable/ic_cancelarx" />
+                    app:icon="@drawable/close"
+                    app:iconTint="@color/secondary"/>
 
                 <TextView
                     android:id="@+id/lblSeleccionados"
@@ -104,9 +105,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/fondoContenedorFiltro"
-        android:paddingBottom="10dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintTop_toBottomOf="@+id/contenedorSeleccionados"
-        app:layout_constraintBottom_toTopOf="@id/contBottomNav"
+        app:layout_constraintBottom_toTopOf="@+id/btn_anadir_feligres"
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -124,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_hay_elementos_a_mostrar"
                 android:textSize="24sp"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -137,7 +138,7 @@
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/contBottomNav"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
@@ -151,7 +152,7 @@
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/contBottomNav"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
@@ -165,7 +166,7 @@
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/contBottomNav"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="15dp"
@@ -177,32 +178,12 @@
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:indeterminateTint="@color/onSelectedColorBotBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/contBottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/onSelectedColorBotBar"
-            android:theme="@style/BottomBarStyle"
-            app:menu="@menu/bottom_navigation_menu"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"/>
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -48,11 +48,9 @@ class VerifyFragment : Fragment() {
 
         authViewModel.authResult.observe(viewLifecycleOwner, Observer { isSuccess ->
             if (isSuccess) {
-                val bundle = Bundle()
-                bundle.putString("rol",arguments?.getString("rol"))
                 Toast.makeText(requireContext(), "Verificación exitosa", Toast.LENGTH_SHORT).show()
 
-                findNavController().navigate(R.id.action_verifyFragment_to_listarFragment, bundle)
+                findNavController().navigate(R.id.action_verifyFragment_to_listarFragment)
             } else {
                 Toast.makeText(requireContext(), "Error en la verificación", Toast.LENGTH_SHORT).show()
             }

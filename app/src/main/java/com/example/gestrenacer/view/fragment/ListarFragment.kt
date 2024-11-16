@@ -2,8 +2,8 @@ package com.example.gestrenacer.view.fragment
 
 //import UserAdapter
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentListarFeligresesBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.utils.FechasAux
 import com.example.gestrenacer.view.MainActivity
+import com.example.gestrenacer.view.MainActivity.Recargable
 import com.example.gestrenacer.view.adapter.UserAdapter
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.view.modal.ModalBottomSheet
@@ -26,20 +28,19 @@ import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
+import java.util.Calendar
 import java.util.Date
-import com.example.gestrenacer.view.MainActivity.Recargable
-
 
 
 @AndroidEntryPoint
 class ListarFragment : Fragment(), Recargable {
     private lateinit var binding: FragmentListarFeligresesBinding
+    private lateinit var rol: String
     private val userViewModel: UserViewModel by viewModels()
     private var adapter: UserAdapter? = null
     private var userList = mutableListOf<User>()
     private val groupViewModel: GroupViewModel by viewModels()
     private var appliedFilters = false
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,8 +53,8 @@ class ListarFragment : Fragment(), Recargable {
 
     override fun onResume() {
         super.onResume()
-        binding.toolbar.searchView.setQuery("",false)
-        verFeligreses()
+        binding.toolbar.searchView.setQuery("", false)
+        cargarFiltros()
         forceRecyclerViewUpdate()
     }
 
@@ -61,30 +62,33 @@ class ListarFragment : Fragment(), Recargable {
         super.onViewCreated(view, savedInstanceState)
         iniciarComponentes()
 
-        parentFragmentManager.setFragmentResultListener("editarUsuario", viewLifecycleOwner) { _, result ->
+        parentFragmentManager.setFragmentResultListener(
+            "editarUsuario",
+            viewLifecycleOwner
+        ) { _, result ->
             val usuarioEditado = result.getBoolean("usuarioEditado", false)
             if (usuarioEditado) {
-                verFeligreses()
+                cargarFiltros()
                 forceRecyclerViewUpdate()
             }
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                activity?.finish()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finish()
+                }
+            })
     }
 
-    private fun iniciarComponentes(){
+    private fun iniciarComponentes() {
         anadirRol()
         observerListFeligreses()
         observerProgress()
-        observerRol()
         configurarBusqueda()
         manejadorBtnAnadir()
         manejadorBtnMensaje()
-        manejadorBottomBar()
         manejadorBtnFiltro()
         manejadorBtnEliminar()
         manejadorBtnCancelar()
@@ -93,40 +97,27 @@ class ListarFragment : Fragment(), Recargable {
     }
 
     override fun recargarDatos() {
-        verFeligreses()
+        cargarFiltros()
         forceRecyclerViewUpdate()
-    }
-
-    private fun verFeligreses(){
-        val listEst = resources.getStringArray(R.array.listaEstadoCivil).toList()
-        val listSexo = resources.getStringArray(R.array.listaSexos).toList()
-        val listEstado = resources.getStringArray(R.array.listaEstadoAtencion).toList()
-
-        userViewModel.getFeligreses(
-            Timestamp(Date(0,1,0)),
-            Timestamp(Date(300,12,0)),
-            listEst, listSexo, listEstado
-        )
-    }
-
-    private fun anadirRol() {
-        val data = arguments?.getString("rol")
-        userViewModel.colocarRol(data)
     }
 
     private fun observerListFeligreses() {
         userViewModel.listaUsers.observe(viewLifecycleOwner) { lista ->
-            if (lista != null) {
-                userList = lista as MutableList<User>
-            }
+            userList = lista
             binding.lblResultado.text = "Resultados: ${userList.size}"
             binding.txtNoResultados.isVisible = userList.isEmpty()
 
             if (adapter == null) {
-                adapter = UserAdapter(userList, findNavController(), userViewModel.rol.value, userViewModel,
+                adapter = UserAdapter(
+                    userList,
+                    findNavController(),
+                    rol,
+                    userViewModel,
                     { isVisible -> binding.btnEliminar.isVisible = isVisible },
-                    { selectedCount -> updateSelectedCountDisplay(selectedCount)
-                    }
+                    { selectedCount ->
+                        updateSelectedCountDisplay(selectedCount)
+                    },
+                    this::guardarFiltros
                 )
                 binding.listaFeligreses.layoutManager = LinearLayoutManager(context)
                 binding.listaFeligreses.adapter = adapter
@@ -150,8 +141,16 @@ class ListarFragment : Fragment(), Recargable {
         // Mostrar/ocultar botones según si hay usuarios seleccionados
         val hasSelectedUsers = selectedCount > 0
         binding.btnEliminar.isVisible = hasSelectedUsers
-        binding.btnEnviarSms.isVisible = !hasSelectedUsers && (userViewModel.rol.value == "Administrador")
-        binding.btnAnadirFeligres.isVisible = !hasSelectedUsers && (userViewModel.rol.value in listOf("Administrador","Gestor"))
+        binding.btnEnviarSms.isVisible = (rol == "Administrador") && (selectedCount == 0)
+        binding.btnAnadirFeligres.visibility = (
+                if (!hasSelectedUsers && (rol in listOf("Administrador", "Gestor"))) View.VISIBLE
+                else if (hasSelectedUsers && (rol in listOf(
+                        "Administrador",
+                        "Gestor"
+                    ))
+                ) View.INVISIBLE
+                else View.GONE
+                )
 
         val shouldHideFiltersAndSearch = hasSelectedUsers
         binding.contenedorFiltros.isVisible =
@@ -160,89 +159,81 @@ class ListarFragment : Fragment(), Recargable {
             !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
     }
 
-    private fun observerProgress(){
+    private fun observerProgress() {
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
 
             if (!it) {
-                binding.listaFeligreses.visibility = View.VISIBLE
                 reanudarBusqueda()
             }
-            else{
-                binding.listaFeligreses.visibility = View.INVISIBLE
-            }
         }
     }
 
-    private fun observerRol() {
-        userViewModel.rol.observe(viewLifecycleOwner) { rol ->
-            binding.btnAnadirFeligres.isVisible = rol in listOf("Administrador", "Gestor")
-            binding.contBottomNav.isVisible = rol in listOf("Administrador", "Gestor")
-            binding.btnEnviarSms.isVisible = rol in listOf("Administrador", "Gestor")
-            binding.btnEliminar.isVisible = rol in listOf("Administrador")
+    private fun anadirRol() {
+        val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+            ?.getString("rol", "Visualizador") as String
+        val roles = pref in listOf("Administrador", "Gestor")
+        val actividad = activity as MainActivity
+
+        if (roles) {
+            actividad.visibilidadBottomBar(true)
         }
+
+        if (pref == "Gestor") {
+            actividad.modVisItemBottomBar(R.id.item_2, false)
+        }
+
+        rol = pref
     }
 
-    private fun reanudarBusqueda(){
-        if (binding.toolbar.searchView.query.isNotEmpty()){
+    private fun reanudarBusqueda() {
+        if (binding.toolbar.searchView.query.isNotEmpty()) {
             filter(binding.toolbar.searchView.query.toString())
         }
     }
 
-    private fun manejadorBottomBar() {
-        val bundle = Bundle()
-        bundle.putString("rol",arguments?.getString("rol"))
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.item_1 -> {
-                    Log.d("BottomNavSelect1", "Menú principal seleccionado")
-                    true
-                }
-                R.id.item_2 -> {
-                    Log.d("BottomNavSelect2", "Reportes seleccionado")
-                    true
-                }
-                R.id.item_3 -> {
-                    Log.d("BottomNavSelect3", "Lista llamar deleccionado")
-                    findNavController().navigate(R.id.action_listarFragment_to_pendingFragment, bundle)
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
     private fun manejadorBtnFiltro() {
-        binding.btnFiltrar.setOnClickListener{
+        binding.btnFiltrar.setOnClickListener {
             val listFiltros = userViewModel.filtros.value as List<List<String>>
             val listOrden = userViewModel.orden.value as List<String>
-            val role = userViewModel.rol.value as String
-            val modalBottomSheet = ModalBottomSheet(userViewModel::getFeligreses,
-                listFiltros,listOrden, groupViewModel, setAppliedFilters, role
+            val modalBottomSheet = ModalBottomSheet(
+                userViewModel::getFeligreses,
+                listFiltros, listOrden, groupViewModel, setAppliedFilters
             )
-            modalBottomSheet.show(requireActivity().supportFragmentManager,ModalBottomSheet.TAG)
+            modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
-    }
+    }//3152179554
 
     private fun manejadorBtnMensaje() {
         binding.btnEnviarSms.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("appliedFilters", if (appliedFilters) "true" else "false")
-            bundle.putString("rol",arguments?.getString("rol"))
-            Log.d("BtnSMS", "Clic en el botón de SMS")
-            findNavController().navigate(R.id.action_listarFragment_to_plantillasMensajesFragment,
-                bundle)
+            val listFiltros = userViewModel.filtros.value as List<List<String>>
+            val edades = FechasAux.calcEdadLista(listFiltros[2])
+            val lista = listFiltros[0] + listFiltros[1] + detEdad(edades)
 
+            val bundle = Bundle().apply {
+                val array1 = ArrayList<String>()
+                val array2 = ArrayList<String>()
 
+                array1.addAll(lista)
+                putStringArrayList("filtros", array1)
+
+                array2.addAll(anadirFeligresBundle())
+
+                putStringArrayList("usuarios", array2)
+            }
+
+            guardarFiltros()
+            findNavController().navigate(R.id.action_listarFragment_to_smsFragment, bundle)
         }
     }
 
     private fun manejadorBtnAnadir() {
         binding.btnAnadirFeligres.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("rol", userViewModel.rol.value)
-            binding.toolbar.searchView.setQuery("",false)
-            findNavController().navigate(R.id.action_listarFragment_to_agregarUsuariosFragment, bundle)
+            binding.toolbar.searchView.setQuery("", false)
+            guardarFiltros()
+            findNavController().navigate(
+                R.id.action_listarFragment_to_agregarUsuariosFragment
+            )
         }
     }
 
@@ -271,9 +262,9 @@ class ListarFragment : Fragment(), Recargable {
         })
 
         closeButton?.setOnClickListener {
-            searchView.setQuery("",false)
+            searchView.setQuery("", false)
             searchView.clearFocus()
-            if (userList.size>0){
+            if (userList.size > 0) {
                 binding.txtNoResultados.visibility = View.GONE
             }
         }
@@ -313,11 +304,12 @@ class ListarFragment : Fragment(), Recargable {
 
     private fun setupSelectAllCheckbox() {
         binding.checkboxSelectAll.setOnCheckedChangeListener { buttonView, isChecked ->
-            Log.d("YourFragment", "Checkbox 'Seleccionar Todos' presionado.")
             adapter?.selectAll(isChecked) // Selecciona o deselecciona según el estado del CheckBox
-            binding.lblSeleccionados.text = "Seleccionados: ${adapter?.getSelectedUsersCount() ?: 0}" // Actualiza el texto
+            binding.lblSeleccionados.text =
+                "Seleccionados: ${adapter?.getSelectedUsersCount() ?: 0}" // Actualiza el texto
         }
     }
+
     private fun manejadorBtnEliminar() {
         binding.btnEliminar.setOnClickListener {
             eliminarSeleccionados()
@@ -328,31 +320,46 @@ class ListarFragment : Fragment(), Recargable {
         return userList.count { it.rol == "Administrador" }
     }
 
+    private fun verAutoborrado(list: List<User>): Int {
+        val preferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val tel = preferences?.getString("numero", "")
+
+        return list.count { it.celular == tel }
+    }
+
     private fun eliminarSeleccionados() {
         val seleccionados = adapter?.getSelectedUsers() ?: return
         if (seleccionados.isEmpty()) return
 
+        val autoborrado = verAutoborrado(seleccionados) == 0
         val adminCount = contarAdministradores()
         val eliminandoAdmins = seleccionados.count { it.rol == "Administrador" }
 
         if (adminCount - eliminandoAdmins < 1) {
+            DialogUtils.dialogoInformativo(
+                requireContext(),
+                getString(R.string.titModalError),
+                getString(R.string.txtErrorBorrarAdmin),
+                getString(R.string.txtBtnAceptar)
+            ).show()
+        } else if (autoborrado) {
+            DialogUtils.dialogoInformativo(
+                requireContext(),
+                getString(R.string.titModalError),
+                getString(R.string.txtErrorBorrarTodos),
+                getString(R.string.txtBtnAceptar)
+            ).show()
+        } else {
             DialogUtils.dialogoConfirmacion(
                 context = requireContext(),
-                mensaje = "Debes conservar al menos un administrador en la lista.",
-                onYes = {} // No se realiza ninguna acción si se confirma
+                mensaje = getString(R.string.txtModalEliminar),
+                onYes = {
+                    userViewModel.eliminarUsuarios(seleccionados.toMutableList())
+                    adapter?.clearSelection()
+                    updateSelectedCountDisplay(0)
+                }
             )
-            return
         }
-
-        DialogUtils.dialogoConfirmacion(
-            context = requireContext(),
-            mensaje = "¿Estás seguro de que deseas eliminar a los usuarios seleccionados?",
-            onYes = {
-                userViewModel.eliminarUsuarios(seleccionados.toMutableList())
-                adapter?.clearSelection()
-                updateSelectedCountDisplay(0)
-            }
-        )
     }
 
 
@@ -364,7 +371,92 @@ class ListarFragment : Fragment(), Recargable {
         }
     }
 
+    private fun detEdad(edades: List<Int>): MutableList<String> {
+        val list: MutableList<String> = mutableListOf()
+        if (edades[0] < 100) {
+            list.add("Menor ${edades[0]}")
+        }
+        if (edades[1] > 0) {
+            list.add("Mayor ${edades[1]}")
+        }
+        if (edades[1] <= 0 && edades[0] >= 100) {
+            list.add("Todas")
+        }
+
+        return list
+    }
+
+    private fun anadirFeligresBundle(): List<String> {
+        val itemCount = adapter?.getSelectedUsersCount() as Int
+
+        if (itemCount > 0) {
+            return adapter?.getSelectedUsers()?.map { x -> x.celular } as List<String>
+        } else {
+            return userList.map { x -> x.celular }
+        }
+    }
+
+    private fun guardarFiltros() {
+        val conjuntoFiltros: MutableSet<String> = mutableSetOf()
+
+        userViewModel.filtros.value?.forEach { x -> conjuntoFiltros.addAll(x) }
+
+        val preferences =
+            requireActivity().getSharedPreferences("filtros", Context.MODE_PRIVATE).edit()
+
+        preferences.putStringSet("filtros", conjuntoFiltros)
+        preferences.putStringSet("orden", userViewModel.orden.value?.toMutableSet())
+
+        preferences.apply()
+    }
+
+    private fun cargarFiltros() {
+        val listEst = resources.getStringArray(R.array.listaEstadoCivil).toSet()
+        val listSexo = resources.getStringArray(R.array.listaSexos).toSet()
+        val listEstado = resources.getStringArray(R.array.listaEstadoAtencion).toSet()
+        try {
+            val preferences =
+                requireActivity().getSharedPreferences("filtros", Context.MODE_PRIVATE)
+            val filtros = preferences.getStringSet("filtros", mutableSetOf()) as MutableSet<String>
+            val orden =
+                cargarOrden(preferences.getStringSet("orden", mutableSetOf()) as MutableSet<String>)
+
+            if (orden == listOf("", "")) throw Exception()
+
+            val edades = filtros - listSexo - listEst - listEstado
+            val filtroSexo = filtros - listEst - edades - listEstado
+            val filtroEst = filtros - listSexo - edades - listEstado
+            val calendar = Calendar.getInstance()
+
+            val aux = edades.map { x -> x.toInt() }.sorted()
+
+            userViewModel.getFeligreses(
+                Timestamp(Date(aux[0], calendar.time.month, calendar.time.date)),
+                Timestamp(Date(aux[1], calendar.time.month, calendar.time.date)),
+                filtroEst.toList(), filtroSexo.toList(), listEstado.toList(),
+                orden[0], orden[1]
+            )
+        } catch (e: Exception) {
+            userViewModel.getFeligreses(
+                Timestamp(Date(0, 1, 0)),
+                Timestamp(Date(300, 12, 0)),
+                listEst.toList(), listSexo.toList(), listEstado.toList()
+            )
+
+        }
+    }
+
+    private fun cargarOrden(conjunto: MutableSet<String>): List<String> {
+        val list: MutableList<String> = mutableListOf("", "")
+        for (i in conjunto) {
+            when (i) {
+                "nombre", "fechaNacimiento", "fechaCreacion" -> list[0] = i
+                "ascendente", "descendente" -> list[1] = i
+            }
+        }
+
+        return list
+    }
+
     val setAppliedFilters: (Boolean) -> Unit = { x -> appliedFilters = x }
-
-
 }
