@@ -31,10 +31,11 @@ class SmsAdapter(
 
         fun setCardSms(sms: Sms) {
             val fecha = sms.fecha.toDate().toString().split(" ")
+            val hora = fecha[3].split(":")
             val filtros = sms.filtros
 
-            binding.txtFecha.text = "${fecha[0]}, ${fecha[1]} ${fecha[2]} de ${fecha[5]}."
-            binding.txtMensaje.text = "${sms.mensaje}."
+            binding.txtFecha.text = "${fecha[0]}, ${fecha[1]} ${fecha[2]} de ${fecha[5]} a las ${hora[0]}:${hora[1]}."
+            binding.txtMensaje.text = "\"${sms.mensaje}\"."
             binding.txtEnviado.text = sms.enviado
 
             if (filtros.isNotEmpty()) {

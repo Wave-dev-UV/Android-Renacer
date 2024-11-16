@@ -169,8 +169,6 @@ class ListarFragment : Fragment(), Recargable {
         val shouldHideFiltersAndSearch = hasSelectedUsers
         binding.contenedorFiltros.isVisible =
             !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
-        binding.toolbar.root.isVisible =
-            !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
     }
 
     private fun observerProgress() {

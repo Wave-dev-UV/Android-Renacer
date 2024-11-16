@@ -75,6 +75,7 @@ class SmsViewModel @Inject constructor(
                     _operacion.value = 2
                 }
             }
+            _await.value = 0
             _progress.value = false
         }
     }
