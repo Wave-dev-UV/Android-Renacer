@@ -82,16 +82,17 @@ class SmsViewModel @Inject constructor(
 
     private fun guardarSms(texto: String, grupo: String, filtros: List<String>) {
         val fecha = Timestamp.now()
-        var envio = "${usuarios.value?.size} personas."
+        val envio = "${usuarios.value?.size} personas."
+        var grupoEnvio = ""
         var filtro = filtros
 
         if (grupoActivado.value as Boolean) {
-            envio = "Grupo \"${grupo}\"."
+            grupoEnvio = grupo
             filtro = listOf()
         }
 
         viewModelScope.launch {
-            smsRepositorio.guardarSms(Sms(filtro, texto, envio, fecha))
+            smsRepositorio.guardarSms(Sms(filtro, texto, envio, fecha, grupoEnvio))
         }
     }
 

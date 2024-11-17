@@ -360,6 +360,7 @@ class ListarFragment : Fragment(), Recargable {
                 context = requireContext(),
                 mensaje = getString(R.string.txtModalEliminar),
                 onYes = {
+                    binding.toolbar.searchView.setQuery("",true)
                     userViewModel.eliminarUsuarios(seleccionados.toMutableList())
                     adapter?.clearSelection()
                     updateSelectedCountDisplay(0)

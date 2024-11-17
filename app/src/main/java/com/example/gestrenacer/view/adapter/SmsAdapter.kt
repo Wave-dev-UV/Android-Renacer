@@ -42,6 +42,9 @@ class SmsAdapter(
                 mostrarChip(filtros)
             }
             else{
+                binding.lblGrupo.isVisible = true
+                binding.txtGrupo.isVisible = true
+                binding.txtGrupo.text = "${sms.grupo}."
                 binding.lblFiltro.isVisible = false
             }
         }

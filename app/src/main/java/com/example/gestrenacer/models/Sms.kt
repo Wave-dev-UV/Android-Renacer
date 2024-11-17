@@ -7,12 +7,14 @@ data class Sms(
     val filtros: List<String>,
     val mensaje: String,
     val enviado: String,
-    val fecha: Timestamp
+    val fecha: Timestamp,
+    val grupo: String
 ) : Serializable {
     constructor() : this(
         listOf(),
         "",
         "",
-        Timestamp(2024, 1)
+        Timestamp(2024, 1),
+        ""
     )
 }
