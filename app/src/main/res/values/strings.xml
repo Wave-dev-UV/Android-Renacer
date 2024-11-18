@@ -23,7 +23,7 @@
     <string name="direccion_emergencia">Dirección</string>
     <string name="direcci_n_de_su_contacto">Dirección de su contacto</string>
     <string name="cargo_en_la_iglesia">Cargo en la iglesia</string>
-    <string name="es_lider">¿Es lider?</string>
+    <string name="es_lider">¿Es líder?</string>
     <string name="inserte_el_nombre_del_contacto">Inserte el nombre del contacto</string>
     <string name="parentesco_con_su_contacto">Parentesco con su contacto</string>
     <string name="contacto_de_emergencia">Contacto de emergencia</string>
@@ -163,4 +163,5 @@
     <string name="txtNoPerSms">No hay personas que coincidan con los filtros.</string>
     <string name="txtGrupoErrNoEncontrado">No existe un grupo con ese nombre.</string>
     <string name="txtSmsEnviados">Los SMS fueron enviados correctamente.</string>
+    <string name="no_especificado">No especificado</string>
 </resources>
