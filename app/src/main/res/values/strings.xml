@@ -124,12 +124,31 @@
     <string name="on">ON</string>
     <string name="checkbox_select_all">Seleccionar Todos</string>
     <string name="outlined_icon_btn_desc">Cancelar</string>
+    <string name="txtModalTelRep">El número de celular ingresado ya está registrado. Reintenta nuevamente con otro.</string>
+    <string name="txtModalTelExcep">No se ha podido guardar el registro. Reintenta mas tarde.</string>
+    <string name="titModalError">Error.</string>
+    <string name="txtBtnAceptar">Aceptar</string>
+    <string name="txtModalEliminar">¿Estás seguro de que deseas eliminar a los usuarios seleccionados?</string>
+    <string name="txtErrorBorrarAdmin">Debes conservar al menos un administrador en la lista.</string>
+    <string name="txtErrorBorrarTodos">No puedes borrar tu propio registro.</string>
+    <string name="txtPlantilla">Plantillas guardadas.</string>
+    <string name="txtGrupos">Grupos.</string>
+    <string name="txtFiltroSms">Filtros aplicados.</string>
+    <string name="lblMensaje">Mensaje</string>
+    <string name="lblNomPlantilla">Nombre plantilla.</string>
+    <string name="lblBtnEnviarSms">Enviar mensaje</string>
+    <string name="lblBtnEnvGuardSms">Enviar y guardar mensaje</string>
+    <string name="txtCrearPlantilla">¿Crear una plantilla a partir de este mensaje?</string>
+    <string name="txtErrorSms">No se podido enviar los SMS, reintenta más tarde.</string>
+    <string name="txtTodaEdad">Todas las edades.</string>
+    <string name="txtEnvPersonSel">El mensaje se enviará a </string>
+    <string name="lblMensajeria">Mensajería</string>
     <string name="ingrese_el_c_digo_que_ha_recibido_por_sms">Ingrese el código que ha recibido por SMS</string>
     <string name="c_digo_sms">Código SMS</string>
     <string name="verificar_c_digo">Verificar Código</string>
     <string name="feligr_s">Feligrés</string>
     <string name="lbl_Usar_Huella">Usar Huella</string>>
-    <string name="tituloMensajeria">Mensajeria</string>
+    <string name="tituloMensajeria">Mensajería</string>
     <string name="ya_hay_un_grupo_con_ese_nombre_elige_otro">Ya hay un grupo con ese nombre. Elige otro</string>
     <string name="por_favor_asigna_un_nombre_al_grupo">Por favor, asigna un nombre al grupo</string>
     <string name="escribe_el_nombre_del_grupo">Escribe el nombre del grupo</string>
@@ -140,6 +159,8 @@
     <string name="grupos_predeterminados">Grupos predeterminados</string>
     <string name="escribe_un_mensaje">Escribe un mensaje</string>
     <string name="enviar">Enviar</string>
-
-
+    <string name="txtErrPlantilla">Ya hay una plantilla con ese nombre.</string>
+    <string name="txtNoPerSms">No hay personas que coincidan con los filtros.</string>
+    <string name="txtGrupoErrNoEncontrado">No existe un grupo con ese nombre.</string>
+    <string name="txtSmsEnviados">Los SMS fueron enviados correctamente.</string>
 </resources>

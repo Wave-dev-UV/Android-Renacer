@@ -27,5 +27,6 @@ data class User(
 ): Serializable {
     constructor(): this("", "", "", "", "", "",
         "", "", "", "", "",
-        "","",false, "Feligrés", "", "", null, "", null)
+        "","",false, "Feligrés", "", "", null, "", null
+    )
 }
