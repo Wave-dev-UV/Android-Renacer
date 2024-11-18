@@ -21,7 +21,8 @@ class UserAdapter(
     private val rol: String?,
     private val usersViewModel: UserViewModel,
     private val onDeleteUsers: (Boolean) -> Unit,
-    private val onSelectedUsersCountChange: (Int) -> Unit
+    private val onSelectedUsersCountChange: (Int) -> Unit,
+    private val guardarFiltros: () -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     private val selectedUsers = mutableMapOf<Int, Boolean>()
@@ -146,17 +147,16 @@ class UserAdapter(
         }
 
         private fun manejadorClicCard(user: User) {
-            if (rol != "Visualizador") {
-                binding.cardFeligres.setOnClickListener {
-                    try {
-                        val bundle = Bundle().apply {
-                            putSerializable("dataFeligres", user)
-                            putString("rol", rol)
-                        }
-                        navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
-                    } catch (e: Exception) {
-                        Log.e("UserAdapter", "Error navigating: ${e.message}")
+            binding.cardFeligres.setOnClickListener {
+                try {
+                    val bundle = Bundle().apply {
+                        putSerializable("dataFeligres", user)
+                        putString("rol", rol)
                     }
+                    adapter.guardarFiltros()
+                    navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
+                } catch (e: Exception) {
+                    Log.e("UserAdapter", "Error navigating: ${e.message}")
                 }
             }
         }
@@ -164,7 +164,7 @@ class UserAdapter(
         private fun manejadorAnadirPendientes(user: User) {
             binding.addPendingUser.setOnClickListener {
                 user.estadoAtencion = if (user.estadoAtencion == "Por Llamar") "Llamado" else "Por Llamar"
-                usersViewModel.editarUsuario(user)
+                usersViewModel.editarUsuario(user, llamado = true)
                 adapter.changeStatus(bindingAdapterPosition)
             }
         }

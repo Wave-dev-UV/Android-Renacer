@@ -1,5 +1,6 @@
 package com.example.gestrenacer.view.modal
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.SheetFiltrosBinding
 import com.example.gestrenacer.models.Group
 import com.example.gestrenacer.viewmodel.GroupViewModel
+import com.example.gestrenacer.utils.FechasAux
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.Timestamp
 import java.util.Calendar
@@ -20,8 +22,7 @@ class ModalBottomSheet(
     private val filtros: List<List<String>>,
     private val orden: List<String>,
     private val groupViewModel: GroupViewModel,
-    private val setAppliedFilters: (Boolean) -> Unit,
-    private val roleMode: String
+    private val setAppliedFilters: (Boolean) -> Unit
 ) : BottomSheetDialogFragment() {
     private lateinit var binding: SheetFiltrosBinding
 
@@ -54,7 +55,10 @@ class ModalBottomSheet(
     }
 
     private fun iniciarCreadorGrupos() {
-        if (roleMode in listOf("Administrador")) {
+        val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val roleMode = pref.getString("rol","Visualizador")
+
+        if (roleMode == "Administrador") {
             binding.gruposTv.visibility = View.VISIBLE
             binding.groupEv.visibility = View.VISIBLE
             binding.swithGruposContainer.visibility = View.VISIBLE
@@ -62,10 +66,9 @@ class ModalBottomSheet(
     }
 
     private fun iniciarText(){
-        val anos = filtros[2].map { it.toInt() + 1900 }
-        val anoActual = Calendar.getInstance().get(Calendar.YEAR)
-        val edadFinal = anoActual - anos[0] - 1
-        val edadInicial = anoActual - anos[1] + 1
+        val anos = FechasAux.calcEdadLista(filtros[2])
+        val edadFinal = anos[0]
+        val edadInicial = anos[1]
 
         if (edadInicial > 0) {
             binding.txtEdadInicial.setText(edadInicial.toString())
@@ -199,11 +202,12 @@ class ModalBottomSheet(
                 }
 
                 if (createGroupToggle.isChecked) {
+                    //esta alreves, mayor de a menor de
                     val groupWithFilters = Group(
                         nombre=groupEvName,
                         datesfilters = listOf(
-                            Timestamp(fechaInicial),
-                            Timestamp(fechaFinal)
+                            Timestamp(fechaFinal),
+                            Timestamp(fechaInicial)
                         ),
                         checkboxfilters = checkboxFilters
                     )
@@ -296,15 +300,22 @@ class ModalBottomSheet(
     }
 
     private fun validarEdad(): Boolean{
-        val txtInicial = binding.txtEdadInicial.text.toString()
-        val txtFinal = binding.txtEdadFinal.text.toString()
-        val vacio = txtInicial.isEmpty() && txtFinal.isEmpty()
-        val ambosLlenosMax = txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtInicial.toInt() <= txtFinal.toInt())
-        val ambosLlenosMin = txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtFinal.toInt() >= txtInicial.toInt())
-        val llenoInicial = txtInicial.isNotEmpty() && txtFinal.isEmpty()
-        val llenoFinal = txtFinal.isNotEmpty() && txtInicial.isEmpty()
+        try {
+            val txtInicial = binding.txtEdadInicial.text.toString()
+            val txtFinal = binding.txtEdadFinal.text.toString()
+            val vacio = txtInicial.isEmpty() && txtFinal.isEmpty()
+            val ambosLlenosMax =
+                txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtInicial.toInt() <= txtFinal.toInt())
+            val ambosLlenosMin =
+                txtInicial.isNotEmpty() && txtFinal.isNotEmpty() && (txtFinal.toInt() >= txtInicial.toInt())
+            val llenoInicial = txtInicial.isNotEmpty() && txtFinal.isEmpty()
+            val llenoFinal = txtFinal.isNotEmpty() && txtInicial.isEmpty()
 
-        return vacio || (ambosLlenosMax && ambosLlenosMin) || llenoInicial || llenoFinal
+            return vacio || (ambosLlenosMax && ambosLlenosMin) || llenoInicial || llenoFinal
+        }
+        catch (e: Exception){
+            return false
+        }
     }
 
     private fun validarDatos(){

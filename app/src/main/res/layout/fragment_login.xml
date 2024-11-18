@@ -1,64 +1,79 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="18dp">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/logoImageView"
-            android:layout_width="203dp"
-            android:layout_height="202dp"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/logo_renacer" />
-
-        <EditText
-            android:id="@+id/phoneNumberInput"
-            android:layout_width="270dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="30dp"
-            android:hint="Número de Teléfono"
-            android:inputType="phone"
-            android:maxLength="10"
-            android:background="@drawable/edittext_background"
-            android:padding="10dp"
-            android:gravity="center_vertical"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:textColorHint="@android:color/darker_gray" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/generateCodeButton"
-            android:layout_width="270dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="30dp"
-            android:text="Enviar Código"
-            android:textColor="@android:color/white"
-            android:background="@drawable/button_background"
-            android:gravity="center" />
-
-        <!-- Indicador de carga -->
         <ProgressBar
             android:id="@+id/loadingIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/lblUsarHuella"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginVertical="100dp"
-            android:text="@string/lbl_Usar_Huella"
-            android:textSize="17sp"
-            android:textColor="@color/azulPrincipal"
+            android:indeterminateTint="@color/onSelectedColorBotBar"
             android:visibility="gone"
-            />
-    </LinearLayout>
-</ScrollView>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:id="@+id/contPrincipal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <ImageView
+                    android:id="@+id/logoImageView"
+                    android:layout_width="203dp"
+                    android:layout_height="202dp"
+                    android:layout_marginTop="50dp"
+                    android:src="@drawable/logo_renacer" />
+
+                <EditText
+                    android:id="@+id/phoneNumberInput"
+                    android:layout_width="270dp"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/edittext_background"
+                    android:gravity="center_vertical"
+                    android:hint="Número de Teléfono"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:padding="10dp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/generateCodeButton"
+                    android:layout_width="270dp"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/button_background"
+                    android:gravity="center"
+                    android:text="Enviar Código"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/lblUsarHuella"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:layout_marginVertical="100dp"
+                    android:text="@string/lbl_Usar_Huella"
+                    android:textSize="17sp"
+                    android:textColor="@color/azulPrincipal"
+                    android:visibility="gone"
+                    />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

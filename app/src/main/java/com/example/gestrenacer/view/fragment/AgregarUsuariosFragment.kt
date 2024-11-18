@@ -1,6 +1,7 @@
 package com.example.gestrenacer.view.fragment
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentAgregarUsuariosBinding
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
@@ -25,6 +28,7 @@ import java.util.Calendar
 @AndroidEntryPoint
 class AgregarUsuariosFragment : Fragment() {
     private lateinit var binding: FragmentAgregarUsuariosBinding
+    private lateinit var rol: String
     private val userViewModel: UserViewModel by viewModels()
     private val user = User()
     private var fechaNacimientoUser: Timestamp? = null
@@ -47,7 +51,9 @@ class AgregarUsuariosFragment : Fragment() {
 
     private fun controler() {
         anadirRol()
-        observerRol()
+        menuRol()
+        observerProgress()
+        observerOperacion()
         activarBoton()
         confSelTipoId()
         confSelRol()
@@ -57,8 +63,6 @@ class AgregarUsuariosFragment : Fragment() {
         confSelEstadoCivil()
         manejadorFechaNacimiento()
     }
-
-
 
     private fun manejadorFechaNacimiento(){
         binding.editTextFechaNacimiento.setOnClickListener {
@@ -91,18 +95,46 @@ class AgregarUsuariosFragment : Fragment() {
         datePickerDialog.show()
     }
 
-    private fun anadirRol(){
-        val data = arguments?.getString("rol")
-        userViewModel.colocarRol(data)
+    private fun anadirRol() {
+        val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+            ?.getString("rol", "Visualizador")
+        val actividad = activity as MainActivity
+        actividad.visibilidadBottomBar(false)
+        rol = pref as String
+    }
+    private fun menuRol(){
+        if (rol == "Administrador"){
+            binding.selectRole.visibility = View.VISIBLE
+            binding.txtRol.visibility = View.VISIBLE
+        }
     }
 
-    private fun observerRol(){
-        userViewModel.rol.observe(viewLifecycleOwner){
-            Log.d("rol", it)
-            if (it == "Administrador"){
-                binding.selectRole.visibility = View.VISIBLE
-                binding.txtRol.visibility = View.VISIBLE
+    private fun observerProgress(){
+        userViewModel.progresState.observe(viewLifecycleOwner) {
+            binding.progress.isVisible = it
+            binding.contPrincipal.isVisible = !it
+        }
+    }
+
+    private fun observerOperacion(){
+        userViewModel.resOperacion.observe(viewLifecycleOwner) {
+            var mensaje = ""
+            when (it) {
+                1 -> mensaje = getString(R.string.txtModalTelRep)
+                2 -> mensaje = getString(R.string.txtModalTelExcep)
             }
+
+            if (mensaje.isNotEmpty()){
+                DialogUtils.dialogoInformativo(
+                    requireContext(),
+                    getString(R.string.titModalError),
+                    mensaje,
+                    getString(R.string.txtBtnAceptar)
+                ).show()
+            }
+
+            if (it == 0) findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment)
+            else binding.contPrincipal.isVisible = true
         }
     }
 
@@ -169,8 +201,9 @@ class AgregarUsuariosFragment : Fragment() {
     }
 
     private fun manejadorBtnVolver(){
-        binding.btnVolver.setOnClickListener {
-            findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment,requireArguments())
+        binding.toolbar.lblToolbar.text = getString(R.string.ver_usuario)
+        binding.toolbar.btnVolver.setOnClickListener {
+            findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment)
         }
     }
 
@@ -183,7 +216,6 @@ class AgregarUsuariosFragment : Fragment() {
                 newUser.rol = binding.autoCompleteRole.text.toString()
                 newUser.estadoAtencion = "Por Llamar"
                 userViewModel.crearUsuario(newUser)
-                findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment,requireArguments())
             }
 
         }

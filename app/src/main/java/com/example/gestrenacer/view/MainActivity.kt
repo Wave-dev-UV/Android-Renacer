@@ -4,17 +4,23 @@ import NotificationWorker
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.gestrenacer.R
+import com.example.gestrenacer.databinding.ActivityMainBinding
 import com.example.gestrenacer.repository.UserRepositorio
 import com.example.gestrenacer.view.fragment.NoConnectionFragment
 import com.example.gestrenacer.viewmodel.ConnectionViewModel
@@ -25,8 +31,9 @@ import java.util.concurrent.TimeUnit
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
     private val connectionViewModel: ConnectionViewModel by viewModels()
-    private lateinit var userRepositorio: UserRepositorio
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() } // Instancia de FirebaseAuth
 
     companion object {
@@ -39,21 +46,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        userRepositorio = UserRepositorio(this)
-
-
-        userRepositorio.clearUserRole()
-
+        setupBottomNav()
 
         checkNotificationPermission()
 
         setupObservers()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        deleteSharedPreferences("filtros")
+        deleteSharedPreferences("filtrosPending")
+    }
+
     override fun onStop() {
         super.onStop()
+
+        deleteSharedPreferences("filtros")
+        deleteSharedPreferences("filtrosPending")
 
         if (auth.currentUser != null && isRoleValid()) {
             scheduleNotification()
@@ -65,18 +77,25 @@ class MainActivity : AppCompatActivity() {
     private fun setupObservers() {
         connectionViewModel.isConnected.observe(this) { isConnected ->
             if (isConnected == false) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.noConnectionContainer, NoConnectionFragment(), "NoConnectionFragment")
-                    .commit()
 
-                findViewById<FrameLayout>(R.id.noConnectionContainer).visibility = View.VISIBLE
+                supportFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.noConnectionContainer,
+                        NoConnectionFragment(),
+                        "NoConnectionFragment"
+                    )
+                    .commit()
+                binding.contBottomNav.isVisible = false
+                binding.noConnectionContainer.visibility = View.VISIBLE
             } else {
-                findViewById<FrameLayout>(R.id.noConnectionContainer).visibility = View.GONE
+
+                binding.noConnectionContainer.visibility = View.GONE
 
                 val navHostFragment = supportFragmentManager.findFragmentById(R.id.navigationContainer) as? androidx.navigation.fragment.NavHostFragment
                 val currentFragment = navHostFragment?.childFragmentManager?.primaryNavigationFragment
 
                 if (currentFragment is Recargable) {
+                    mostrarBottomNav()
                     currentFragment.recargarDatos()
                 }
             }
@@ -84,8 +103,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isRoleValid(): Boolean {
-        val role = userRepositorio.getUserRole()?.lowercase()
-        return role == "gestor" || role == "administrador"
+        val preferences = getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val role = preferences.getString("rol","Visualizador")
+
+        return role == "Gestor" || role == "Administrador"
     }
 
     private fun scheduleNotification() {
@@ -124,10 +145,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun logout() {
-        userRepositorio.clearUserRole()
-        auth.signOut()
-        Log.d("MainActivity", "Rol eliminado en logout y usuario desconectado")
+    private fun mostrarBottomNav(){
+        val pref = getSharedPreferences("auth", Context.MODE_PRIVATE)
+            ?.getString("rol", "Visualizador")
 
+        if (pref in listOf("Adminsitrador","Gestor")){
+            visibilidadBottomBar(true)
+        }
+    }
+
+    private fun setupBottomNav(){
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.navigationContainer) as NavHostFragment
+        navController = navHostFragment.navController
+
+        val navView = binding.bottomNavigation
+
+        navView.setupWithNavController(navController)
+    }
+
+    fun visibilidadBottomBar(visibilidad: Boolean){
+        binding.contBottomNav.isVisible = visibilidad
+    }
+
+    fun modVisItemBottomBar(item: Int, visibilidad: Boolean){
+        binding.bottomNavigation.menu.findItem(item).isVisible = visibilidad
     }
 }

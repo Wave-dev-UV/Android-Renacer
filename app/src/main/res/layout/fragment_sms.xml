@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ScrollView
+            android:id="@+id/contPrincipal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/toolbar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lblSms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:hint="@string/lblMensaje"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="160"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/groupsAutoCompleteTv">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txtSms"
+                        android:maxLength="160"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lines="3" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/lblFiltros"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_vertical"
+                    android:text="@string/txtFiltroSms"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblSms" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/filtrosCont"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    app:chipSpacingVertical="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblFiltros">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipCasado"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroCasado"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSoltero"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroSoltero"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFemenino"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroFemenino"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipMasculino"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroMasculino"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipLibre"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroLibre"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipViudo"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroViudo"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipEdadMax"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblMax"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipEdadMin"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblMin"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDivorciado"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lblFiltroDivorciado"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipTodaEdad"
+                        android:enabled="false"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/txtTodaEdad"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/onSelectedColorBotBar"
+                        android:visibility="gone" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+                <TextView
+                    android:id="@+id/lblPersonas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_vertical"
+                    android:text="@string/txtEnvPersonSel"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/filtrosCont" />
+
+                <TextView
+                    android:id="@+id/lblGrupos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_vertical"
+                    android:text="@string/txtGrupos"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/groupsAutoCompleteTv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:hint="@string/escribe_el_nombre_del_grupo"
+                    android:inputType="text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblGrupos" />
+
+                <TextView
+                    android:id="@+id/lblPlantillaGuard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_vertical"
+                    android:text="@string/txtPlantilla"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btnEnviar" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewPlantillas"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblPlantillaGuard" />
+
+                <TextView
+                    android:id="@+id/lblGuardSms"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_vertical"
+                    android:text="@string/txtCrearPlantilla"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@id/lblPersonas"
+                    app:layout_constraintEnd_toStartOf="@id/switchGuardSms"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchGuardSms"
+                    style="@style/Widget.App.Switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginEnd="30dp"
+                    android:checked="false"
+                    android:contentDescription="@string/el_usuario_es_un_lider"
+                    app:layout_constraintTop_toBottomOf="@id/lblPersonas"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:thumbTint="@color/white" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lblPlantilla"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="10dp"
+                    android:enabled="false"
+                    android:visibility="gone"
+                    android:hint="@string/lblNomPlantilla"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="50"
+                    app:layout_constraintTop_toBottomOf="@id/lblGuardSms"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:maxLength="50"
+                        android:id="@+id/txtPlantilla"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btnEnviar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginVertical="10dp"
+                    android:backgroundTint="@color/btnDesactivado"
+                    android:enabled="false"
+                    android:text="@string/lblBtnEnviarSms"
+                    android:textColor="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/lblPlantilla"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/onSelectedColorBotBar"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

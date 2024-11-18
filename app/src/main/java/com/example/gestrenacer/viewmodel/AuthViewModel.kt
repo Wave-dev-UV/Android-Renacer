@@ -40,7 +40,7 @@ class AuthViewModel @Inject constructor(
     private val _rol = MutableLiveData("Feligrés")
     val rol: LiveData<String> = _rol
 
-    private val sharedPref = context.getSharedPreferences("my_preferences", Context.MODE_PRIVATE)
+    private val sharedPref = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
 
     fun isUserVerified(): Boolean {
         return sharedPref.getBoolean("user_verified", false)
@@ -55,20 +55,25 @@ class AuthViewModel @Inject constructor(
 
     fun saveUserRole(role: String) {
         with(sharedPref.edit()) {
-            putString("user_role", role)
+            putString("rol", role)
             apply()
         }
         Log.d("AuthViewModel", "Rol guardado: $role") // Registro de log para verificar el rol guardado
     }
 
-    fun getUserRole(): String {
-        return sharedPref.getString("user_role", null) ?: "Visualizador"
-    }
-
     fun isReVerificationNeeded(): Boolean {
         val lastVerification = sharedPref.getLong("last_verification_time", 0)
         val currentTime = System.currentTimeMillis()
-        return (currentTime - lastVerification) > 24 * 60 * 60 * 1000
+        val res = (currentTime - lastVerification) > 24 * 60 * 60 * 1000
+
+        if (res) {
+            viewModelScope.launch {
+                userRepositorio.cerrarSesion()
+                context.deleteSharedPreferences("auth")
+            }
+        }
+
+        return res
     }
 
     fun saveLastVerificationTime() {
@@ -86,7 +91,6 @@ class AuthViewModel @Inject constructor(
             if (userRole != null) {
                 saveUserRole(userRole) // Guarda el rol en SharedPreferences
                 sendVerificationCode(phoneNumber, activity)
-                _rol.value = userRole
             } else {
                 _accessGranted.value = false
                 _error.value = "El usuario no tiene acceso o no está registrado"
