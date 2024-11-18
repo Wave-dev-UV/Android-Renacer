@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val repository: UserRepositorio
+    private val repository: UserRepositorio,
     private val imageRepository: ImagesRepositorio
 ) : ViewModel() {
     private val _listaUsers = MutableLiveData<MutableList<User>>()

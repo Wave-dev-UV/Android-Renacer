@@ -51,6 +51,17 @@ class UserRepositorio @Inject constructor(
         }.toMutableList()
     }
 
+    suspend fun getUsers(): MutableList<User>{
+        val snapshot = usersCollection.get().await()
+
+        return snapshot.map { x ->
+            val obj = x.toObject(User::class.java)
+            obj.firestoreID = x.id
+            obj
+        }.toMutableList()
+    }
+
+
     suspend fun saveUser(user: User): Int {
         try {
             var res = 0
