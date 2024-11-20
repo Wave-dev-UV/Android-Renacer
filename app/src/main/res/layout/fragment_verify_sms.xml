@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ingrese el código que ha recibido por SMS"
+        android:text="@string/ingrese_el_c_digo_que_ha_recibido_por_sms"
         android:textSize="16sp"
         android:layout_marginBottom="20dp" />
 
@@ -17,7 +17,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
         android:maxLength="6"
-    android:hint="Código SMS"
+    android:hint="@string/c_digo_sms"
     android:inputType="number"
     android:padding="10dp" />
 
@@ -26,7 +26,7 @@
         android:layout_width="250dp"
         android:layout_height="38dp"
         android:layout_marginTop="20dp"
-        android:text="Verificar Código"
+        android:text="@string/verificar_c_digo"
         android:textColor="@android:color/white"
         android:background="@drawable/button_background"
         android:gravity="center"
