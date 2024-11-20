@@ -45,7 +45,7 @@ class UserRepositorio @Inject constructor(
                 }.toMutableList()
 
         if (filtroSexo.size == 2 && filtroEstCivil.size == 5) {
-            val vacioSexo = usersCollection.whereEqualTo("sexo", "")
+            val vacioSexo = verCampo("sexo","",filtroLlamado,fechaInicial,fechaFinal) /*usersCollection.whereEqualTo("sexo", "")
                 .whereIn("estadoAtencion", filtroLlamado)
                 .whereGreaterThan("fechaNacimiento", fechaInicial)
                 .whereLessThan("fechaNacimiento", fechaFinal).get()
@@ -53,9 +53,9 @@ class UserRepositorio @Inject constructor(
                     val obj = x.toObject(User::class.java)
                     obj.firestoreID = x.id
                     obj
-                }.toList()
+                }.toList()*/
 
-            val vacioEst = usersCollection.whereEqualTo("estadoCivil", "")
+            val vacioEst = verCampo("estadoCivil","",filtroLlamado,fechaInicial,fechaFinal) /*usersCollection.whereEqualTo("estadoCivil", "")
                 .whereIn("estadoAtencion", filtroLlamado)
                 .whereGreaterThan("fechaNacimiento", fechaInicial)
                 .whereLessThan("fechaNacimiento", fechaFinal).get()
@@ -63,13 +63,28 @@ class UserRepositorio @Inject constructor(
                     val obj = x.toObject(User::class.java)
                     obj.firestoreID = x.id
                     obj
-                }.toList()
+                }.toList()*/
 
             snapshot.addAll(vacioSexo)
             snapshot.addAll(vacioEst)
-
-            snapshot = FiltrosAux.ordenar(snapshot, critOrden, escalaOrden)
         }
+
+        snapshot = FiltrosAux.ordenar(snapshot, critOrden, escalaOrden)
+
+        return snapshot
+    }
+
+    suspend fun verCampo(campo: String, valor: String,filtroLlamado: List<String>, fechaInicial: Timestamp,
+                 fechaFinal: Timestamp): MutableList<User>{
+        val snapshot = usersCollection.whereEqualTo(campo, valor)
+            .whereIn("estadoAtencion", filtroLlamado)
+            .whereGreaterThan("fechaNacimiento", fechaInicial)
+            .whereLessThan("fechaNacimiento", fechaFinal).get()
+            .await().map { x ->
+                val obj = x.toObject(User::class.java)
+                obj.firestoreID = x.id
+                obj
+            }.toMutableList()
 
         return snapshot
     }

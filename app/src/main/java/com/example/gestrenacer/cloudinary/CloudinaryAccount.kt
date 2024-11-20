@@ -3,6 +3,7 @@ package com.example.gestrenacer.cloudinary
 import android.util.Log
 import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
+import com.example.gestrenacer.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -11,14 +12,11 @@ class CloudinaryAccount {
     private val cloudinary: Cloudinary
 
     init {
-        val cloudName = "dhrzjndkd"
-        val apiKey = "246765662314964"
-        val apiSecret = "NfSi3ddPyAxlcwfrL8gyB2qZwSg"
 
         val config = ObjectUtils.asMap(
-            "cloud_name", cloudName,
-            "api_key", apiKey,
-            "api_secret", apiSecret
+            "cloud_name", Constants.CLOUD_NAME,
+            "api_key", Constants.API_KEY,
+            "api_secret", Constants.API_SECRET
         )
 
         cloudinary = Cloudinary(config)
