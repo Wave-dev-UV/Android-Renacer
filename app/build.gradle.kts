@@ -100,6 +100,9 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    //MPAndroidChart (graficas)
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     //testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:3.12.4")
