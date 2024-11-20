@@ -16,9 +16,8 @@ import com.example.gestrenacer.utils.Format
 import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.UserViewModel
-import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Calendar
+import java.util.Date
 
 @AndroidEntryPoint
 class VisualizarUsuarioFragment : Fragment() {
@@ -60,20 +59,18 @@ class VisualizarUsuarioFragment : Fragment() {
 
     private fun formatearFechas() {
         if (user.fechaNacimiento != null){
-            val calendar = Calendar.getInstance()
-            calendar.set(1901, Calendar.JANUARY, 1, 0,0,0)
-            val timestamp1 = Timestamp(calendar.time)
-            val timestamp2 = user.fechaNacimiento
+            val aux = user.fechaNacimiento?.toDate()
+            val expr = (aux?.year == 1) && (aux.month == 0) && (aux.date == 1)
 
-            if (timestamp2?.let { timestamp1.compareTo(it) } == 0) {
-                binding.tvFechaNacimiento.text = R.string.no_especificado.toString()
+            if (expr) {
+                binding.tvFechaNacimiento.text = getString(R.string.no_especificado)
             } else {
                 binding.tvFechaNacimiento.text = user.fechaNacimiento?.let { Format.timestampToString(it) }
 
             }
 
         }
-        binding.tvFechaNacimiento.text = user.fechaNacimiento?.let { Format.timestampToString(it) }
+
         binding.tvFechaRegistro.text = user.fechaCreacion?.let { Format.timestampToString(it) }
     }
 
