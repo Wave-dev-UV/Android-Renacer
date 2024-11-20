@@ -161,7 +161,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{user.sexo}"
+                                android:text='@{!user.sexo.isEmpty() ? user.sexo : "No especificado"}'
                                 tools:text="Femenino"
                                 android:textSize="16sp"
                                 android:layout_marginBottom="8dp"/>
@@ -184,7 +184,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{user.estadoCivil}"
+                                android:text='@{!user.estadoCivil.isEmpty ? user.estadoCivil : "No especificado"}'
                                 tools:text="Soltero(a)"
                                 android:textSize="16sp"
                                 android:layout_marginBottom="8dp"/>
@@ -443,7 +443,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{user.obsevaciones}"
+                            android:text='@{user.obsevaciones.isEmpty() ? "Ninguna" : user.obsevaciones}'
                             tools:text="Morena, ojos claros, y otras muchas cosas más que ahora mismo no se me ocurren "
                             android:textSize="16sp"
                             android:layout_marginBottom="15dp"/>

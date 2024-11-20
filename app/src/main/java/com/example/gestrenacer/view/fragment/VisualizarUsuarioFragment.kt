@@ -213,7 +213,19 @@ class VisualizarUsuarioFragment : Fragment() {
     }
 
     private fun formatearFechas() {
-        binding.tvFechaNacimiento.text = user.fechaNacimiento?.let { Format.timestampToString(it) }
+        if (user.fechaNacimiento != null){
+            val aux = user.fechaNacimiento?.toDate()
+            val expr = (aux?.year == 1) && (aux.month == 0) && (aux.date == 1)
+
+            if (expr) {
+                binding.tvFechaNacimiento.text = getString(R.string.no_especificado)
+            } else {
+                binding.tvFechaNacimiento.text = user.fechaNacimiento?.let { Format.timestampToString(it) }
+
+            }
+
+        }
+
         binding.tvFechaRegistro.text = user.fechaCreacion?.let { Format.timestampToString(it) }
     }
 
