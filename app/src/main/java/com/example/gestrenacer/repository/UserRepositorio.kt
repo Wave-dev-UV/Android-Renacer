@@ -1,8 +1,6 @@
 package com.example.gestrenacer.repository
 
 import android.app.Activity
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import com.example.gestrenacer.models.PeticionEnviarSms
 import com.example.gestrenacer.models.User
@@ -45,25 +43,9 @@ class UserRepositorio @Inject constructor(
                 }.toMutableList()
 
         if (filtroSexo.size == 2 && filtroEstCivil.size == 5) {
-            val vacioSexo = verCampo("sexo","",filtroLlamado,fechaInicial,fechaFinal) /*usersCollection.whereEqualTo("sexo", "")
-                .whereIn("estadoAtencion", filtroLlamado)
-                .whereGreaterThan("fechaNacimiento", fechaInicial)
-                .whereLessThan("fechaNacimiento", fechaFinal).get()
-                .await().map { x ->
-                    val obj = x.toObject(User::class.java)
-                    obj.firestoreID = x.id
-                    obj
-                }.toList()*/
+            val vacioSexo = verCampo("sexo", "", filtroLlamado, fechaInicial, fechaFinal)
 
-            val vacioEst = verCampo("estadoCivil","",filtroLlamado,fechaInicial,fechaFinal) /*usersCollection.whereEqualTo("estadoCivil", "")
-                .whereIn("estadoAtencion", filtroLlamado)
-                .whereGreaterThan("fechaNacimiento", fechaInicial)
-                .whereLessThan("fechaNacimiento", fechaFinal).get()
-                .await().map { x ->
-                    val obj = x.toObject(User::class.java)
-                    obj.firestoreID = x.id
-                    obj
-                }.toList()*/
+            val vacioEst = verCampo("estadoCivil", "", filtroLlamado, fechaInicial, fechaFinal)
 
             snapshot.addAll(vacioSexo)
             snapshot.addAll(vacioEst)
@@ -74,8 +56,10 @@ class UserRepositorio @Inject constructor(
         return snapshot
     }
 
-    suspend fun verCampo(campo: String, valor: String,filtroLlamado: List<String>, fechaInicial: Timestamp,
-                 fechaFinal: Timestamp): MutableList<User>{
+    suspend fun verCampo(
+        campo: String, valor: String, filtroLlamado: List<String>, fechaInicial: Timestamp,
+        fechaFinal: Timestamp
+    ): MutableList<User> {
         val snapshot = usersCollection.whereEqualTo(campo, valor)
             .whereIn("estadoAtencion", filtroLlamado)
             .whereGreaterThan("fechaNacimiento", fechaInicial)
@@ -89,7 +73,7 @@ class UserRepositorio @Inject constructor(
         return snapshot
     }
 
-    suspend fun getUsers(): MutableList<User>{
+    suspend fun getUsers(): MutableList<User> {
         val snapshot = usersCollection.get().await()
 
         return snapshot.map { x ->
