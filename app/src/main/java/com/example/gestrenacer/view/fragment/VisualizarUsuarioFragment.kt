@@ -91,8 +91,11 @@ class VisualizarUsuarioFragment : Fragment() {
     }
 
     private fun inicializarUrlImagen(){
-        Glide.with(requireContext())
-            .load(user.imageUrl)
+        val img = (if (user.imageUrl?.isEmpty() as Boolean) R.drawable.defecto
+        else user.imageUrl)
+
+        Glide.with(binding.root.context)
+            .load(img)
             .into(binding.imagenUsuario)
     }
 
@@ -217,6 +220,9 @@ class VisualizarUsuarioFragment : Fragment() {
     private fun observerProgressBar() {
         viewmodel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
+            binding.toolbarVerUsuario.isVisible = !it
+            binding.buttonEditar.isVisible = !it
+            binding.buttonBorrar.isVisible = !it
         }
     }
 

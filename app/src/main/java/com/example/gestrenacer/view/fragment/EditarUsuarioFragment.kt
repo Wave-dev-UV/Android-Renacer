@@ -7,10 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.DatePicker
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -151,7 +154,10 @@ class EditarUsuarioFragment : Fragment() {
                 ).show()
             }
 
-            if (it == 0) findNavController().navigate(R.id.action_editarUsuarioFragment_to_listarFragment)
+            if (it == 0) {
+                hideKeyboard()
+                findNavController().navigate(R.id.action_editarUsuarioFragment_to_listarFragment)
+            }
             else binding.contPrincipal.isVisible = true
         }
     }
@@ -327,5 +333,19 @@ class EditarUsuarioFragment : Fragment() {
         userViewModel.editarUsuario(feligresActualizado, bundleUser.celular)
     }
 
+    private fun AppCompatActivity.hideKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+    }
 
+    private fun Fragment.hideKeyboard() {
+        val activity = this.activity
+        if (activity is AppCompatActivity) {
+            activity.hideKeyboard()
+        }
+    }
 }

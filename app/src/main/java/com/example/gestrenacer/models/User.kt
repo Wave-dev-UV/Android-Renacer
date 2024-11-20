@@ -30,6 +30,6 @@ data class User(
     constructor(): this("", "", "", "", "", "",
         "", "", "", "", "",
         "","",false, "Feligrés", "", "",
-        null, "", null, "Renacer/defecto",
-        "https://res.cloudinary.com/dhrzjndkd/image/upload/v1731290649/Renacer/defecto.jpg")
+        null, "", null, "",
+        "")
 }

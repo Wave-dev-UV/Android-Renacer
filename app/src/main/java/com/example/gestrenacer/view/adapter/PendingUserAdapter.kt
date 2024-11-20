@@ -69,10 +69,13 @@ class PendingUserAdapter(
         fun setItemUser(user: User){
             val nombre = user.nombre
             val apellido = user.apellido
+            val img = (if (user.imageUrl?.isEmpty() as Boolean) R.drawable.defecto
+            else user.imageUrl)
 
             Glide.with(binding.root.context)
-                .load(user.imageUrl)
+                .load(img)
                 .into(binding.imagePerfil)
+
             binding.txtNombre.text = "${nombre} ${apellido}."
             binding.txtCelular.text = "${user.celular}."
             binding.txtRol.text = "${user.rol}."

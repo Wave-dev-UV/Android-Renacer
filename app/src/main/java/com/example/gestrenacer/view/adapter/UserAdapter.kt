@@ -13,7 +13,6 @@ import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.ItemUserBinding
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.viewmodel.UserViewModel
-import kotlinx.coroutines.withContext
 
 class UserAdapter(
     private var listaUsers: List<User>,
@@ -28,7 +27,8 @@ class UserAdapter(
     private val selectedUsers = mutableMapOf<Int, Boolean>()
     private var longPressMode = false
 
-    fun getSelectedUsers(): List<User> = listaUsers.filterIndexed { index, _ -> selectedUsers[index] == true }
+    fun getSelectedUsers(): List<User> =
+        listaUsers.filterIndexed { index, _ -> selectedUsers[index] == true }
 
     fun clearSelection() {
         selectedUsers.clear()
@@ -110,11 +110,19 @@ class UserAdapter(
         private val rol: String?,
         private val usersViewModel: UserViewModel,
         private val adapter: UserAdapter
-    ): RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(user: User, isSelected: Boolean, longPressMode: Boolean, onCheckedChange: (Boolean) -> Unit) {
+        fun bind(
+            user: User,
+            isSelected: Boolean,
+            longPressMode: Boolean,
+            onCheckedChange: (Boolean) -> Unit
+        ) {
+            val img = (if (user.imageUrl?.isEmpty() as Boolean) R.drawable.defecto
+            else user.imageUrl)
+
             Glide.with(binding.root.context)
-                .load(user.imageUrl)
+                .load(img)
                 .into(binding.imagePerfil)
             binding.txtNombre.text = "${user.nombre} ${user.apellido}"
             binding.txtCelular.text = user.celular
@@ -140,8 +148,8 @@ class UserAdapter(
             desactivarBtnLlamar()
         }
 
-        private fun desactivarBtnLlamar(){
-            if (rol !in listOf("Administrador","Gestor")){
+        private fun desactivarBtnLlamar() {
+            if (rol !in listOf("Administrador", "Gestor")) {
                 binding.addPendingUser.isVisible = false
             }
         }
@@ -154,7 +162,10 @@ class UserAdapter(
                         putString("rol", rol)
                     }
                     adapter.guardarFiltros()
-                    navController.navigate(R.id.action_listarFragment_to_visualizarUsuarioFragment, bundle)
+                    navController.navigate(
+                        R.id.action_listarFragment_to_visualizarUsuarioFragment,
+                        bundle
+                    )
                 } catch (e: Exception) {
                     Log.e("UserAdapter", "Error navigating: ${e.message}")
                 }
@@ -163,7 +174,8 @@ class UserAdapter(
 
         private fun manejadorAnadirPendientes(user: User) {
             binding.addPendingUser.setOnClickListener {
-                user.estadoAtencion = if (user.estadoAtencion == "Por Llamar") "Llamado" else "Por Llamar"
+                user.estadoAtencion =
+                    if (user.estadoAtencion == "Por Llamar") "Llamado" else "Por Llamar"
                 usersViewModel.editarUsuario(user, llamado = true)
                 adapter.changeStatus(bindingAdapterPosition)
             }

@@ -3,14 +3,12 @@ package com.example.gestrenacer.view.fragment
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.example.gestrenacer.databinding.FragmentBottomSheetModalBinding
 import com.example.gestrenacer.viewmodel.SharedViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -75,5 +73,4 @@ class BottomSheetModalFragment : BottomSheetDialogFragment() {
 
         behavior.isDraggable = true
     }
-
 }
