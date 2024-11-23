@@ -43,8 +43,6 @@ class VisualizarUsuarioFragment : Fragment() {
     private lateinit var user: User
     private lateinit var rol: String
     private lateinit var pickImageLauncher: ActivityResultLauncher<PickVisualMediaRequest>
-    private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
-    private lateinit var photoFile: File
 
 
     override fun onDestroy() {
@@ -67,12 +65,6 @@ class VisualizarUsuarioFragment : Fragment() {
         pickImageLauncher = registerForActivityResult(
             ActivityResultContracts.PickVisualMedia()
         ) {uploadImage(it)}
-
-        /*
-        takePictureLauncher = registerForActivityResult(
-            ActivityResultContracts.TakePicture()
-        ){activityForTakePicture(it)}
-         */
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,6 +80,13 @@ class VisualizarUsuarioFragment : Fragment() {
         manejadorBotonVolver()
         manejadorBotonEditarImagen()
         desactivarBtn()
+        desactivarEditarImagenPorRol()
+    }
+
+    private fun desactivarEditarImagenPorRol() {
+        if (rol !in listOf("Administrador","Gestor")){
+            binding.btnEditarImagen.isVisible = false
+        }
     }
 
     private fun inicializarUrlImagen(){
@@ -102,7 +101,6 @@ class VisualizarUsuarioFragment : Fragment() {
     private fun observeImageChange(){
         viewmodel.listaUsers.observe(viewLifecycleOwner){list ->
             val myUser = list?.find { it.firestoreID == user.firestoreID }
-            Log.d("IMPORTANTE", "CAMBIE A ${myUser?.imageUrl}")
             Glide.with(requireContext())
                 .load(myUser?.imageUrl)
                 .into(binding.imagenUsuario)
@@ -130,19 +128,6 @@ class VisualizarUsuarioFragment : Fragment() {
 
     }
 
-    private fun activityForTakePicture(isSuccess: Boolean){
-        if (isSuccess){
-            Log.d("IMPORTANTE", "Andamos subiendo la imagen")
-            viewmodel.uploadImage(photoFile, user)
-        } else {
-            Toast.makeText(
-                requireContext(),
-                "No se tomo ninguna foto",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
     private fun getRealPathFromURI(uri: Uri): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         val cursor = requireActivity().contentResolver.query(uri, projection, null, null, null)
@@ -160,19 +145,7 @@ class VisualizarUsuarioFragment : Fragment() {
             if(option == "gallery"){
                 pickImageLauncher
                     .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            }
-            /*else if (option == "camera"){
-                try {
-                    photoFile = createImageFile()
-                    val photoUri = FileProvider.getUriForFile(
-                        requireContext(),
-                        "${requireActivity().packageName}.fileprovider",
-                        photoFile)
-                    takePictureLauncher.launch(photoUri)
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            } */ else if (option == "delete"){
+            } else if (option == "delete"){
                 DialogUtils.dialogoConfirmacion(
                     requireContext(),
                     "¿Deseas eliminar la imagen de perfil?"
@@ -184,16 +157,6 @@ class VisualizarUsuarioFragment : Fragment() {
         }
     }
 
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-        val storageDir: File = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
-        return File.createTempFile(
-            "JPEG_${timeStamp}_",
-            ".jpg",
-            storageDir
-        )
-    }
 
     private fun manejadorBotonEditarImagen() {
         binding.btnEditarImagen.setOnClickListener {
@@ -201,7 +164,6 @@ class VisualizarUsuarioFragment : Fragment() {
             bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
         }
     }
-
 
     private fun desactivarBtn(){
         if (rol !in listOf("Administrador","Gestor")){

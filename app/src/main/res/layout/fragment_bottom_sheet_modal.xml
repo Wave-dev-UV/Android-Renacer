@@ -60,40 +60,16 @@
         android:textStyle="bold"
         android:textSize="20sp"/>
 
-    <LinearLayout
-        android:id="@+id/camara_section"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_titulo"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true">
-        <ImageButton
-            android:id="@+id/camera_button"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@drawable/button_icon_circle"
-            android:src="@drawable/camera"
-            app:tint="@color/white"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cámara"
-            android:paddingVertical="8dp"/>
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:focusable="true"
-        app:layout_constraintStart_toEndOf="@id/camara_section"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_titulo"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginStart="40dp"
         android:clickable="true">
         <ImageButton
             android:id="@+id/btn_galeria"
