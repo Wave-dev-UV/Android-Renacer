@@ -167,7 +167,7 @@ class VisualizarUsuarioFragment : Fragment() {
 
     private fun desactivarBtn(){
         if (rol !in listOf("Administrador","Gestor")){
-            binding.buttonBorrar.isVisible = false
+            binding.buttonEditar.isVisible = false
         }
         if (rol != "Administrador"){
             binding.buttonBorrar.isVisible = false
@@ -197,6 +197,8 @@ class VisualizarUsuarioFragment : Fragment() {
             binding.toolbarVerUsuario.isVisible = !it
             binding.buttonEditar.isVisible = !it
             binding.buttonBorrar.isVisible = !it
+
+            desactivarBtn()
         }
     }
 

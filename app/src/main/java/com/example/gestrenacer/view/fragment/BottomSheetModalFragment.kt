@@ -33,6 +33,7 @@ class BottomSheetModalFragment : BottomSheetDialogFragment() {
         val btnGallery = binding.btnGaleria
         val btnDelete = binding.btnDelete
 
+        binding.btnCerrar.setOnClickListener { dismiss() }
         btnGallery.setOnClickListener { sharedViewModel.selectGallery(); dismiss() }
         btnDelete.setOnClickListener { sharedViewModel.selectDelete(); dismiss() }
     }
