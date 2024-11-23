@@ -23,10 +23,13 @@ data class User(
     var estadoCivil: String,
     var fechaNacimiento: Timestamp?,
     var obsevaciones: String,
-    var fechaCreacion: Timestamp?
+    var fechaCreacion: Timestamp?,
+    var imageId: String?,
+    var imageUrl: String?
 ): Serializable {
     constructor(): this("", "", "", "", "", "",
         "", "", "", "", "",
-        "","",false, "Feligrés", "", "", null, "", null
-    )
+        "","",false, "Feligrés", "", "",
+        null, "", null, "",
+        "")
 }

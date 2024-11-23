@@ -21,7 +21,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.ActivityMainBinding
-import com.example.gestrenacer.repository.UserRepositorio
 import com.example.gestrenacer.view.fragment.NoConnectionFragment
 import com.example.gestrenacer.viewmodel.ConnectionViewModel
 import com.google.firebase.auth.FirebaseAuth

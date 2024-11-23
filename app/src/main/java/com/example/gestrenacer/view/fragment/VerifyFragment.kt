@@ -1,10 +1,14 @@
 package com.example.gestrenacer
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -40,6 +44,7 @@ class VerifyFragment : Fragment() {
         binding.verifyButton.setOnClickListener {
             val code = binding.verificationCodeInput.text.toString().trim()
             if (code.isNotEmpty()) {
+                hideKeyboard()
                 authViewModel.signInWithCredential(PhoneAuthProvider.getCredential(verificationId, code))
             } else {
                 Toast.makeText(requireContext(), "Introduce el código de verificación", Toast.LENGTH_SHORT).show()
@@ -48,6 +53,7 @@ class VerifyFragment : Fragment() {
 
         authViewModel.authResult.observe(viewLifecycleOwner, Observer { isSuccess ->
             if (isSuccess) {
+
                 Toast.makeText(requireContext(), "Verificación exitosa", Toast.LENGTH_SHORT).show()
 
                 findNavController().navigate(R.id.action_verifyFragment_to_listarFragment)
@@ -65,5 +71,21 @@ class VerifyFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun AppCompatActivity.hideKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+    }
+
+    private fun Fragment.hideKeyboard() {
+        val activity = this.activity
+        if (activity is AppCompatActivity) {
+            activity.hideKeyboard()
+        }
     }
 }

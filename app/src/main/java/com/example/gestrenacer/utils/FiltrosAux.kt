@@ -25,8 +25,8 @@ object FiltrosAux {
     fun ordenar(lista: MutableList<User>, criterio: String, escala: String): MutableList<User> {
         when (criterio) {
             "nombre" -> {
-                if (escala == "ascendente") return lista.sortedBy { it.nombre }.toMutableList()
-                else return lista.sortedByDescending { it.nombre }.toMutableList()
+                if (escala == "ascendente") return lista.sortedBy { it.nombre.lowercase() }.toMutableList()
+                else return lista.sortedByDescending { it.nombre.lowercase() }.toMutableList()
             }
 
             "fechaNacimiento" -> {

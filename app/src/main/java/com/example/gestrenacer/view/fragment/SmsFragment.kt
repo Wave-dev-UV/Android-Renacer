@@ -1,11 +1,15 @@
 package com.example.gestrenacer
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -353,6 +357,7 @@ class SmsFragment : Fragment() {
 
     private fun manejadorBtnVolver() {
         binding.toolbar.btnVolver.setOnClickListener {
+            hideKeyboard()
             findNavController().popBackStack()
         }
     }
@@ -368,6 +373,8 @@ class SmsFragment : Fragment() {
     private fun manejadorBtnEnviar() {
         binding.btnEnviar.setOnClickListener {
             val checked = binding.switchGuardSms.isChecked
+
+            hideKeyboard()
 
             if (checked) {
                 crearPlantilla()
@@ -419,6 +426,22 @@ class SmsFragment : Fragment() {
             binding.lblPlantilla.isEnabled = it
             binding.lblPlantilla.isVisible = it
             smsViewModel.cambiarGuardado(it)
+        }
+    }
+
+    private fun AppCompatActivity.hideKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+    }
+
+    private fun Fragment.hideKeyboard() {
+        val activity = this.activity
+        if (activity is AppCompatActivity) {
+            activity.hideKeyboard()
         }
     }
 }
