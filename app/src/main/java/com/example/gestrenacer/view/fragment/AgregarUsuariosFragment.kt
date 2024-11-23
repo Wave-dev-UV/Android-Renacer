@@ -50,6 +50,7 @@ class AgregarUsuariosFragment : Fragment() {
     }
 
     private fun controler() {
+        fechaPorDefecto()
         anadirRol()
         menuRol()
         observerProgress()
@@ -62,6 +63,12 @@ class AgregarUsuariosFragment : Fragment() {
         confSelSexo()
         confSelEstadoCivil()
         manejadorFechaNacimiento()
+    }
+
+    private fun fechaPorDefecto(){
+        val calendar = Calendar.getInstance()
+        calendar.set(1901, Calendar.JANUARY, 1, 0, 0, 0)
+        fechaNacimientoUser = Timestamp(calendar.time)
     }
 
     private fun manejadorFechaNacimiento(){
@@ -152,7 +159,8 @@ class AgregarUsuariosFragment : Fragment() {
                 }
 
                 binding.buttonEnviar.isEnabled = isFull
-
+                if (isFull) binding.buttonEnviar.setBackgroundColor(resources.getColor(R.color.azulPrincipal))
+                else binding.buttonEnviar.setBackgroundColor(resources.getColor(R.color.secondary))
             }
         }
     }

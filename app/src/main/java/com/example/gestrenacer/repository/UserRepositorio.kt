@@ -4,6 +4,7 @@ import android.app.Activity
 import android.util.Log
 import com.example.gestrenacer.models.PeticionEnviarSms
 import com.example.gestrenacer.models.User
+import com.example.gestrenacer.utils.FiltrosAux
 import com.example.gestrenacer.webservices.SmsService
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -11,7 +12,6 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -19,7 +19,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class UserRepositorio @Inject constructor(
-    private val smsService: SmsService) {
+    private val smsService: SmsService
+) {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -30,23 +31,45 @@ class UserRepositorio @Inject constructor(
         fechaFinal: Timestamp, critOrden: String,
         escalaOrden: String
     ): MutableList<User> {
-        val order = (
-                if (escalaOrden == "ascendente") Query.Direction.ASCENDING
-                else Query.Direction.DESCENDING
-                )
-
-        val snapshot =
+        var snapshot =
             usersCollection.whereIn("sexo", filtroSexo).whereIn("estadoCivil", filtroEstCivil)
                 .whereIn("estadoAtencion", filtroLlamado)
                 .whereGreaterThan("fechaNacimiento", fechaInicial)
-                .whereLessThan("fechaNacimiento", fechaFinal).orderBy(critOrden, order).get()
-                .await()
+                .whereLessThan("fechaNacimiento", fechaFinal).get()
+                .await().map { x ->
+                    val obj = x.toObject(User::class.java)
+                    obj.firestoreID = x.id
+                    obj
+                }.toMutableList()
 
-        return snapshot.map { x ->
-            val obj = x.toObject(User::class.java)
-            obj.firestoreID = x.id
-            obj
-        }.toMutableList()
+        if (filtroSexo.size == 2 && filtroEstCivil.size == 5) {
+            val vacioSexo = usersCollection.whereEqualTo("sexo", "")
+                .whereIn("estadoAtencion", filtroLlamado)
+                .whereGreaterThan("fechaNacimiento", fechaInicial)
+                .whereLessThan("fechaNacimiento", fechaFinal).get()
+                .await().map { x ->
+                    val obj = x.toObject(User::class.java)
+                    obj.firestoreID = x.id
+                    obj
+                }.toList()
+
+            val vacioEst = usersCollection.whereEqualTo("estadoCivil", "")
+                .whereIn("estadoAtencion", filtroLlamado)
+                .whereGreaterThan("fechaNacimiento", fechaInicial)
+                .whereLessThan("fechaNacimiento", fechaFinal).get()
+                .await().map { x ->
+                    val obj = x.toObject(User::class.java)
+                    obj.firestoreID = x.id
+                    obj
+                }.toList()
+
+            snapshot.addAll(vacioSexo)
+            snapshot.addAll(vacioEst)
+
+            snapshot = FiltrosAux.ordenar(snapshot, critOrden, escalaOrden)
+        }
+
+        return snapshot
     }
 
     suspend fun saveUser(user: User): Int {
@@ -71,12 +94,12 @@ class UserRepositorio @Inject constructor(
                 var vacio = prevNumber.isEmpty()
 
                 if (prevNumber.isNotEmpty()) {
-                    vacio = usersCollection.whereEqualTo ("celular", feligres.celular).get().await().isEmpty
+                    vacio = usersCollection.whereEqualTo("celular", feligres.celular).get()
+                        .await().isEmpty
                 }
                 if (vacio || llamado) {
                     usersCollection.document(id).set(feligres).await()
-                }
-                else res = 1
+                } else res = 1
 
                 res
             } catch (e: Exception) {
@@ -142,7 +165,7 @@ class UserRepositorio @Inject constructor(
         return withContext(Dispatchers.IO) {
             val list = users as MutableList<User>
             try {
-                for (user in list){
+                for (user in list) {
                     usersCollection.document(user.firestoreID).delete().await()
                 }
                 true
@@ -180,7 +203,7 @@ class UserRepositorio @Inject constructor(
         }
     }
 
-    suspend fun cerrarSesion(){
+    suspend fun cerrarSesion() {
         withContext(Dispatchers.IO) {
             auth.signOut()
         }
