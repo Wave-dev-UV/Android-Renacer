@@ -7,8 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -50,6 +53,7 @@ class AgregarUsuariosFragment : Fragment() {
     }
 
     private fun controler() {
+        fechaPorDefecto()
         anadirRol()
         menuRol()
         observerProgress()
@@ -62,6 +66,12 @@ class AgregarUsuariosFragment : Fragment() {
         confSelSexo()
         confSelEstadoCivil()
         manejadorFechaNacimiento()
+    }
+
+    private fun fechaPorDefecto(){
+        val calendar = Calendar.getInstance()
+        calendar.set(1901, Calendar.JANUARY, 1, 0, 0, 0)
+        fechaNacimientoUser = Timestamp(calendar.time)
     }
 
     private fun manejadorFechaNacimiento(){
@@ -152,7 +162,8 @@ class AgregarUsuariosFragment : Fragment() {
                 }
 
                 binding.buttonEnviar.isEnabled = isFull
-
+                if (isFull) binding.buttonEnviar.setBackgroundColor(resources.getColor(R.color.azulPrincipal))
+                else binding.buttonEnviar.setBackgroundColor(resources.getColor(R.color.secondary))
             }
         }
     }
@@ -209,6 +220,9 @@ class AgregarUsuariosFragment : Fragment() {
 
     private fun manejadorBtnEnviar(){
         binding.buttonEnviar.setOnClickListener {
+
+            hideKeyboard()
+
             DialogUtils.dialogoConfirmacion(requireContext(),
                 "¿Está seguro que desea añadir al usuario?"){
                 val user = binding.user ?: User()
@@ -218,6 +232,22 @@ class AgregarUsuariosFragment : Fragment() {
                 userViewModel.crearUsuario(newUser)
             }
 
+        }
+    }
+
+    private fun AppCompatActivity.hideKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+    }
+
+    private fun Fragment.hideKeyboard() {
+        val activity = this.activity
+        if (activity is AppCompatActivity) {
+            activity.hideKeyboard()
         }
     }
 }

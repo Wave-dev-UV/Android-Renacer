@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.SheetFiltrosBinding
 import com.example.gestrenacer.models.Group
@@ -150,6 +154,8 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
             val createGroupToggle = binding.createGroupToggle
             val groupEvName = binding.groupEv.text.toString()
 
+            hideKeyboard()
+
             fun executeFilter() {
                 val listSexo = ArrayList<String>()
                 val listEstado = ArrayList<String>()
@@ -219,7 +225,7 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
                         checkboxfilters = checkboxFilters
                     )
 
-                    //groupViewModel.saveGroup(groupWithFilters)
+                    groupViewModel.saveGroup(groupWithFilters)
 
                 }
 
@@ -339,6 +345,22 @@ class ModalBottomSheet : BottomSheetDialogFragment() {
 
         binding.btnAplicarFiltro.setBackgroundColor(color)
         binding.btnAplicarFiltro.isEnabled = activado
+    }
+
+    fun AppCompatActivity.hideKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+    }
+
+    fun Fragment.hideKeyboard() {
+        val activity = this.activity
+        if (activity is AppCompatActivity) {
+            activity.hideKeyboard()
+        }
     }
 
         companion object {

@@ -1,5 +1,7 @@
 package com.example.gestrenacer.utils
 
+import com.example.gestrenacer.models.User
+
 
 object FiltrosAux {
     fun clasificarFiltros(
@@ -18,5 +20,29 @@ object FiltrosAux {
         }
 
         return listOf(sexo, estado)
+    }
+
+    fun ordenar(lista: MutableList<User>, criterio: String, escala: String): MutableList<User> {
+        when (criterio) {
+            "nombre" -> {
+                if (escala == "ascendente") return lista.sortedBy { it.nombre.lowercase() }.toMutableList()
+                else return lista.sortedByDescending { it.nombre.lowercase() }.toMutableList()
+            }
+
+            "fechaNacimiento" -> {
+                if (escala == "ascendente") return lista.sortedByDescending { it.fechaNacimiento }
+                    .toMutableList()
+                else return lista.sortedBy { it.fechaNacimiento }.toMutableList()
+            }
+
+            "fechaCreacion" -> {
+                if (escala == "ascendente") return lista.sortedByDescending { it.fechaCreacion }
+                    .toMutableList()
+                else return lista.sortedBy { it.fechaCreacion }.toMutableList()
+            }
+            else -> {
+                return lista
+            }
+        }
     }
 }
