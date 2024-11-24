@@ -91,14 +91,13 @@ class PendingFragment : Fragment(), Recargable {
         val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
             ?.getString("rol", "Visualizador")
 
-        val roles = pref in listOf("Administrador", "Gestor")
         val actividad = activity as MainActivity
 
-        if (roles){
-            actividad.visibilidadBottomBar(true)
-        }
 
-        if (pref == "Gestor"){
+        actividad.visibilidadBottomBar(true)
+
+
+        if (pref == "Gestor" || pref == "Visualizador"){
             actividad.modVisItemBottomBar(R.id.item_2,false)
         }
 
