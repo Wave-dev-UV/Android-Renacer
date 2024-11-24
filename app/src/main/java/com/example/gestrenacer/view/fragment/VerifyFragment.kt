@@ -1,5 +1,6 @@
 package com.example.gestrenacer
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,6 +50,13 @@ class VerifyFragment : Fragment() {
 
         authViewModel.authResult.observe(viewLifecycleOwner, Observer { isSuccess ->
             if (isSuccess) {
+                val rol = requireArguments().getString("rol","Visualizador")
+                val preferences = requireContext().getSharedPreferences("auth",Context.MODE_PRIVATE)?.edit()
+
+                preferences?.putBoolean("user_verified",true)
+                preferences?.putLong("last_verification_time",System.currentTimeMillis())
+                preferences?.putString("rol",rol)
+                preferences?.apply()
                 findNavController().navigate(R.id.action_verifyFragment_to_listarFragment)
             } else {
                 Toast.makeText(requireContext(), "Error en la verificación", Toast.LENGTH_SHORT).show()
