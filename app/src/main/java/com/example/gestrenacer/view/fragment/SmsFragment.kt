@@ -1,11 +1,15 @@
 package com.example.gestrenacer
 
+import android.Manifest
 import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -27,7 +31,6 @@ import com.example.gestrenacer.viewmodel.PlantillaViewModel
 import com.example.gestrenacer.viewmodel.SmsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
-import kotlin.time.Duration
 
 @AndroidEntryPoint
 class SmsFragment : Fragment() {
@@ -37,6 +40,7 @@ class SmsFragment : Fragment() {
     private val plantillaViewModel: PlantillaViewModel by viewModels()
     private val groupViewModel: GroupViewModel by viewModels()
     private val filtros: MutableList<String> = mutableListOf()
+    private val SMS_PERMISSION_REQUEST_CODE = 2
     private lateinit var listaDePlantillas: MutableList<Plantilla>
     private lateinit var plantillaAdapter: PlantillaAdapter
 
@@ -78,7 +82,19 @@ class SmsFragment : Fragment() {
         observerGrupoActivado()
         observerPlantillas()
         observerGuardPlantilla()
+        pedirPermiso()
     }
+
+    private fun pedirPermiso(){
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.SEND_SMS),
+                SMS_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
 
     private fun iniciarToolbar() {
         val activity = requireActivity() as MainActivity
@@ -117,7 +133,8 @@ class SmsFragment : Fragment() {
                 smsViewModel.enviarSms(
                     binding.txtSms.text.toString(),
                     binding.groupsAutoCompleteTv.text.toString(),
-                    filtros
+                    filtros,
+                    requireContext()
                 )
             }
         }
@@ -391,17 +408,31 @@ class SmsFragment : Fragment() {
 
     private fun manejadorBtnEnviar() {
         binding.btnEnviar.setOnClickListener {
-            val checked = binding.switchGuardSms.isChecked
-
-            if (checked) {
-                crearPlantilla()
-            } else {
-                val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
-                    x.nombre == binding.groupsAutoCompleteTv.text.toString()
-                } as List<Group>
-
-                enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
+                DialogUtils.dialogoInformativo(
+                    requireContext(),
+                    getString(R.string.txtAviso),
+                    getString(R.string.txtNoPerSms),
+                    getString(R.string.txtBtnAceptar)
+                ).show()
             }
+            else {
+                operacionEnvio()
+            }
+        }
+    }
+
+    private fun operacionEnvio(){
+        val checked = binding.switchGuardSms.isChecked
+
+        if (checked) {
+            crearPlantilla()
+        } else {
+            val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
+                x.nombre == binding.groupsAutoCompleteTv.text.toString()
+            } as List<Group>
+
+            enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
         }
     }
 

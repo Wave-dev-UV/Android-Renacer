@@ -2,9 +2,7 @@ package com.example.gestrenacer.repository
 
 import android.app.Activity
 import android.util.Log
-import com.example.gestrenacer.models.PeticionEnviarSms
 import com.example.gestrenacer.models.User
-import com.example.gestrenacer.webservices.SmsService
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential

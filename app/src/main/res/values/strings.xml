@@ -165,4 +165,6 @@
     <string name="lblHistSms">Historial de mensajes</string>
     <string name="lblBtnHistSms">Ver historial</string>
     <string name="lblGrupoHist">Grupo:</string>
+    <string name="txtPermisoSms">No podrás enviar SMS hasta que concedas el permiso.</string>
+    <string name="txtAviso">Aviso.</string>
 </resources>

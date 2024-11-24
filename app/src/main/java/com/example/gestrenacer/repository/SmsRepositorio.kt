@@ -1,8 +1,7 @@
 package com.example.gestrenacer.repository
 
-import com.example.gestrenacer.models.PeticionEnviarSms
+import android.telephony.SmsManager
 import com.example.gestrenacer.models.Sms
-import com.example.gestrenacer.webservices.SmsService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -11,7 +10,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class SmsRepositorio @Inject constructor(private val smsService: SmsService) {
+class SmsRepositorio @Inject constructor() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val smsCollection = db.collection("sms")
@@ -39,15 +38,14 @@ class SmsRepositorio @Inject constructor(private val smsService: SmsService) {
         }
     }
 
-    suspend fun enviarSms(mensaje: String, numeros: List<String>): Boolean {
-        val token = auth.getAccessToken(true).await().token as String
-        val telefono = auth.currentUser?.phoneNumber as String
-        val body = PeticionEnviarSms(telefono.split("+57")[1], mensaje, numeros)
-
+    suspend fun enviarSms(usuarios: List<String>, mensaje: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val response = smsService.enviarSms(body, token)
-                response.resultado
+                val smsManager = SmsManager.getDefault()
+                for (phoneNumber in usuarios) {
+                    smsManager.sendTextMessage("+57${phoneNumber}",null,mensaje,null,null)
+                }
+                true
             } catch (e: Exception) {
                 e.printStackTrace()
                 false

@@ -1,5 +1,10 @@
 package com.example.gestrenacer.viewmodel
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.telephony.SmsManager
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -61,11 +66,11 @@ class SmsViewModel @Inject constructor(
         }
     }
 
-    fun enviarSms(texto: String, grupo: String = "", filtros: List<String> = listOf()) {
+    fun enviarSms(texto: String, grupo: String = "", filtros: List<String> = listOf(), context: Context) {
         viewModelScope.launch {
             _await.value = 2
             _progress.value = true
-            val res = smsRepositorio.enviarSms(texto, usuarios.value as List<String>)
+            val res = smsRepositorio.enviarSms(usuarios.value as List<String>,texto)
             when (res) {
                 true -> {
                     _operacion.value = 1
