@@ -5,11 +5,12 @@ plugins {
     id ("kotlin-kapt")
     id("com.google.gms.google-services")
     id ("com.google.dagger.hilt.android")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
     namespace = "com.example.gestrenacer"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.gestrenacer"
@@ -19,6 +20,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    secrets {
+        propertiesFileName = "secrets.properties"
+
+        defaultPropertiesFileName = "local.properties"
     }
 
     buildTypes {
@@ -40,6 +46,7 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -91,6 +98,9 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.0.0")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
+
+    //ai
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
     //Dagger hilt
     implementation("com.google.dagger:hilt-android:2.47")

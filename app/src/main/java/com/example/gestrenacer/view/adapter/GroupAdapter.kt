@@ -21,6 +21,18 @@ class GroupAdapter(
 
     private var filteredGroups: List<Group> = allGroups
 
+    init {
+        autoCompleteTextView.threshold = 0
+        autoCompleteTextView.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                autoCompleteTextView.showDropDown()
+            }
+        }
+        autoCompleteTextView.setOnClickListener {
+            autoCompleteTextView.showDropDown()
+        }
+    }
+
     override fun getCount(): Int {
         return filteredGroups.size
     }
@@ -38,8 +50,6 @@ class GroupAdapter(
         val typedValue = TypedValue()
         context.theme.resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true)
         view.setBackgroundResource(typedValue.resourceId)
-
-        autoCompleteTextView.threshold = 1
 
         view.setOnClickListener {
             group?.let {

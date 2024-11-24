@@ -164,4 +164,5 @@
     <string name="txtGrupoErrNoEncontrado">No existe un grupo con ese nombre.</string>
     <string name="txtSmsEnviados">Los SMS fueron enviados correctamente.</string>
     <string name="no_especificado">No especificado</string>
+    <string name="el_servicio_est_muy_ocupado_por_favor_intente_m_s_tarde">El servicio está muy ocupado. Por favor, intente más tarde.</string>
 </resources>

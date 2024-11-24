@@ -3,6 +3,7 @@ package com.example.gestrenacer
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,11 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.gestrenacer.BuildConfig
 import com.example.gestrenacer.databinding.FragmentSmsBinding
 import com.example.gestrenacer.models.Group
 import com.example.gestrenacer.models.Plantilla
@@ -28,8 +31,10 @@ import com.example.gestrenacer.view.adapter.PlantillaAdapter
 import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.PlantillaViewModel
+import com.google.ai.client.generativeai.GenerativeModel
 import com.example.gestrenacer.viewmodel.SmsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.UUID
 import kotlin.time.Duration
 
@@ -80,6 +85,7 @@ class SmsFragment : Fragment() {
         observerGrupoActivado()
         observerPlantillas()
         observerGuardPlantilla()
+        setupAIButton()
     }
 
     private fun iniciarToolbar() {
@@ -442,6 +448,155 @@ class SmsFragment : Fragment() {
         val activity = this.activity
         if (activity is AppCompatActivity) {
             activity.hideKeyboard()
+        }
+    }
+
+    private fun createLoaderDialog(context: Context): AlertDialog {
+        val progressDialog = AlertDialog.Builder(context)
+            .setView(R.layout.dialog_loader)
+            .setCancelable(false)
+            .create()
+        progressDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        return progressDialog
+    }
+
+
+    private fun setupAIButton() {
+        binding.aiMessageButton.setOnClickListener {
+            val message = binding.txtSms.text.toString()
+
+            if (message.isEmpty()) {
+                Toast.makeText(
+                    context,
+                    "Ingresa texto en el campo de mensaje para usar esto",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val options = arrayOf(
+                    "Mejorar redacción y ortografía",
+                    "Elaborar mensaje",
+                    "Resumir mensaje"
+                )
+
+                showOptionsDialog(options) { which ->
+                    when (which) {
+                        0 -> handleActionAI(0, message)
+                        1 -> handleActionAI(1, message)
+                        2 -> handleActionAI(2, message)
+                    }
+                }
+            }
+
+
+        }
+    }
+
+    private fun showOptionsDialog(options: Array<String>, onOptionSelected: (Int) -> Unit) {
+        AlertDialog.Builder(context)
+            .setTitle("Elige una opción")
+            .setItems(options) { _, which -> onOptionSelected(which) }
+            .setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
+    }
+
+    private fun showConfirmationDialog(
+        aiGeneratedMessage: String,
+        onConfirm: (Boolean) -> Unit,
+        onRegenerate: () -> Unit
+    ) {
+        val builder = AlertDialog.Builder(requireContext())
+            .setTitle("Confirmar mensaje")
+            .setMessage(aiGeneratedMessage)
+            .setPositiveButton("Confirmar") { dialog, _ ->
+                onConfirm(true)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancelar") { dialog, _ ->
+                onConfirm(false)
+                dialog.dismiss()
+            }
+            .setNeutralButton("Volver a generar") { dialog, _ ->
+                dialog.dismiss()
+                onRegenerate()
+            }
+
+        builder.create().show()
+    }
+
+
+
+    private fun handleActionAI(mode: Int, message: String = "") {
+        val promptContext = """Teniendo en cuenta que este mensaje será enviado vía SMS 
+        |a los feligreses de una iglesia, realiza la tarea que está entre llaves {}.
+        |
+        |Solo retorna la respuesta a la tarea.
+        |
+        |Recuerda que si el mensaje dado como parámetro incluye un enlace o link, este debe
+        |aparecer en el resultado.
+        |
+        |TAREA:""".trimMargin()
+
+        val prompt = when (mode) {
+            0 -> "{Mejora la redacción y ortografía del siguiente mensaje: \"$message\"}"
+            1 -> "{A partir de esta idea: \"$message\" genera o completa el mensaje}"
+            2 -> "{Resume este mensaje: \"$message\"}"
+            else -> throw IllegalArgumentException("Invalid mode: $mode")
+        }.let { "$promptContext\n$it" }
+
+        val loaderDialog = createLoaderDialog(requireContext())
+        loaderDialog.show()
+
+        lifecycleScope.launch {
+            try {
+                val response = GenerativeModel("gemini-1.5-flash", BuildConfig.MAPS_API_KEY)
+                    .generateContent(prompt)
+
+                loaderDialog.dismiss()
+
+                val aiGeneratedMessage = response.text.toString()
+
+                showConfirmationDialog(
+                    aiGeneratedMessage,
+                    onConfirm = { confirmed ->
+                        if (confirmed) {
+                            binding.txtSms.setText(aiGeneratedMessage)
+                        }
+                    },
+                    onRegenerate = {
+                        loaderDialog.show()
+
+                        lifecycleScope.launch {
+                            try {
+                                val regeneratedResponse = GenerativeModel("gemini-1.5-flash", BuildConfig.MAPS_API_KEY)
+                                    .generateContent(prompt)
+
+                                loaderDialog.dismiss()
+                                val regeneratedMessage = regeneratedResponse.text.toString()
+
+                                showConfirmationDialog(
+                                    regeneratedMessage,
+                                    onConfirm = { confirmed ->
+                                        if (confirmed) {
+                                            binding.txtSms.setText(regeneratedMessage)
+                                        }
+                                    },
+                                    onRegenerate = {}
+                                )
+                            } catch (e: Exception) {
+                                loaderDialog.dismiss()
+                                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                                Log.e("AI-15", "Error regenerating content", e)
+                            }
+                        }
+                    }
+                )
+            } catch (e: Exception) {
+                loaderDialog.dismiss()
+                Toast.makeText(requireContext(),
+                    getString(R.string.el_servicio_est_muy_ocupado_por_favor_intente_m_s_tarde), Toast.LENGTH_SHORT).show()
+                Log.e("AI-15", "Error generating content", e)
+            }
         }
     }
 }
