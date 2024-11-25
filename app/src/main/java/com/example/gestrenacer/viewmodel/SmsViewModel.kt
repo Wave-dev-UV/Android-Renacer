@@ -91,7 +91,7 @@ class SmsViewModel @Inject constructor(
 
                     val notificationWork = OneTimeWorkRequestBuilder<SmsWorker>()
                         .setInputData(inputData)
-                        .setInitialDelay(110 * (x - 1).toLong(), TimeUnit.SECONDS)
+                        .setInitialDelay(3 * (x - 1).toLong(), TimeUnit.MINUTES)
                         .build()
 
                     WorkManager.getInstance(contexto).enqueue(notificationWork)
