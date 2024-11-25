@@ -162,6 +162,14 @@
     <string name="txtErrPlantilla">Ya hay una plantilla con ese nombre.</string>
     <string name="txtNoPerSms">No hay personas que coincidan con los filtros.</string>
     <string name="txtGrupoErrNoEncontrado">No existe un grupo con ese nombre.</string>
-    <string name="txtSmsEnviados">Los SMS fueron enviados correctamente.</string>
+    <string name="txtSmsEnviados">Los SMS fueron planificados satisfactoriamente.</string>
     <string name="no_especificado">No especificado</string>
+    <string name="lblMensajeHist">Mensaje.</string>
+    <string name="lblEnviadoHist">Enviado a: </string>
+    <string name="lblFechaHist">Fecha envío:</string>
+    <string name="lblHistSms">Historial de mensajes</string>
+    <string name="lblBtnHistSms">Ver historial</string>
+    <string name="lblGrupoHist">Grupo:</string>
+    <string name="txtPermisoSms">No podrás enviar SMS hasta que concedas el permiso.</string>
+    <string name="txtAviso">Aviso.</string>
 </resources>

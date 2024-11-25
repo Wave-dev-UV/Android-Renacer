@@ -2,10 +2,8 @@ package com.example.gestrenacer.repository
 
 import android.app.Activity
 import android.util.Log
-import com.example.gestrenacer.models.PeticionEnviarSms
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.utils.FiltrosAux
-import com.example.gestrenacer.webservices.SmsService
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -18,9 +16,7 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UserRepositorio @Inject constructor(
-    private val smsService: SmsService
-) {
+class UserRepositorio @Inject constructor() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -194,22 +190,6 @@ class UserRepositorio @Inject constructor(
                 usersCollection.document(user.firestoreID).delete().await()
                 true
             } catch (e: Exception) {
-                false
-            }
-        }
-    }
-
-    suspend fun enviarSms(mensaje: String, numeros: List<String>): Boolean {
-        val token = auth.getAccessToken(true).await().token as String
-        val telefono = auth.currentUser?.phoneNumber as String
-        val body = PeticionEnviarSms(telefono.split("+57")[1], mensaje, numeros)
-
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = smsService.enviarSms(body, token)
-                response.resultado
-            } catch (e: Exception) {
-                e.printStackTrace()
                 false
             }
         }

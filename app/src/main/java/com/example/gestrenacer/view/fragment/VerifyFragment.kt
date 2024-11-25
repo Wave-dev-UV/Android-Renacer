@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -55,7 +56,13 @@ class VerifyFragment : Fragment() {
             if (isSuccess) {
 
                 Toast.makeText(requireContext(), "Verificación exitosa", Toast.LENGTH_SHORT).show()
+                val rol = requireArguments().getString("rol","Visualizador")
+                val preferences = requireContext().getSharedPreferences("auth",Context.MODE_PRIVATE)?.edit()
 
+                preferences?.putBoolean("user_verified",true)
+                preferences?.putLong("last_verification_time",System.currentTimeMillis())
+                preferences?.putString("rol",rol)
+                preferences?.apply()
                 findNavController().navigate(R.id.action_verifyFragment_to_listarFragment)
             } else {
                 Toast.makeText(requireContext(), "Error en la verificación", Toast.LENGTH_SHORT).show()
@@ -64,7 +71,8 @@ class VerifyFragment : Fragment() {
 
 
         authViewModel.progress.observe(viewLifecycleOwner, Observer { isLoading ->
-            binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progress.isVisible = isLoading
+            binding.contPrincipal.isVisible = !isLoading
         })
     }
 

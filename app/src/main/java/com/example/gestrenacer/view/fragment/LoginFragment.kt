@@ -19,10 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.databinding.FragmentLoginBinding
 import com.example.gestrenacer.viewmodel.AuthViewModel
-import com.google.android.material.tabs.TabLayout.Mode
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Timer
-import java.util.TimerTask
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -46,13 +43,19 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val btnUsarHuella = binding.lblUsarHuella
+        val preferences = requireContext().getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val verificado = preferences.getBoolean("user_verified", false)
 
-        if (authViewModel.isUserVerified() && !authViewModel.isReVerificationNeeded()) {
+        if (verificado && !isReVerificationNeeded()) {
             btnUsarHuella.visibility = View.VISIBLE
 
             btnUsarHuella.setOnClickListener {
                 if (bloqueado) {
-                        Toast.makeText(requireContext(), "Demasiados intentos fallidos, prueba luego", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Demasiados intentos fallidos, prueba luego",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                 } else {
                     showBiometricPrompt()
@@ -64,7 +67,11 @@ class LoginFragment : Fragment() {
 
         binding.generateCodeButton.setOnClickListener {
             val phoneNumber = binding.phoneNumberInput.text.toString().trim()
-            val preferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)?.edit()
+
+            hideKeyboard()
+
+            val preferences =
+                requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)?.edit()
 
             preferences?.putString("telefono", phoneNumber)
             preferences?.apply()
@@ -74,22 +81,30 @@ class LoginFragment : Fragment() {
                 authViewModel.checkUserAccess(phoneNumber, requireActivity())
 
             } else {
-                Toast.makeText(requireContext(), "Introduce un número de teléfono", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Introduce un número de teléfono",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
 
         authViewModel.accessGranted.observe(viewLifecycleOwner, Observer { hasAccess ->
             if (hasAccess == false) {
-                Toast.makeText(requireContext(), "El usuario no tiene acceso o no está registrado", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "El usuario no tiene acceso o no está registrado",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         })
 
         authViewModel.verificationId.observe(viewLifecycleOwner, Observer { verificationId ->
             val bundle = Bundle().apply {
                 putString("verificationId", verificationId)
+                putString("rol", authViewModel.rol.value)
             }
-            hideKeyboard()
             findNavController().navigate(R.id.action_loginFragment_to_verifyFragment, bundle)
         })
 
@@ -108,21 +123,22 @@ class LoginFragment : Fragment() {
 
     private fun showBiometricPrompt() {
         val executor = ContextCompat.getMainExecutor(requireContext())
-        val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                super.onAuthenticationError(errorCode, errString)
-                Log.d("biometria","error biometría: ${errString} code: $errorCode")
+        val biometricPrompt =
+            BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Log.d("biometria", "error biometría: ${errString} code: $errorCode")
 
-                bloqueado = errorCode == 9
-            }
+                    bloqueado = errorCode == 9
+                }
 
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                findNavController().navigate(R.id.action_loginFragment_to_listarFragment)
-            }
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    findNavController().navigate(R.id.action_loginFragment_to_listarFragment)
+                }
 
 
-        })
+            })
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle("Autenticación Biométrica")
@@ -131,6 +147,20 @@ class LoginFragment : Fragment() {
             .build()
 
         biometricPrompt.authenticate(promptInfo)
+    }
+
+    private fun isReVerificationNeeded(): Boolean {
+        val lastVerification = requireContext().getSharedPreferences("auth", Context.MODE_PRIVATE)
+            .getLong("last_verification_time", 0)
+        val currentTime = System.currentTimeMillis()
+        val res = (currentTime - lastVerification) > 24 * 60 * 60 * 1000
+
+        if (res) {
+            authViewModel.cerrarSesion()
+            requireContext().deleteSharedPreferences("auth")
+        }
+
+        return res
     }
 
     override fun onDestroyView() {

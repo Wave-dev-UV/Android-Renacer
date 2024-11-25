@@ -85,8 +85,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:background="@color/fondoCardListaFelirgeses"
-                    android:foregroundTint="@color/onSelectedColorBotBar"
-                    android:theme="@style/RadioButtonStyle">
+                    android:foregroundTint="@color/onSelectedColorBotBar">
 
                     <RadioButton
                         android:id="@+id/radioBtnAlfabeticoAsc"
@@ -192,7 +191,7 @@
                         android:id="@+id/txtEdadFinal"
                         android:layout_height="50dp"
                         android:layout_width="90dp"
-                        android:inputType="numberSigned"
+                        android:inputType="number"
                         android:maxLength="2"
                         android:textColorHighlight="@color/onSelectedColorBotBar"
                         android:textAlignment="center"

@@ -1,7 +1,41 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.GestRenacer" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Base.Theme.GestRenacer" parent="Theme.Material3.Light.NoActionBar">
+
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/onSelectedColorBotBar</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Dialog" parent="@style/ThemeOverlay.MaterialComponents.Dialog">
+        <item name="colorSecondary">@color/onSelectedColorBotBar</item>
+        <item name="colorPrimary">@color/onSelectedColorBotBar</item>
+    </style>
+
+    <style name="Theme.GestRenacer" parent="Base.Theme.GestRenacer" />
+
+    <style name="RadioButtonStyle" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/onSelectedColorBotBar</item>
+    </style>
+    <style name="BottomBarStyle" parent="Base.Theme.GestRenacer">
+        <item name="colorSecondaryContainer">@color/colorBottomBar</item>
+    </style>
+
+    <style name="Theme.App" parent="Theme.Material3.DayNight">
+        <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
+    </style>
+
+    <style name="Widget.App.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorPrimary">@color/azulPrincipal</item>
+        <item name="colorSurfaceContainerHighest">@color/secondary</item>
+    </style>
+
+    <style name="CheckboxStyle" parent="Base.Theme.GestRenacer">
+        <item name="colorOnSurface">@color/onSelectedColorBotBar</item>
+        <item name="colorPrimary">@color/onSelectedColorBotBar</item>
+        <item name="colorSurface">@color/onSelectedColorBotBar</item>
     </style>
 </resources>
