@@ -1,5 +1,6 @@
 package com.example.gestrenacer.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,16 +9,16 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentStatsBinding
+import com.example.gestrenacer.view.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class StatsFragment : Fragment(R.layout.fragment_stats) {
+class StatsFragment : Fragment(R.layout.fragment_stats), MainActivity.Recargable {
 
     private lateinit var binding: FragmentStatsBinding
 
@@ -29,15 +30,43 @@ class StatsFragment : Fragment(R.layout.fragment_stats) {
         return binding.root
     }
 
+    override fun recargarDatos() {
+        anadirRol()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
         manejadorBtnVolver()
         conectarWeb()
+        anadirRol()
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finish()
+                }
+            })
     }
 
-    private fun conectarWeb(){
+    private fun anadirRol() {
+        val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
+            ?.getString("rol", "Visualizador") as String
+        val roles = pref in listOf("Administrador", "Gestor")
+        val actividad = activity as MainActivity
+
+        if (roles) {
+            actividad.visibilidadBottomBar(true)
+        }
+
+        if (pref == "Gestor" || pref == "Visualizador") {
+            actividad.modVisItemBottomBar(R.id.statsFragment, false)
+        }
+    }
+
+    private fun conectarWeb() {
         val webView: WebView = binding.webView
 
         val webSettings = webView.settings
