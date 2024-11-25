@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/statsFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/editarUsuarioFragment"
@@ -110,10 +110,18 @@
         android:name="com.example.gestrenacer.SmsFragment"
         android:label="SmsFragment" >
     </fragment>
+
     <fragment
         android:id="@+id/statsFragment"
         android:name="com.example.gestrenacer.ui.fragment.StatsFragment"
         android:label="StatsFragment"
         tools:layout="@layout/fragment_stats">
-</fragment>
+        <action
+            android:id="@+id/action_statsFragment_to_pendingFragment"
+            app:destination="@id/pendingFragment" />
+        <action
+            android:id="@+id/action_statsFragment_to_listarFragment"
+            app:destination="@id/listarFragment" />
+    </fragment>
+
 </navigation>
