@@ -23,6 +23,35 @@
                     layout="@layout/toolbar"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
+                <TextView
+                    android:id="@+id/lblTitulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lblMensajeria"
+                    android:textSize="30sp"
+                    android:fontFamily="@font/roboto_bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="12dp"
+                    />
+
+                <Button
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:id="@+id/btnHistorial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/historial"
+                    app:iconTint="@color/black"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@string/lblBtnHistSms"
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="30dp"
+                    android:backgroundTint="@color/white"
+                    android:textSize="16sp"
+                    android:layout_marginTop="12dp"
+                    />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lblSms"
@@ -204,7 +233,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toolbar" />
+                    app:layout_constraintTop_toBottomOf="@id/lblTitulo" />
 
                 <LinearLayout
                     android:layout_width="0dp"

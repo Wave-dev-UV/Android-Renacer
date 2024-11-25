@@ -36,22 +36,6 @@
 
         </androidx.cardview.widget.CardView>
 
-
-        <!--<TextView
-            android:id="@+id/lblIniciales"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:fontFamily="@font/roboto_bold"
-            android:textColor="@color/white"
-            android:textSize="29sp"
-            android:padding="10dp"
-            android:text="AA"
-            android:background="@drawable/burbuja_iniciales"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintBottom_toBottomOf="parent" /> -->
-
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"

@@ -17,8 +17,8 @@ import kotlinx.coroutines.tasks.await
 class NotificationWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
 
     override fun doWork(): Result {
-        val sharedPreferences = applicationContext.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val role = sharedPreferences.getString("user_role", null)?.lowercase()
+        val sharedPreferences = applicationContext.getSharedPreferences("auth", Context.MODE_PRIVATE)
+        val role = sharedPreferences.getString("rol", null)?.lowercase()
 
         if (role == "gestor" || role == "administrador") {
 

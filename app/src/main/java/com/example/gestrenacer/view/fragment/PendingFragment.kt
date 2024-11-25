@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
@@ -18,21 +18,21 @@ import com.example.gestrenacer.models.User
 import com.example.gestrenacer.view.MainActivity
 import com.example.gestrenacer.view.adapter.PendingUserAdapter
 import com.example.gestrenacer.view.modal.ModalBottomSheet
-import com.example.gestrenacer.viewmodel.GroupViewModel
 import com.example.gestrenacer.viewmodel.UserViewModel
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.Normalizer
 import java.util.Date
 import com.example.gestrenacer.view.MainActivity.Recargable
+import com.example.gestrenacer.viewmodel.GroupViewModel
 import java.util.Calendar
 
 @AndroidEntryPoint
 class PendingFragment : Fragment(), Recargable {
     private lateinit var binding: FragmentPendingBinding
     private lateinit var rol: String
-    private val userViewModel: UserViewModel by viewModels()
-    private val groupViewModel: GroupViewModel by viewModels()
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var groupViewModel: GroupViewModel
     private var adapter: PendingUserAdapter? = null
     private var appliedFilters = false
     private var userList = mutableListOf<User>()
@@ -43,6 +43,8 @@ class PendingFragment : Fragment(), Recargable {
     ): View? {
         binding = FragmentPendingBinding.inflate(inflater)
         binding.lifecycleOwner = this
+        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
+        groupViewModel = ViewModelProvider(requireActivity()).get(GroupViewModel::class.java)
         return binding.root
     }
 
@@ -84,6 +86,7 @@ class PendingFragment : Fragment(), Recargable {
 
     override fun recargarDatos() {
         cargarFiltros()
+        anadirRol()
         forceRecyclerViewUpdate()
     }
 
@@ -143,12 +146,7 @@ class PendingFragment : Fragment(), Recargable {
 
     private fun manejadorBtnFiltro() {
         binding.btnFiltrar.setOnClickListener{
-            val listFiltros = userViewModel.filtros.value as List<List<String>>
-            val listOrden = userViewModel.orden.value as List<String>
-            val modalBottomSheet = ModalBottomSheet(
-                userViewModel::getFeligreses, listFiltros,
-                listOrden, groupViewModel, setAppliedFilters
-            )
+            val modalBottomSheet = ModalBottomSheet()
             modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
         }
     }
