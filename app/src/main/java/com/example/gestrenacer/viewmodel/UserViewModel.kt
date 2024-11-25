@@ -82,9 +82,24 @@ class UserViewModel @Inject constructor(
                     if (prevNum.isNotEmpty() && (user.celular != prevNum)) prevNum
                     else ""
                     )
-            if (!llamado) _progresState.value = true
+            _progresState.value = true
             _resOperacion.value = repository.updateUser(user, numAnt, llamado)
-            if (!llamado) _progresState.value = false
+
+            if (llamado) {
+                val filtros = filtros.value as List<List<String>>
+                val orden = orden.value as List<String>
+                val aux = filtros[2].map { x -> x.toInt() }.sorted()
+                val calendar = Calendar.getInstance()
+
+                getFeligreses(
+                    Timestamp(Date(aux[0], calendar.time.month, calendar.time.date)),
+                    Timestamp(Date(aux[1], calendar.time.month, calendar.time.date)),
+                    filtros[1], filtros[0], filtros[3],
+                    orden[0], orden[1]
+                )
+            }
+
+            _progresState.value = false
         }
     }
 

@@ -86,6 +86,7 @@ class PendingFragment : Fragment(), Recargable {
 
     override fun recargarDatos() {
         cargarFiltros()
+        anadirRol()
         forceRecyclerViewUpdate()
     }
 

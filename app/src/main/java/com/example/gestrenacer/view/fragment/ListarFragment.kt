@@ -99,6 +99,7 @@ class ListarFragment : Fragment(), Recargable {
 
     override fun recargarDatos() {
         cargarFiltros()
+        anadirRol()
         forceRecyclerViewUpdate()
     }
 
