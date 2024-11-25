@@ -67,6 +67,9 @@ class LoginFragment : Fragment() {
 
         binding.generateCodeButton.setOnClickListener {
             val phoneNumber = binding.phoneNumberInput.text.toString().trim()
+
+            hideKeyboard()
+
             val preferences =
                 requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)?.edit()
 
@@ -102,7 +105,6 @@ class LoginFragment : Fragment() {
                 putString("verificationId", verificationId)
                 putString("rol", authViewModel.rol.value)
             }
-            hideKeyboard()
             findNavController().navigate(R.id.action_loginFragment_to_verifyFragment, bundle)
         })
 

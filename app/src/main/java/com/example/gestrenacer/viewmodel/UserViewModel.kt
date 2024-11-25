@@ -1,7 +1,6 @@
 package com.example.gestrenacer.viewmodel
 
 import android.util.Log
-import java.text.Normalizer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,10 +9,11 @@ import com.example.gestrenacer.models.User
 import com.example.gestrenacer.repository.ImagesRepositorio
 import com.example.gestrenacer.repository.UserRepositorio
 import com.google.firebase.Timestamp
-import com.google.type.Expr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -120,7 +120,7 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun uploadImage(file: File, user: User){
+    fun uploadImage(file: File, user: User) {
         viewModelScope.launch {
             _progresState.value = true
             try {
@@ -131,7 +131,7 @@ class UserViewModel @Inject constructor(
                     imageUrl = imageInfo?.get("url")
                 )
                 editarUsuario(newUser)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 e.message?.let { Log.e("Error upload Image", it) }
             } finally {
                 _progresState.value = false
@@ -140,7 +140,7 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun deleteImage(publicId: String, user: User){
+    fun deleteImage(publicId: String, user: User) {
         viewModelScope.launch {
             _progresState.value = true
             try {
@@ -150,7 +150,7 @@ class UserViewModel @Inject constructor(
                     imageUrl = "https://res.cloudinary.com/dhrzjndkd/image/upload/v1731290649/Renacer/defecto.jpg"
                 )
                 editarUsuario(newUser)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 e.message?.let { Log.e("Error delete Image", it) }
             } finally {
                 _progresState.value = false
@@ -158,7 +158,7 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun cambiarMostFiltros(valor: Boolean){
+    fun cambiarMostFiltros(valor: Boolean) {
         _mostrarFiltros.value = valor
     }
 }

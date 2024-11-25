@@ -133,12 +133,10 @@ class SmsFragment : Fragment() {
     private fun observerAwaiting() {
         smsViewModel.await.observe(viewLifecycleOwner) {
             if (it == 1) {
-                println("aca mi negro")
                 smsViewModel.enviarSms(
                     binding.txtSms.text.toString(),
                     binding.groupsAutoCompleteTv.text.toString(),
-                    filtros,
-                    requireContext()
+                    filtros
                 )
             }
         }

@@ -30,11 +30,11 @@ class SmsAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun setCardSms(sms: Sms) {
-            val fecha = sms.fecha.toDate().toString().split(" ")
+            val fecha = sms.fecha.toDate().toLocaleString().split(" ").map{x -> x.removeSuffix(",")}
             val hora = fecha[3].split(":")
             val filtros = sms.filtros
 
-            binding.txtFecha.text = "${fecha[0]}, ${fecha[1]} ${fecha[2]} de ${fecha[5]} a las ${hora[0]}:${hora[1]}."
+            binding.txtFecha.text = "${fecha[0]} ${fecha[1]} de ${fecha[2]} a las ${hora[0]}:${hora[1]} ${fecha[4]}."
             binding.txtMensaje.text = "\"${sms.mensaje}\"."
             binding.txtEnviado.text = sms.enviado
 

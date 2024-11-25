@@ -66,7 +66,7 @@ class SmsViewModel @Inject constructor(
         }
     }
 
-    fun enviarSms(texto: String, grupo: String = "", filtros: List<String> = listOf(), context: Context) {
+    fun enviarSms(texto: String, grupo: String = "", filtros: List<String> = listOf()) {
         viewModelScope.launch {
             _await.value = 2
             _progress.value = true

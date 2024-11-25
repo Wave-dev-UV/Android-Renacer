@@ -16,9 +16,6 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UserRepositorio @Inject constructor(
-    private val smsService: SmsService
-) {
 class UserRepositorio @Inject constructor() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()

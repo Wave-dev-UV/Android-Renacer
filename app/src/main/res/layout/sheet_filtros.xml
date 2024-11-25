@@ -85,8 +85,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:background="@color/fondoCardListaFelirgeses"
-                    android:foregroundTint="@color/onSelectedColorBotBar"
-                    android:theme="@style/RadioButtonStyle">
+                    android:foregroundTint="@color/onSelectedColorBotBar">
 
                     <RadioButton
                         android:id="@+id/radioBtnAlfabeticoAsc"

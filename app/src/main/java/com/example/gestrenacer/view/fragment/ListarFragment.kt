@@ -328,7 +328,7 @@ class ListarFragment : Fragment(), Recargable {
 
     private fun verAutoborrado(list: List<User>): Int {
         val preferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
-        val tel = preferences?.getString("numero", "")
+        val tel = preferences?.getString("telefono", "")
 
         return list.count { it.celular == tel }
     }
@@ -337,7 +337,7 @@ class ListarFragment : Fragment(), Recargable {
         val seleccionados = adapter?.getSelectedUsers() ?: return
         if (seleccionados.isEmpty()) return
 
-        val autoborrado = verAutoborrado(seleccionados) == 0
+        val autoborrado = verAutoborrado(seleccionados) != 0
         val adminCount = contarAdministradores()
         val eliminandoAdmins = seleccionados.count { it.rol == "Administrador" }
 
