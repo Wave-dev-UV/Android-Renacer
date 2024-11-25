@@ -1,20 +1,21 @@
 package com.example.gestrenacer.viewmodel
 
+import SmsWorker
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.telephony.SmsManager
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.gestrenacer.models.Sms
 import com.example.gestrenacer.repository.SmsRepositorio
 import com.example.gestrenacer.repository.UserRepositorio
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,22 +67,47 @@ class SmsViewModel @Inject constructor(
         }
     }
 
-    fun enviarSms(texto: String, grupo: String = "", filtros: List<String> = listOf()) {
+    fun enviarSms(texto: String, contexto: Context, grupo: String = "", filtros: List<String> = listOf()) {
         viewModelScope.launch {
             _await.value = 2
             _progress.value = true
-            val res = smsRepositorio.enviarSms(usuarios.value as List<String>,texto)
-            when (res) {
-                true -> {
-                    _operacion.value = 1
-                    guardarSms(texto, grupo, filtros)
+            try {
+                val users = usuarios.value as List<String>
+
+                val cant = users.size / 30
+                val res = users.size % 30
+                var inicio = 0
+
+                for (x in 1..(cant + 1)) {
+                    val list = (
+                            if (x != cant + 1) {
+                                users.subList(inicio, 30 * x).toTypedArray()
+                            } else users.subList(inicio, inicio + res).toTypedArray())
+
+                    val inputData = Data.Builder()
+                        .putString("mensaje", texto)
+                        .putStringArray("usuarios", list)
+                        .build()
+
+                    val notificationWork = OneTimeWorkRequestBuilder<SmsWorker>()
+                        .setInputData(inputData)
+                        .setInitialDelay(110 * (x - 1).toLong(), TimeUnit.SECONDS)
+                        .build()
+
+                    WorkManager.getInstance(contexto).enqueue(notificationWork)
+
+                    inicio = 30 * x
                 }
-                false -> {
-                    _operacion.value = 2
-                }
+                _operacion.value = 1
+            guardarSms(texto, grupo, filtros)
+
             }
-            _await.value = 0
-            _progress.value = false
+            catch (e: Exception){
+                _operacion.value = 2
+            } finally {
+                _await.value = 0
+                _progress.value = false
+            }
         }
     }
 

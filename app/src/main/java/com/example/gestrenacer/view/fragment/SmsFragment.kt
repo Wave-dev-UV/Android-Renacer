@@ -135,6 +135,7 @@ class SmsFragment : Fragment() {
             if (it == 1) {
                 smsViewModel.enviarSms(
                     binding.txtSms.text.toString(),
+                    requireContext(),
                     binding.groupsAutoCompleteTv.text.toString(),
                     filtros
                 )

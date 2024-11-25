@@ -1,8 +1,6 @@
 package com.example.gestrenacer.repository
 
-import android.telephony.SmsManager
 import com.example.gestrenacer.models.Sms
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +9,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SmsRepositorio @Inject constructor() {
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val smsCollection = db.collection("sms")
 
@@ -34,21 +31,6 @@ class SmsRepositorio @Inject constructor() {
             } catch (e: Exception) {
                 println("Error al ver sms $e")
                 listOf()
-            }
-        }
-    }
-
-    suspend fun enviarSms(usuarios: List<String>, mensaje: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                val smsManager = SmsManager.getDefault()
-                for (phoneNumber in usuarios) {
-                    smsManager.sendTextMessage("+57${phoneNumber}",null,mensaje,null,null)
-                }
-                true
-            } catch (e: Exception) {
-                e.printStackTrace()
-                false
             }
         }
     }
