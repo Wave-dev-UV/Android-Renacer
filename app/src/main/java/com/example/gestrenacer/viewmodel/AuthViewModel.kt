@@ -1,7 +1,6 @@
 package com.example.gestrenacer.viewmodel
 
 import android.app.Activity
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,14 +11,12 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val userRepositorio: UserRepositorio,
-    @ApplicationContext private val context: Context
+    private val userRepositorio: UserRepositorio
 ) : ViewModel() {
 
     private val _verificationId = MutableLiveData<String>()
@@ -40,46 +37,9 @@ class AuthViewModel @Inject constructor(
     private val _rol = MutableLiveData("Feligrés")
     val rol: LiveData<String> = _rol
 
-    private val sharedPref = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
-
-    fun isUserVerified(): Boolean {
-        return sharedPref.getBoolean("user_verified", false)
-    }
-
-    fun saveUserVerification() {
-        with(sharedPref.edit()) {
-            putBoolean("user_verified", true)
-            apply()
-        }
-    }
-
-    fun saveUserRole(role: String) {
-        with(sharedPref.edit()) {
-            putString("rol", role)
-            apply()
-        }
-        Log.d("AuthViewModel", "Rol guardado: $role") // Registro de log para verificar el rol guardado
-    }
-
-    fun isReVerificationNeeded(): Boolean {
-        val lastVerification = sharedPref.getLong("last_verification_time", 0)
-        val currentTime = System.currentTimeMillis()
-        val res = (currentTime - lastVerification) > 24 * 60 * 60 * 1000
-
-        if (res) {
-            viewModelScope.launch {
-                userRepositorio.cerrarSesion()
-                context.deleteSharedPreferences("auth")
-            }
-        }
-
-        return res
-    }
-
-    fun saveLastVerificationTime() {
-        with(sharedPref.edit()) {
-            putLong("last_verification_time", System.currentTimeMillis())
-            apply()
+    fun cerrarSesion() {
+        viewModelScope.launch {
+            userRepositorio.cerrarSesion()
         }
     }
 
@@ -89,8 +49,8 @@ class AuthViewModel @Inject constructor(
             val userRole = userRepositorio.getUserByPhone(phoneNumber)
 
             if (userRole != null) {
-                saveUserRole(userRole) // Guarda el rol en SharedPreferences
                 sendVerificationCode(phoneNumber, activity)
+                _rol.value = userRole
             } else {
                 _accessGranted.value = false
                 _error.value = "El usuario no tiene acceso o no está registrado"
@@ -102,31 +62,36 @@ class AuthViewModel @Inject constructor(
     private fun sendVerificationCode(phoneNumber: String, activity: Activity) {
         val fullPhoneNumber = "+57$phoneNumber"
 
-        userRepositorio.sendVerificationCode(fullPhoneNumber, object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                signInWithCredential(credential)
-            }
+        userRepositorio.sendVerificationCode(
+            fullPhoneNumber,
+            object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                    signInWithCredential(credential)
+                }
 
-            override fun onVerificationFailed(e: FirebaseException) {
-                _error.value = "Error al enviar el código: ${e.message}"
-                _progress.value = false
-            }
+                override fun onVerificationFailed(e: FirebaseException) {
+                    _error.value = "Error al enviar el código: ${e.message}"
+                    _progress.value = false
+                }
 
-            override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-                _verificationId.value = verificationId
-                _progress.value = false
-            }
-        }, activity)
+                override fun onCodeSent(
+                    verificationId: String,
+                    token: PhoneAuthProvider.ForceResendingToken
+                ) {
+                    _verificationId.value = verificationId
+                    _progress.value = false
+                }
+            },
+            activity
+        )
     }
 
     fun signInWithCredential(credential: PhoneAuthCredential) {
         viewModelScope.launch {
+            _progress.value = true
             val result = userRepositorio.signInWithPhoneAuthCredential(credential)
-            if (result) {
-                saveUserVerification()
-                saveLastVerificationTime()
-            }
             _authResult.value = result
+            _progress.value = false
         }
     }
 }

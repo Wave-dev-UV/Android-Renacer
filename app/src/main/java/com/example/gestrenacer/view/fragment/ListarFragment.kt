@@ -1,7 +1,5 @@
 package com.example.gestrenacer.view.fragment
 
-//import UserAdapter
-
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gestrenacer.R
@@ -36,11 +34,10 @@ import java.util.Date
 class ListarFragment : Fragment(), Recargable {
     private lateinit var binding: FragmentListarFeligresesBinding
     private lateinit var rol: String
-    private val userViewModel: UserViewModel by viewModels()
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var groupViewModel: GroupViewModel
     private var adapter: UserAdapter? = null
     private var userList = mutableListOf<User>()
-    private val groupViewModel: GroupViewModel by viewModels()
-    private var appliedFilters = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +45,9 @@ class ListarFragment : Fragment(), Recargable {
     ): View {
         binding = FragmentListarFeligresesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
+        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
+        groupViewModel = ViewModelProvider(requireActivity()).get(GroupViewModel::class.java)
+
         return binding.root
     }
 
@@ -86,6 +86,7 @@ class ListarFragment : Fragment(), Recargable {
         anadirRol()
         observerListFeligreses()
         observerProgress()
+        observerMostrarFiltros()
         configurarBusqueda()
         manejadorBtnAnadir()
         manejadorBtnMensaje()
@@ -98,7 +99,21 @@ class ListarFragment : Fragment(), Recargable {
 
     override fun recargarDatos() {
         cargarFiltros()
+        anadirRol()
         forceRecyclerViewUpdate()
+    }
+
+    private fun observerMostrarFiltros() {
+        userViewModel.mostrarFiltros.observe(viewLifecycleOwner) {
+            if (it) {
+                val modalBottomSheet = ModalBottomSheet()
+                modalBottomSheet.show(
+                    requireActivity().supportFragmentManager,
+                    ModalBottomSheet.TAG
+                )
+                userViewModel.cambiarMostFiltros(false)
+            }
+        }
     }
 
     private fun observerListFeligreses() {
@@ -155,8 +170,6 @@ class ListarFragment : Fragment(), Recargable {
         val shouldHideFiltersAndSearch = hasSelectedUsers
         binding.contenedorFiltros.isVisible =
             !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
-        binding.toolbar.root.isVisible =
-            !shouldHideFiltersAndSearch // Oculta si hay seleccionados, muestra si no
     }
 
     private fun observerProgress() {
@@ -194,13 +207,7 @@ class ListarFragment : Fragment(), Recargable {
 
     private fun manejadorBtnFiltro() {
         binding.btnFiltrar.setOnClickListener {
-            val listFiltros = userViewModel.filtros.value as List<List<String>>
-            val listOrden = userViewModel.orden.value as List<String>
-            val modalBottomSheet = ModalBottomSheet(
-                userViewModel::getFeligreses,
-                listFiltros, listOrden, groupViewModel, setAppliedFilters
-            )
-            modalBottomSheet.show(requireActivity().supportFragmentManager, ModalBottomSheet.TAG)
+            userViewModel.cambiarMostFiltros(true)
         }
     }//3152179554
 
@@ -322,7 +329,7 @@ class ListarFragment : Fragment(), Recargable {
 
     private fun verAutoborrado(list: List<User>): Int {
         val preferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
-        val tel = preferences?.getString("numero", "")
+        val tel = preferences?.getString("telefono", "")
 
         return list.count { it.celular == tel }
     }
@@ -331,7 +338,7 @@ class ListarFragment : Fragment(), Recargable {
         val seleccionados = adapter?.getSelectedUsers() ?: return
         if (seleccionados.isEmpty()) return
 
-        val autoborrado = verAutoborrado(seleccionados) == 0
+        val autoborrado = verAutoborrado(seleccionados) != 0
         val adminCount = contarAdministradores()
         val eliminandoAdmins = seleccionados.count { it.rol == "Administrador" }
 
@@ -354,6 +361,7 @@ class ListarFragment : Fragment(), Recargable {
                 context = requireContext(),
                 mensaje = getString(R.string.txtModalEliminar),
                 onYes = {
+                    binding.toolbar.searchView.setQuery("",true)
                     userViewModel.eliminarUsuarios(seleccionados.toMutableList())
                     adapter?.clearSelection()
                     updateSelectedCountDisplay(0)
@@ -457,6 +465,4 @@ class ListarFragment : Fragment(), Recargable {
 
         return list
     }
-
-    val setAppliedFilters: (Boolean) -> Unit = { x -> appliedFilters = x }
 }

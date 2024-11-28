@@ -82,7 +82,8 @@
     <fragment
         android:id="@+id/pendingFragment"
         android:name="com.example.gestrenacer.view.fragment.PendingFragment"
-        android:label="PendingFragment" >
+        android:label="PendingFragment"
+        tools:layout="@layout/fragment_pending">
         <action
             android:id="@+id/action_pendingFragment_to_listarFragment"
             app:destination="@id/listarFragment" />
@@ -108,7 +109,11 @@
     <fragment
         android:id="@+id/smsFragment"
         android:name="com.example.gestrenacer.SmsFragment"
-        android:label="SmsFragment" >
+        android:label="SmsFragment"
+        tools:layout="@layout/fragment_sms">
+        <action
+            android:id="@+id/action_smsFragment_to_historialSmsFragment"
+            app:destination="@id/historialSmsFragment" />
     </fragment>
 
     <fragment
@@ -124,4 +129,9 @@
             app:destination="@id/listarFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/historialSmsFragment"
+        android:name="com.example.gestrenacer.view.fragment.HistorialSmsFragment"
+        android:label="HistorialSmsFragment"
+        tools:layout="@layout/fragment_historial_sms"/>
 </navigation>

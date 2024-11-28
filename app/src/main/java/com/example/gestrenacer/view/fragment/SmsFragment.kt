@@ -1,11 +1,19 @@
 package com.example.gestrenacer
 
+import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -27,7 +35,6 @@ import com.example.gestrenacer.viewmodel.PlantillaViewModel
 import com.example.gestrenacer.viewmodel.SmsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
-import kotlin.time.Duration
 
 @AndroidEntryPoint
 class SmsFragment : Fragment() {
@@ -36,6 +43,8 @@ class SmsFragment : Fragment() {
     private val smsViewModel: SmsViewModel by viewModels()
     private val plantillaViewModel: PlantillaViewModel by viewModels()
     private val groupViewModel: GroupViewModel by viewModels()
+    private val filtros: MutableList<String> = mutableListOf()
+    private val SMS_PERMISSION_REQUEST_CODE = 2
     private lateinit var listaDePlantillas: MutableList<Plantilla>
     private lateinit var plantillaAdapter: PlantillaAdapter
 
@@ -53,8 +62,8 @@ class SmsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         groupViewModel.getGroups()
-        iniciarComponentes()
         plantillaViewModel.obtenerPlantillas()
+        iniciarComponentes()
     }
 
     private fun iniciarComponentes() {
@@ -62,6 +71,7 @@ class SmsFragment : Fragment() {
         manejadorBtnEnviar()
         manejadorBtnVolver()
         manejadorSwitchGuard()
+        manejadorBtnHist()
         iniciarToolbar()
         iniciarFiltros()
         iniciarCantSms()
@@ -76,7 +86,19 @@ class SmsFragment : Fragment() {
         observerGrupoActivado()
         observerPlantillas()
         observerGuardPlantilla()
+        pedirPermiso()
     }
+
+    private fun pedirPermiso(){
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.SEND_SMS),
+                SMS_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
 
     private fun iniciarToolbar() {
         val activity = requireActivity() as MainActivity
@@ -111,7 +133,12 @@ class SmsFragment : Fragment() {
     private fun observerAwaiting() {
         smsViewModel.await.observe(viewLifecycleOwner) {
             if (it == 1) {
-                smsViewModel.enviarSms(binding.txtSms.text.toString())
+                smsViewModel.enviarSms(
+                    binding.txtSms.text.toString(),
+                    requireContext(),
+                    binding.groupsAutoCompleteTv.text.toString(),
+                    filtros
+                )
             }
         }
     }
@@ -206,6 +233,8 @@ class SmsFragment : Fragment() {
 
     private fun mostrarChip(filtro: String) {
         val aux = filtro.split(" ")
+        val lista = listOf("Menor", "Mayor")
+        var text = ""
         when (aux[0]) {
             "Casado(a)" -> binding.chipCasado.isVisible = true
             "Viudo(a)" -> binding.chipViudo.isVisible = true
@@ -217,15 +246,23 @@ class SmsFragment : Fragment() {
             "Menor" -> {
                 binding.chipEdadMin.setText("Menores de ${aux[1]} años.")
                 binding.chipEdadMin.isVisible = true
+                text = "Menores de ${aux[1]} años."
             }
 
             "Mayor" -> {
                 binding.chipEdadMax.setText("Mayores de ${aux[1]} años.")
                 binding.chipEdadMax.isVisible = true
+                text = "Mayores de ${aux[1]} años."
             }
 
             "Todas" -> binding.chipTodaEdad.isVisible = true
         }
+
+        if (aux[0] !in lista) {
+            text = aux[0]
+        }
+
+        filtros.add(text)
     }
 
     private fun manejadorTxtSms() {
@@ -235,6 +272,13 @@ class SmsFragment : Fragment() {
             i.addTextChangedListener {
                 validarTexto()
             }
+        }
+    }
+
+    private fun manejadorBtnHist(){
+        binding.btnHistorial.setOnClickListener{
+            binding.txtSms.text?.clear()
+            findNavController().navigate(R.id.action_smsFragment_to_historialSmsFragment)
         }
     }
 
@@ -353,6 +397,7 @@ class SmsFragment : Fragment() {
 
     private fun manejadorBtnVolver() {
         binding.toolbar.btnVolver.setOnClickListener {
+            hideKeyboard()
             findNavController().popBackStack()
         }
     }
@@ -367,17 +412,34 @@ class SmsFragment : Fragment() {
 
     private fun manejadorBtnEnviar() {
         binding.btnEnviar.setOnClickListener {
-            val checked = binding.switchGuardSms.isChecked
 
-            if (checked) {
-                crearPlantilla()
-            } else {
-                val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
-                    x.nombre == binding.groupsAutoCompleteTv.text.toString()
-                } as List<Group>
+            hideKeyboard()
 
-                enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
+                DialogUtils.dialogoInformativo(
+                    requireContext(),
+                    getString(R.string.txtAviso),
+                    getString(R.string.txtNoPerSms),
+                    getString(R.string.txtBtnAceptar)
+                ).show()
             }
+            else {
+                operacionEnvio()
+            }
+        }
+    }
+
+    private fun operacionEnvio(){
+        val checked = binding.switchGuardSms.isChecked
+
+        if (checked) {
+            crearPlantilla()
+        } else {
+            val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
+                x.nombre == binding.groupsAutoCompleteTv.text.toString()
+            } as List<Group>
+
+            enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
         }
     }
 
@@ -419,6 +481,22 @@ class SmsFragment : Fragment() {
             binding.lblPlantilla.isEnabled = it
             binding.lblPlantilla.isVisible = it
             smsViewModel.cambiarGuardado(it)
+        }
+    }
+
+    private fun AppCompatActivity.hideKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+    }
+
+    private fun Fragment.hideKeyboard() {
+        val activity = this.activity
+        if (activity is AppCompatActivity) {
+            activity.hideKeyboard()
         }
     }
 }

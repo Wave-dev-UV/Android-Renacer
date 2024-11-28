@@ -2,10 +2,8 @@ package com.example.gestrenacer.repository
 
 import android.app.Activity
 import android.util.Log
-import com.example.gestrenacer.models.PeticionEnviarSms
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.utils.FiltrosAux
-import com.example.gestrenacer.webservices.SmsService
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -18,9 +16,7 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UserRepositorio @Inject constructor(
-    private val smsService: SmsService
-) {
+class UserRepositorio @Inject constructor() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -43,34 +39,46 @@ class UserRepositorio @Inject constructor(
                 }.toMutableList()
 
         if (filtroSexo.size == 2 && filtroEstCivil.size == 5) {
-            val vacioSexo = usersCollection.whereEqualTo("sexo", "")
-                .whereIn("estadoAtencion", filtroLlamado)
-                .whereGreaterThan("fechaNacimiento", fechaInicial)
-                .whereLessThan("fechaNacimiento", fechaFinal).get()
-                .await().map { x ->
-                    val obj = x.toObject(User::class.java)
-                    obj.firestoreID = x.id
-                    obj
-                }.toList()
+            val vacioSexo = verCampo("sexo", "", filtroLlamado, fechaInicial, fechaFinal)
 
-            val vacioEst = usersCollection.whereEqualTo("estadoCivil", "")
-                .whereIn("estadoAtencion", filtroLlamado)
-                .whereGreaterThan("fechaNacimiento", fechaInicial)
-                .whereLessThan("fechaNacimiento", fechaFinal).get()
-                .await().map { x ->
-                    val obj = x.toObject(User::class.java)
-                    obj.firestoreID = x.id
-                    obj
-                }.toList()
+            val vacioEst = verCampo("estadoCivil", "", filtroLlamado, fechaInicial, fechaFinal)
 
             snapshot.addAll(vacioSexo)
             snapshot.addAll(vacioEst)
-
-            snapshot = FiltrosAux.ordenar(snapshot, critOrden, escalaOrden)
         }
+
+        snapshot = FiltrosAux.ordenar(snapshot, critOrden, escalaOrden)
 
         return snapshot
     }
+
+    suspend fun verCampo(
+        campo: String, valor: String, filtroLlamado: List<String>, fechaInicial: Timestamp,
+        fechaFinal: Timestamp
+    ): MutableList<User> {
+        val snapshot = usersCollection.whereEqualTo(campo, valor)
+            .whereIn("estadoAtencion", filtroLlamado)
+            .whereGreaterThan("fechaNacimiento", fechaInicial)
+            .whereLessThan("fechaNacimiento", fechaFinal).get()
+            .await().map { x ->
+                val obj = x.toObject(User::class.java)
+                obj.firestoreID = x.id
+                obj
+            }.toMutableList()
+
+        return snapshot
+    }
+
+    suspend fun getUsers(): MutableList<User> {
+        val snapshot = usersCollection.get().await()
+
+        return snapshot.map { x ->
+            val obj = x.toObject(User::class.java)
+            obj.firestoreID = x.id
+            obj
+        }.toMutableList()
+    }
+
 
     suspend fun saveUser(user: User): Int {
         try {
@@ -182,22 +190,6 @@ class UserRepositorio @Inject constructor(
                 usersCollection.document(user.firestoreID).delete().await()
                 true
             } catch (e: Exception) {
-                false
-            }
-        }
-    }
-
-    suspend fun enviarSms(mensaje: String, numeros: List<String>): Boolean {
-        val token = auth.getAccessToken(true).await().token as String
-        val telefono = auth.currentUser?.phoneNumber as String
-        val body = PeticionEnviarSms(telefono.split("+57")[1], mensaje, numeros)
-
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = smsService.enviarSms(body, token)
-                response.resultado
-            } catch (e: Exception) {
-                e.printStackTrace()
                 false
             }
         }

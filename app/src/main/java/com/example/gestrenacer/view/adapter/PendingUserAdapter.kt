@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.ItemPendingUserBinding
 import com.example.gestrenacer.models.User
@@ -68,8 +69,13 @@ class PendingUserAdapter(
         fun setItemUser(user: User){
             val nombre = user.nombre
             val apellido = user.apellido
+            val img = (if (user.imageUrl?.isEmpty() as Boolean) R.drawable.defecto
+            else user.imageUrl)
 
-            binding.lblIniciales.text = "${nombre.get(0)}${apellido.get(0)}".uppercase()
+            Glide.with(binding.root.context)
+                .load(img)
+                .into(binding.imagePerfil)
+
             binding.txtNombre.text = "${nombre} ${apellido}."
             binding.txtCelular.text = "${user.celular}."
             binding.txtRol.text = "${user.rol}."

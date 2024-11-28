@@ -21,8 +21,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.ActivityMainBinding
-import com.example.gestrenacer.repository.UserRepositorio
 import com.example.gestrenacer.view.fragment.NoConnectionFragment
+import com.example.gestrenacer.view.modal.DialogUtils
 import com.example.gestrenacer.viewmodel.ConnectionViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1
+        private const val SMS_PERMISSION_REQUEST_CODE = 2
     }
 
     interface Recargable {
@@ -141,6 +142,16 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "Permiso de notificaciones concedido")
             } else {
                 Log.d("MainActivity", "Permiso de notificaciones denegado")
+            }
+        }
+        if (requestCode == SMS_PERMISSION_REQUEST_CODE){
+            if ((grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+                DialogUtils.dialogoInformativo(
+                    baseContext,
+                    getString(R.string.txtAviso),
+                    getString(R.string.txtNoPerSms),
+                    getString(R.string.txtBtnAceptar)
+                ).show()
             }
         }
     }
