@@ -193,7 +193,7 @@ class ListarFragment : Fragment(), Recargable {
         }
 
         if (pref == "Gestor") {
-            actividad.modVisItemBottomBar(R.id.item_2, false)
+            actividad.modVisItemBottomBar(R.id.statsFragment, false)
         }
 
         rol = pref

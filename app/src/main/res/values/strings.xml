@@ -164,6 +164,7 @@
     <string name="txtGrupoErrNoEncontrado">No existe un grupo con ese nombre.</string>
     <string name="txtSmsEnviados">Los SMS fueron planificados satisfactoriamente.</string>
     <string name="no_especificado">No especificado</string>
+    <string name="tituloReportes">Reportes</string>
     <string name="lblMensajeHist">Mensaje.</string>
     <string name="lblEnviadoHist">Enviado a: </string>
     <string name="lblFechaHist">Fecha envío:</string>
