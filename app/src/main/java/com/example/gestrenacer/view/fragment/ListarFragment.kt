@@ -188,9 +188,6 @@ class ListarFragment : Fragment(), Recargable {
         val actividad = activity as MainActivity
 
 
-        actividad.visibilidadBottomBar(true)
-
-
         if (pref == "Gestor" || pref == "Visualizador") {
             actividad.modVisItemBottomBar(R.id.item_2, false)
         }

@@ -4,7 +4,7 @@
         android:icon="@drawable/play_arrow"
         android:title="@string/bottomBarText1"/>
     <item
-        android:id="@+id/item_2"
+        android:id="@+id/statsFragment"
         android:icon="@drawable/bar_chart"
         android:title="@string/bottomBarText2"/>
     <item
