@@ -155,7 +155,6 @@ class EditarUsuarioFragment : Fragment() {
             }
 
             if (it == 0) {
-                hideKeyboard()
                 findNavController().navigate(R.id.action_editarUsuarioFragment_to_listarFragment)
             }
             else binding.contPrincipal.isVisible = true
@@ -227,6 +226,7 @@ class EditarUsuarioFragment : Fragment() {
             binding.editTextApellido,
             binding.editTextId,
             binding.editTextCelular,
+            binding.editTextEmail,
             binding.editTextDireccion,
             binding.editTextEps,
             binding.editTextNombreContacto,
@@ -264,6 +264,7 @@ class EditarUsuarioFragment : Fragment() {
     private fun manejadorBtnVolver() {
         binding.toolbar.lblToolbar.text = getString(R.string.tituloEditarUsuario)
         binding.toolbar.btnVolver.setOnClickListener {
+            hideKeyboard()
             findNavController().popBackStack()
         }
     }
@@ -297,6 +298,7 @@ class EditarUsuarioFragment : Fragment() {
 
     private fun manejadorBtnEditar() {
         binding.buttonEditar.setOnClickListener {
+            hideKeyboard()
             DialogUtils.dialogoConfirmacion(
                 requireContext(),
                 "¿Está seguro que desea editar el usuario?"
@@ -308,28 +310,29 @@ class EditarUsuarioFragment : Fragment() {
 
     private fun updateFeligres() {
         val feligresActualizado = User(
-            nombre = binding.editTextNombre.text.toString(),
-            apellido = binding.editTextApellido.text.toString(),
-            id = binding.editTextId.text.toString(),
-            tipoId = binding.autoCompleteTipoId.text.toString(),
-            celular = binding.editTextCelular.text.toString(),
-            direccion = binding.editTextDireccion.text.toString(),
-            eps = binding.editTextEps.text.toString(),
-            nombreContacto = binding.editTextNombreContacto.text.toString(),
-            celularContacto = binding.editTextCelularContacto.text.toString(),
-            parentescoContacto = binding.editTextParentescoContacto.text.toString(),
-            direccionContacto = binding.editTextDireccionContacto.text.toString(),
-            esLider = binding.switch1.isChecked,
-            rol = binding.autoCompleteRole.text.toString(),
-            estadoAtencion = binding.autoCompleteEstadoAtencion.text.toString(),
-            firestoreID = firestoreId,
-            sexo = binding.autoCompleteSexo.text.toString(),
-            estadoCivil = binding.autoCompleteEstadoCivil.text.toString(),
-            fechaNacimiento = fechaNacimientoUser,
-            obsevaciones = binding.editTextObsevaciones.text.toString(),
-            fechaCreacion = bundleUser.fechaCreacion,
-            imageUrl = bundleUser.imageUrl,
-            imageId = bundleUser.imageId
+            binding.editTextNombre.text.toString(),
+            binding.editTextApellido.text.toString(),
+            binding.editTextId.text.toString(),
+            binding.autoCompleteTipoId.text.toString(),
+            binding.editTextCelular.text.toString(),
+            binding.editTextDireccion.text.toString(),
+            binding.editTextEps.text.toString(),
+            binding.editTextNombreContacto.text.toString(),
+            binding.editTextCelularContacto.text.toString(),
+            binding.editTextParentescoContacto.text.toString(),
+            binding.editTextDireccionContacto.text.toString(),
+            binding.autoCompleteEstadoAtencion.text.toString(),
+            firestoreId,
+            binding.switch1.isChecked,
+            binding.autoCompleteRole.text.toString(),
+            binding.autoCompleteSexo.text.toString(),
+            binding.autoCompleteEstadoCivil.text.toString(),
+            fechaNacimientoUser,
+            binding.editTextObsevaciones.text.toString(),
+            bundleUser.fechaCreacion,
+            bundleUser.imageId,
+            bundleUser.imageUrl,
+            binding.editTextEmail.text.toString()
         )
 
         userViewModel.editarUsuario(feligresActualizado, bundleUser.celular)

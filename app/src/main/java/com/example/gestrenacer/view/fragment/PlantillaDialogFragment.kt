@@ -1,4 +1,4 @@
-package com.example.gestrenacer.view.dialog
+package com.example.gestrenacer.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

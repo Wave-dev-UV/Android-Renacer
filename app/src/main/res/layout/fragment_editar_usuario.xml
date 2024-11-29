@@ -617,8 +617,8 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/selectRole"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="350dp"
-                            android:layout_height="60dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:textColorHint="@color/secondary"
                             app:boxStrokeColor="@color/azulPrincipal"
                             app:hintTextColor="@color/azulPrincipal"

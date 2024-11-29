@@ -327,9 +327,9 @@ class ListarFragment : Fragment(), Recargable {
 
     private fun verAutoborrado(list: List<User>): Int {
         val preferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
-        val tel = preferences?.getString("telefono", "")
+        val tel = preferences?.getString("correo", "")
 
-        return list.count { it.celular == tel }
+        return list.count { it.correo == tel }
     }
 
     private fun eliminarSeleccionados() {

@@ -221,6 +221,29 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="@string/txtCorreo"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{user.correo}"
+                                tools:text="correo@gmail.com"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="8dp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="@string/fecha_nacimiento"
                                 android:textSize="16sp"
                                 android:layout_marginBottom="8dp"

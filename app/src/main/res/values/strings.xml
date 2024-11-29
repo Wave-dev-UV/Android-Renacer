@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">GestRenacer</string>
+    <string name="app_name">Gestión Renacer</string>
     <string name="buscar_hint">Buscar a una persona aquí</string>
-    <string name="tituloAñadirUsuario">CREAR NUEVO USUARIO</string>
+    <string name="tituloAñadirUsuario">Añadir registro</string>
     <string name="label_nombre">Nombre(s)</string>
     <string name="inserte_su_nombre">Inserte su nombre</string>
     <string name="apellido_s">Apellido(s)</string>
@@ -61,12 +61,12 @@
         <item>Tarjeta de Identidad</item>
         <item>Pasaporte</item>
     </string-array>
-    <string name="tituloEditarUsuario">EDITAR USUARIO</string>
+    <string name="tituloEditarUsuario">Editar registro</string>
     <string name="editar_usuario">Editar Usuario</string>
     <string name="subtituloEstadoDeAtencion">Estado de atención</string>>
     <string name="estado_de_atencion">Cambiar estado de atención</string>>
     <string name="selecc_atencion">Cambie el estado de atención</string>
-    <string name="ver_usuario">Ver Usuario</string>
+    <string name="ver_usuario">Ver registro</string>
     <string name="imagen_de_perfil">Imagen de perfil</string>
     <string name="cedula">Cédula</string>
     <string name="sexo">Sexo</string>
@@ -124,8 +124,8 @@
     <string name="on">ON</string>
     <string name="checkbox_select_all">Seleccionar Todos</string>
     <string name="outlined_icon_btn_desc">Cancelar</string>
-    <string name="txtModalTelRep">El número de celular ingresado ya está registrado. Reintenta nuevamente con otro.</string>
-    <string name="txtModalTelExcep">No se ha podido guardar el registro. Reintenta mas tarde.</string>
+    <string name="txtModalTelRep">El correo electrónico ingresado ya está registrado. Reintenta nuevamente con otro.</string>
+    <string name="txtModalTelExcep">No se ha podido guardar el registro. Reintenta más tarde.</string>
     <string name="titModalError">Error.</string>
     <string name="txtBtnAceptar">Aceptar</string>
     <string name="txtModalEliminar">¿Estás seguro de que deseas eliminar a los usuarios seleccionados?</string>
@@ -175,4 +175,6 @@
     <string name="txtPermisoSms">No podrás enviar SMS hasta que concedas el permiso.</string>
     <string name="txtAviso">Aviso.</string>
     <string name="txtEmail">Correo electrónico</string>
+    <string name="txtErrEmailGoo">Solo se aceptan correos de Gmail.</string>
+    <string name="txtCorreo">Correo electrónico:</string>
 </resources>

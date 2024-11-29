@@ -73,7 +73,7 @@ class LoginFragment : Fragment() {
             val preferences =
                 requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)?.edit()
 
-            preferences?.putString("telefono", phoneNumber)
+            preferences?.putString("correo", phoneNumber)
             preferences?.apply()
 
             if (phoneNumber.isNotEmpty()) {

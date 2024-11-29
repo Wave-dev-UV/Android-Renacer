@@ -69,22 +69,11 @@ class UserRepositorio @Inject constructor() {
         return snapshot
     }
 
-    suspend fun getUsers(): MutableList<User> {
-        val snapshot = usersCollection.get().await()
-
-        return snapshot.map { x ->
-            val obj = x.toObject(User::class.java)
-            obj.firestoreID = x.id
-            obj
-        }.toMutableList()
-    }
-
-
     suspend fun saveUser(user: User): Int {
         try {
             var res = 0
             val newUser = user.copy(fechaCreacion = Timestamp.now())
-            val numRepetido = usersCollection.whereEqualTo("celular", user.celular).get().await()
+            val numRepetido = usersCollection.whereEqualTo("correo", user.correo).get().await()
 
             if (numRepetido.isEmpty) usersCollection.add(newUser).await()
             else res = 1
@@ -102,7 +91,7 @@ class UserRepositorio @Inject constructor() {
                 var vacio = prevNumber.isEmpty()
 
                 if (prevNumber.isNotEmpty()) {
-                    vacio = usersCollection.whereEqualTo("celular", feligres.celular).get()
+                    vacio = usersCollection.whereEqualTo("correo", feligres.correo).get()
                         .await().isEmpty
                 }
                 if (vacio || llamado) {

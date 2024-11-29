@@ -114,7 +114,7 @@ class VisualizarUsuarioFragment : Fragment() {
         if (uri == null) {
             return Toast.makeText(
                 requireContext(),
-                "No se selecciono ninguna imagen",
+                "No se seleccionó ninguna imagen",
                 Toast.LENGTH_SHORT).show()
         }
         DialogUtils.dialogoConfirmacion(
@@ -230,10 +230,10 @@ class VisualizarUsuarioFragment : Fragment() {
     private fun manejadorBotonBorrar() {
         binding.buttonBorrar.setOnClickListener {
             val preferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
-            val numero = preferences?.getString("numero", "")
+            val numero = preferences?.getString("correo", "")
             val numeroVacio = numero?.isNotEmpty() as Boolean
 
-            if (numeroVacio && (numero == user.celular)) {
+            if (numeroVacio && (numero == user.correo)) {
                 DialogUtils.dialogoInformativo(
                     requireContext(),
                     getString(R.string.titModalError),

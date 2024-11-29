@@ -3,7 +3,6 @@ package com.example.gestrenacer.view.fragment
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,13 +67,13 @@ class AgregarUsuariosFragment : Fragment() {
         manejadorFechaNacimiento()
     }
 
-    private fun fechaPorDefecto(){
+    private fun fechaPorDefecto() {
         val calendar = Calendar.getInstance()
         calendar.set(1901, Calendar.JANUARY, 1, 0, 0, 0)
         fechaNacimientoUser = Timestamp(calendar.time)
     }
 
-    private fun manejadorFechaNacimiento(){
+    private fun manejadorFechaNacimiento() {
         binding.editTextFechaNacimiento.setOnClickListener {
             mostrarDatePicker()
         }
@@ -112,21 +111,22 @@ class AgregarUsuariosFragment : Fragment() {
         actividad.visibilidadBottomBar(false)
         rol = pref as String
     }
-    private fun menuRol(){
-        if (rol == "Administrador"){
+
+    private fun menuRol() {
+        if (rol == "Administrador") {
             binding.selectRole.visibility = View.VISIBLE
             binding.txtRol.visibility = View.VISIBLE
         }
     }
 
-    private fun observerProgress(){
+    private fun observerProgress() {
         userViewModel.progresState.observe(viewLifecycleOwner) {
             binding.progress.isVisible = it
             binding.contPrincipal.isVisible = !it
         }
     }
 
-    private fun observerOperacion(){
+    private fun observerOperacion() {
         userViewModel.resOperacion.observe(viewLifecycleOwner) {
             var mensaje = ""
             when (it) {
@@ -134,7 +134,7 @@ class AgregarUsuariosFragment : Fragment() {
                 2 -> mensaje = getString(R.string.txtModalTelExcep)
             }
 
-            if (mensaje.isNotEmpty()){
+            if (mensaje.isNotEmpty()) {
                 DialogUtils.dialogoInformativo(
                     requireContext(),
                     getString(R.string.titModalError),
@@ -148,14 +148,23 @@ class AgregarUsuariosFragment : Fragment() {
         }
     }
 
-    private fun activarBoton(){
+    private fun activarBoton() {
         val listTxt = listOf(
-            binding.editTextNombre, binding.editTextApellido, binding.editTextId, binding.editTextCelular,
-            binding.editTextDireccion, binding.editTextEps, binding.editTextNombreContacto,
-            binding.editTextCelularContacto, binding.editTextParentescoContacto, binding.editTextDireccionContacto,
-            binding.autoCompleteTipoId)
+            binding.editTextNombre,
+            binding.editTextApellido,
+            binding.editTextId,
+            binding.editTextCelular,
+            binding.editTextEmail,
+            binding.editTextDireccion,
+            binding.editTextEps,
+            binding.editTextNombreContacto,
+            binding.editTextCelularContacto,
+            binding.editTextParentescoContacto,
+            binding.editTextDireccionContacto,
+            binding.autoCompleteTipoId
+        )
 
-        for (i in listTxt){
+        for (i in listTxt) {
             i.addTextChangedListener {
                 val isFull = listTxt.all {
                     it.text.toString().isNotEmpty()
@@ -168,7 +177,7 @@ class AgregarUsuariosFragment : Fragment() {
         }
     }
 
-    private fun confSelTipoId(){
+    private fun confSelTipoId() {
         val adapter = ArrayAdapter.createFromResource(
             this.requireContext(),
             R.array.listaTipoDocumento,
@@ -178,7 +187,7 @@ class AgregarUsuariosFragment : Fragment() {
         binding.autoCompleteTipoId.setAdapter(adapter)
     }
 
-    private fun confSelSexo(){
+    private fun confSelSexo() {
         val adapter = ArrayAdapter.createFromResource(
             this.requireContext(),
             R.array.listaSexos,
@@ -188,7 +197,7 @@ class AgregarUsuariosFragment : Fragment() {
         binding.autoCompleteSexo.setAdapter(adapter)
     }
 
-    private fun confSelEstadoCivil(){
+    private fun confSelEstadoCivil() {
         val adapter = ArrayAdapter.createFromResource(
             this.requireContext(),
             R.array.listaEstadoCivil,
@@ -198,7 +207,7 @@ class AgregarUsuariosFragment : Fragment() {
         binding.autoCompleteEstadoCivil.setAdapter(adapter)
     }
 
-    private fun confSelRol(){
+    private fun confSelRol() {
         val adapter = ArrayAdapter.createFromResource(
             this.requireContext(),
             R.array.listaRoles,
@@ -211,20 +220,23 @@ class AgregarUsuariosFragment : Fragment() {
         }
     }
 
-    private fun manejadorBtnVolver(){
-        binding.toolbar.lblToolbar.text = getString(R.string.ver_usuario)
+    private fun manejadorBtnVolver() {
+        binding.toolbar.lblToolbar.text = getString(R.string.crear_usuario)
         binding.toolbar.btnVolver.setOnClickListener {
+            hideKeyboard()
             findNavController().navigate(R.id.action_agregarUsuariosFragment_to_listarFragment)
         }
     }
 
-    private fun manejadorBtnEnviar(){
+    private fun manejadorBtnEnviar() {
         binding.buttonEnviar.setOnClickListener {
 
             hideKeyboard()
 
-            DialogUtils.dialogoConfirmacion(requireContext(),
-                "¿Está seguro que desea añadir al usuario?"){
+            DialogUtils.dialogoConfirmacion(
+                requireContext(),
+                "¿Está seguro que desea añadir al usuario?"
+            ) {
                 val user = binding.user ?: User()
                 val newUser = user.copy(fechaNacimiento = fechaNacimientoUser)
                 newUser.rol = binding.autoCompleteRole.text.toString()

@@ -79,7 +79,7 @@ class UserViewModel @Inject constructor(
     fun editarUsuario(user: User, prevNum: String = "", llamado: Boolean = false) {
         viewModelScope.launch {
             val numAnt = (
-                    if (prevNum.isNotEmpty() && (user.celular != prevNum)) prevNum
+                    if (prevNum.isNotEmpty() && (user.correo != prevNum)) prevNum
                     else ""
                     )
             _progresState.value = true
