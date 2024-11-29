@@ -174,4 +174,6 @@
     <string name="lblGrupoHist">Grupo:</string>
     <string name="txtPermisoSms">No podrás enviar SMS hasta que concedas el permiso.</string>
     <string name="txtAviso">Aviso.</string>
+    <string name="txtEmail">Correo electrónico</string>
+    <string name="txtEditEmail">Digite su correo electrónico</string>
 </resources>

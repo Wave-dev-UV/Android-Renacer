@@ -96,8 +96,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextNombre"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/inserte_su_nombre"
                             android:textColorHint="@color/secondary" />
 
@@ -110,8 +110,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextApellido"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/inserte_su_apellido"
                             android:textColorHint="@color/secondary" />
 
@@ -123,7 +123,7 @@
                             android:textSize="16sp" />
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="350dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp">
 
@@ -147,8 +147,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextId"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/digite_su_n_mero_de_id"
                             android:inputType="number"
                             android:textColorHint="@color/secondary" />
@@ -163,8 +163,8 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/selectPrioridad"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="350dp"
-                            android:layout_height="60dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:textColorHint="@color/secondary"
                             app:boxStrokeColor="@color/azulPrincipal"
                             app:hintTextColor="@color/azulPrincipal">
@@ -188,8 +188,8 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/selectSexo"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="350dp"
-                            android:layout_height="60dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:textColorHint="@color/secondary"
                             app:boxStrokeColor="@color/azulPrincipal"
                             app:hintTextColor="@color/azulPrincipal">
@@ -213,8 +213,8 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/selectEstadoCivil"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="350dp"
-                            android:layout_height="60dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:textColorHint="@color/secondary"
                             app:boxStrokeColor="@color/azulPrincipal"
                             app:hintTextColor="@color/azulPrincipal">
@@ -237,10 +237,26 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextCelular"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/digite_su_n_mero_de_celular"
                             android:inputType="phone"
+                            android:maxLength="10"
+                            android:textColorHint="@color/secondary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/txtEmail"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/txtEditEmail"
+                            android:inputType="textEmailAddress"
                             android:textColorHint="@color/secondary" />
 
                         <TextView
@@ -252,8 +268,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextDireccion"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/inserte_su_direcci_n"
                             android:textColorHint="@color/secondary" />
 
@@ -266,8 +282,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextEps"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/inserte_su_eps"
                             android:textColorHint="@color/secondary" />
 
@@ -325,8 +341,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextNombreContacto"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/inserte_el_nombre_del_contacto"
                             android:textColorHint="@color/secondary" />
 
@@ -339,8 +355,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextCelularContacto"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/digite_el_celular_de_su_contacto"
                             android:inputType="phone"
                             android:textColorHint="@color/secondary" />
@@ -354,8 +370,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextParentescoContacto"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/parentesco_con_su_contacto"
                             android:textColorHint="@color/secondary" />
 
@@ -368,8 +384,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextDireccionContacto"
-                            android:layout_width="350dp"
-                            android:layout_height="48dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/direcci_n_de_su_contacto"
                             android:textColorHint="@color/secondary" />
 
@@ -555,8 +571,8 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/selectEstadoAtecion"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="350dp"
-                            android:layout_height="60dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:textColorHint="@color/secondary"
                             app:boxStrokeColor="@color/azulPrincipal"
                             app:hintTextColor="@color/azulPrincipal">
@@ -644,11 +660,12 @@
 
             <Button
                 android:id="@+id/buttonEditar"
-                android:layout_width="320dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginHorizontal="27dp"
                 android:backgroundTint="@color/azulPrincipal"
                 android:textColor="@color/white"
                 android:text="@string/editar_usuario"

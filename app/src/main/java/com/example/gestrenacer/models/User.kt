@@ -25,11 +25,12 @@ data class User(
     var obsevaciones: String,
     var fechaCreacion: Timestamp?,
     var imageId: String?,
-    var imageUrl: String?
+    var imageUrl: String?,
+    var correo: String
 ): Serializable {
     constructor(): this("", "", "", "", "", "",
         "", "", "", "", "",
         "","",false, "Feligrés", "", "",
         null, "", null, "",
-        "")
+        "", "")
 }
