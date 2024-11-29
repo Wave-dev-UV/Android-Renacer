@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.gestrenacer.R
 import com.example.gestrenacer.databinding.FragmentNoConnectionBinding
 import com.example.gestrenacer.viewmodel.ConnectionViewModel
 import dagger.hilt.android.AndroidEntryPoint

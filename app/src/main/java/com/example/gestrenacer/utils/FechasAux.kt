@@ -1,6 +1,5 @@
 package com.example.gestrenacer.utils
 
-import android.util.Log
 import java.util.Calendar
 
 object FechasAux {

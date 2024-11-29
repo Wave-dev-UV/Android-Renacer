@@ -2,8 +2,6 @@ package com.example.gestrenacer.repository
 
 import android.util.Log
 import com.example.gestrenacer.models.Group
-import com.example.gestrenacer.models.Plantilla
-import com.example.gestrenacer.models.User
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await

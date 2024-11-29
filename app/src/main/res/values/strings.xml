@@ -30,7 +30,7 @@
     <string name="boton_para_retroceder">Botón para ir a la ventana anterior</string>
     <string name="permisos_en_la_aplicaci_n">Permisos en la aplicación</string>
     <string name="puede_acceder_a_la_aplicaci_n">¿Puede acceder a la aplicación?</string>
-    <string name="crear_usuario">Crear Usuario</string>
+    <string name="crear_usuario">Crear registro</string>
     <string name="el_usuario_es_un_lider">¿El usuario es un líder?</string>
     <string name="el_usuario_puede_acceder_a_la_aplicaci_n">¿El usuario puede acceder a la aplicación?</string>
     <string name="bottomBarText1">Principal</string>
