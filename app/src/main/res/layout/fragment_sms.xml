@@ -62,7 +62,7 @@
                     app:counterEnabled="true"
                     app:counterMaxLength="160"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/groupsAutoCompleteTv">
+                    app:layout_constraintTop_toBottomOf="@id/autocompleteContainer">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtSms"
@@ -235,17 +235,37 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/lblTitulo" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/groupsAutoCompleteTv"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:hint="@string/escribe_el_nombre_del_grupo"
-                    android:inputType="text"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/autocompleteContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lblGrupos" />
+                    app:layout_constraintTop_toBottomOf="@id/lblGrupos" >
+                    <AutoCompleteTextView
+                        android:id="@+id/groupsAutoCompleteTv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/escribe_el_nombre_del_grupo"
+                        android:inputType="text"
+                            />
+
+                    <ImageButton
+                        android:id="@+id/aiMessageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ai_logo"
+                        android:contentDescription="Descripcion"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+
 
                 <TextView
                     android:id="@+id/lblPlantillaGuard"

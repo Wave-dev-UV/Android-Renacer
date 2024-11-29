@@ -185,14 +185,12 @@ class ListarFragment : Fragment(), Recargable {
     private fun anadirRol() {
         val pref = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
             ?.getString("rol", "Visualizador") as String
-        val roles = pref in listOf("Administrador", "Gestor")
         val actividad = activity as MainActivity
 
-        if (roles) {
-            actividad.visibilidadBottomBar(true)
-        }
 
-        if (pref == "Gestor") {
+        actividad.visibilidadBottomBar(true)
+
+        if (pref == "Gestor" || pref == "Visualizador") {
             actividad.modVisItemBottomBar(R.id.statsFragment, false)
         }
 
@@ -209,7 +207,7 @@ class ListarFragment : Fragment(), Recargable {
         binding.btnFiltrar.setOnClickListener {
             userViewModel.cambiarMostFiltros(true)
         }
-    }//3152179554
+    }
 
     private fun manejadorBtnMensaje() {
         binding.btnEnviarSms.setOnClickListener {

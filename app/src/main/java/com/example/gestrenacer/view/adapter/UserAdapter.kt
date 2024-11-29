@@ -145,13 +145,6 @@ class UserAdapter(
 
             manejadorClicCard(user)
             manejadorAnadirPendientes(user)
-            desactivarBtnLlamar()
-        }
-
-        private fun desactivarBtnLlamar() {
-            if (rol !in listOf("Administrador", "Gestor")) {
-                binding.addPendingUser.isVisible = false
-            }
         }
 
         private fun manejadorClicCard(user: User) {
