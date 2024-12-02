@@ -23,7 +23,6 @@ android {
     }
     secrets {
         propertiesFileName = "secrets.properties"
-
         defaultPropertiesFileName = "local.properties"
     }
 
@@ -34,8 +33,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
+
+            // Exponer las claves a BuildConfig en Kotlin DSL
+            buildConfigField("String", "CLOUD_NAME", "\"${project.findProperty("CLOUD_NAME") ?: ""}\"")
+            buildConfigField("String", "API_KEY", "\"${project.findProperty("API_KEY") ?: ""}\"")
+            buildConfigField("String", "API_SECRET", "\"${project.findProperty("API_SECRET") ?: ""}\"")
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -120,4 +124,5 @@ dependencies {
     implementation("com.cloudinary:cloudinary-android:3.0.2")
     implementation("com.github.bumptech.glide:glide:4.15.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.0")
+    }
 }
