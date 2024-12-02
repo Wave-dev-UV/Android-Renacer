@@ -34,7 +34,6 @@ android {
                 "proguard-rules.pro"
             )
 
-            // Exponer las claves a BuildConfig en Kotlin DSL
             buildConfigField("String", "CLOUD_NAME", "\"${project.findProperty("CLOUD_NAME") ?: ""}\"")
             buildConfigField("String", "API_KEY", "\"${project.findProperty("API_KEY") ?: ""}\"")
             buildConfigField("String", "API_SECRET", "\"${project.findProperty("API_SECRET") ?: ""}\"")
