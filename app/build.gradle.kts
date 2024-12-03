@@ -33,7 +33,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-
             buildConfigField("String", "CLOUD_NAME", "\"${project.findProperty("CLOUD_NAME") ?: ""}\"")
             buildConfigField("String", "API_KEY", "\"${project.findProperty("API_KEY") ?: ""}\"")
             buildConfigField("String", "API_SECRET", "\"${project.findProperty("API_SECRET") ?: ""}\"")
