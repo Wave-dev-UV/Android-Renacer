@@ -39,6 +39,9 @@ class UserViewModel @Inject constructor(
     private val _mostrarFiltros = MutableLiveData(false)
     val mostrarFiltros: LiveData<Boolean> = _mostrarFiltros
 
+    private val _imageUrl = MutableLiveData<List<String>>()
+    val imageUrl: LiveData<List<String>> = _imageUrl
+
     fun getFeligreses(
         fechaInicial: Timestamp, fechaFinal: Timestamp,
         filtroEstcivil: List<String>,
@@ -145,6 +148,9 @@ class UserViewModel @Inject constructor(
                     imageId = imageInfo?.get("public_id"),
                     imageUrl = imageInfo?.get("url")
                 )
+
+                _imageUrl.value = listOf(imageInfo?.get("url") as String, imageInfo.get("public_id") as String)
+
                 editarUsuario(newUser)
             } catch (e: Exception) {
                 e.message?.let { Log.e("Error upload Image", it) }
@@ -161,9 +167,12 @@ class UserViewModel @Inject constructor(
             try {
                 imageRepository.deleteFile(publicId)
                 val newUser = user.copy(
-                    imageId = "Renacer/defecto",
-                    imageUrl = "https://res.cloudinary.com/dhrzjndkd/image/upload/v1731290649/Renacer/defecto.jpg"
+                    imageId = "",
+                    imageUrl = ""
                 )
+
+                _imageUrl.value = listOf("", "")
+
                 editarUsuario(newUser)
             } catch (e: Exception) {
                 e.message?.let { Log.e("Error delete Image", it) }

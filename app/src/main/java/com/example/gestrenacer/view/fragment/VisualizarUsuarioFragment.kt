@@ -92,14 +92,16 @@ class VisualizarUsuarioFragment : Fragment() {
     }
 
     private fun observeImageChange(){
-        viewmodel.listaUsers.observe(viewLifecycleOwner){list ->
-            val myUser = list?.find { it.firestoreID == user.firestoreID }
+        viewmodel.imageUrl.observe(viewLifecycleOwner){url ->
+            user.imageUrl = url[0]
+            user.imageId = url[1]
+
+            val img = (if (user.imageUrl?.isEmpty() as Boolean) R.drawable.defecto
+                    else user.imageUrl)
+
             Glide.with(requireContext())
-                .load(myUser?.imageUrl)
+                .load(img)
                 .into(binding.imagenUsuario)
-            if (myUser != null) {
-                user = myUser
-            }
         }
     }
 
