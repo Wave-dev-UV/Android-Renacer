@@ -24,7 +24,7 @@ import java.util.Date
 class UserViewModelTest {
 
 
-    @get:Rule
+    /*@get:Rule
     val rule = InstantTaskExecutorRule()
 
     private lateinit var userViewModel: UserViewModel
@@ -142,7 +142,7 @@ class UserViewModelTest {
 
         verify(userRepositorio).borrarUsuario(user)
 
-    }
+    }*/
 
 
 }

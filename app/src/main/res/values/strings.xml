@@ -180,4 +180,5 @@
     <string name="webClientId">400377355661-vq6g54ps8m76t55o8rs6ai6asjqnvu3b.apps.googleusercontent.com</string>
     <string name="lblBtnEnviarSms">Enviar mensaje</string>
     <string name="txtErrorGoogle">No se ha podido iniciar sesión, comprueba tu tus credenciales o conexión y reintenta.</string>
+    <string name="txtErrorAut">No hay un usuario asociado a la cuenta de Google utilizada.</string>
 </resources>

@@ -1,24 +1,17 @@
 package com.example.gestrenacer.repository
 
-import android.app.Activity
-import android.util.Log
 import com.example.gestrenacer.models.User
 import com.example.gestrenacer.utils.FiltrosAux
+import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class UserRepositorio @Inject constructor() {
-
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
     suspend fun getUsers(
@@ -106,54 +99,21 @@ class UserRepositorio @Inject constructor() {
     }
 
 
-    suspend fun getUserByPhone(phoneNumber: String): String? {
+    suspend fun  verUsuarioPorCorreo(correo: String): String {
         return try {
-            val snapshot = usersCollection
-                .whereEqualTo("celular", phoneNumber)
-                .get()
-                .await()
+            val snapshot = usersCollection.whereEqualTo("correo",correo).get().await()
 
             if (!snapshot.isEmpty) {
                 val document = snapshot.documents.first()
-                val rol = document.getString("rol")
-                    ?: "Feligrés"  // Rol predeterminado si no se encuentra
-                if (rol != "Feligrés") {
-                    rol
-                } else {
-                    null
-                }
-            } else {
-                null
+                document.getString("rol") ?: "Feligrés"
             }
+            else {
+                cerrarSesion()
+                "Feligrés"
+            }
+
         } catch (e: Exception) {
-            Log.e("UserRepositorio", "Error al obtener usuario: ${e.message}")
-            null
-        }
-    }
-
-    fun sendVerificationCode(
-        phoneNumber: String,
-        callback: PhoneAuthProvider.OnVerificationStateChangedCallbacks,
-        activity: Activity
-    ) {
-        val options = PhoneAuthOptions.newBuilder(auth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(activity)
-            .setCallbacks(callback)
-            .build()
-
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
-
-
-    suspend fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential): Boolean {
-        return try {
-            auth.signInWithCredential(credential).await()
-            true
-        } catch (e: Exception) {
-            Log.e("UserRepositorio", "Error en la autenticación: ${e.message}")
-            false
+            "Feligrés"
         }
     }
 
@@ -184,9 +144,7 @@ class UserRepositorio @Inject constructor() {
         }
     }
 
-    suspend fun cerrarSesion() {
-        withContext(Dispatchers.IO) {
-            auth.signOut()
-        }
+    fun cerrarSesion() {
+        Firebase.auth.signOut()
     }
 }
