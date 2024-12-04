@@ -136,7 +136,7 @@
     <string name="txtFiltroSms">Filtros aplicados.</string>
     <string name="lblMensaje">Mensaje</string>
     <string name="lblNomPlantilla">Nombre plantilla.</string>
-    <string name="lblBtnEnviarSms">Enviar mensaje</string>
+    <string name="lblBtnLogin">Iniciar sesión con Google</string>
     <string name="lblBtnEnvGuardSms">Enviar y guardar mensaje</string>
     <string name="txtCrearPlantilla">¿Crear una plantilla a partir de este mensaje?</string>
     <string name="txtErrorSms">No se podido enviar los SMS, reintenta más tarde.</string>

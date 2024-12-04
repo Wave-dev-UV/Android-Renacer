@@ -23,57 +23,58 @@
             android:layout_height="match_parent"
             android:fillViewport="true">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="18dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/logoImageView"
                     android:layout_width="203dp"
                     android:layout_height="202dp"
-                    android:layout_marginTop="50dp"
-                    android:src="@drawable/logo_renacer" />
-
-                <EditText
-                    android:id="@+id/phoneNumberInput"
-                    android:layout_width="270dp"
-                    android:layout_height="38dp"
                     android:layout_marginTop="30dp"
-                    android:background="@drawable/edittext_background"
-                    android:gravity="center_vertical"
-                    android:hint="Número de Teléfono"
-                    android:inputType="phone"
-                    android:maxLength="10"
-                    android:padding="10dp"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:textSize="16sp" />
+                    android:src="@drawable/logo_renacer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/guideline3" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/generateCodeButton"
-                    android:layout_width="270dp"
-                    android:layout_height="38dp"
+                <Button
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_google_logo"
+                    app:iconTint="original"
+                    android:textColor="@color/black"
+                    android:text="@string/lblBtnLogin"
                     android:layout_marginTop="30dp"
-                    android:background="@drawable/button_background"
-                    android:gravity="center"
-                    android:text="Enviar Código"
-                    android:textColor="@android:color/white" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/logoImageView"
+                    />
 
                 <TextView
                     android:id="@+id/lblUsarHuella"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:layout_marginVertical="100dp"
+                    android:layout_marginVertical="50dp"
                     android:text="@string/lbl_Usar_Huella"
                     android:textSize="17sp"
                     android:textColor="@color/azulPrincipal"
                     android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/btnLogin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     />
-            </LinearLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.025" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

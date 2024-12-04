@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "400377355661",
     "project_id": "gestion-821ad",
-    "storage_bucket": "gestion-821ad.appspot.com"
+    "storage_bucket": "gestion-821ad.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,20 @@
           "package_name": "com.example.gestrenacer"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "400377355661-uaaj6kllpp7a1kq3k9v0h0iblnmlkhb7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gestrenacer",
+            "certificate_hash": "3a6ac55c3aa6d1455f9b4d8b74009edca82ae09f"
+          }
+        },
+        {
+          "client_id": "400377355661-vq6g54ps8m76t55o8rs6ai6asjqnvu3b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyALi0HWGSuS4_VKqS0_Jawm5GcxZ9TLMxw"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "400377355661-udo0190m4rmnhmaf5ujl24dse4qp45i6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
