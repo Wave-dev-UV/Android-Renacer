@@ -186,6 +186,7 @@ class EditarUsuarioFragment : Fragment() {
             binding.editTextCelular.setText(bundleUser.celular)
             binding.editTextDireccion.setText(bundleUser.direccion)
             binding.editTextEps.setText(bundleUser.eps)
+            binding.editTextEmail.setText(bundleUser.correo)
             binding.editTextNombreContacto.setText(bundleUser.nombreContacto)
             binding.editTextCelularContacto.setText(bundleUser.celularContacto)
             binding.editTextParentescoContacto.setText(bundleUser.parentescoContacto)
@@ -334,7 +335,7 @@ class EditarUsuarioFragment : Fragment() {
             binding.editTextEmail.text.toString()
         )
 
-        userViewModel.editarUsuario(feligresActualizado, bundleUser.celular)
+        userViewModel.editarUsuario(feligresActualizado, bundleUser.correo)
     }
 
     private fun AppCompatActivity.hideKeyboard() {

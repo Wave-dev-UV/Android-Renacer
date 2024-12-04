@@ -100,6 +100,7 @@ class LoginFragment : Fragment() {
             if (it.isNotEmpty() && it != "Feligrés") {
                 val preferences = requireContext().getSharedPreferences("auth",Context.MODE_PRIVATE)?.edit()
 
+                preferences?.putString("correo",auth.currentUser?.email)
                 preferences?.putBoolean("user_verified",true)
                 preferences?.putLong("last_verification_time",System.currentTimeMillis())
                 preferences?.putString("rol",authViewModel.rol.value)

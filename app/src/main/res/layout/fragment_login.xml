@@ -40,10 +40,9 @@
                 <Button
                     style="?attr/materialButtonOutlinedStyle"
                     android:id="@+id/btnLogin"
-                    android:layout_width="match_parent"
-                    android:layout_marginHorizontal="30dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:icon="@drawable/ic_google_logo"
+                    android:drawableEnd="@drawable/google"
                     android:textColor="@color/black"
                     android:text="@string/lblBtnLogin"
                     android:layout_marginTop="30dp"
@@ -72,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.025" />
+                    app:layout_constraintGuide_percent="0.025"/>
 
                 <ProgressBar
                     android:id="@+id/progress"
