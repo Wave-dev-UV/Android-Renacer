@@ -213,7 +213,6 @@ class VisualizarUsuarioFragment : Fragment() {
         binding.buttonEditar.setOnClickListener {
             val bundle = Bundle().apply {
                 putSerializable("dataFeligres", user)
-                putString("rol", rol)
             }
             findNavController().navigate(
                 R.id.action_visualizarUsuarioFragment_to_editarUsuarioFragment,

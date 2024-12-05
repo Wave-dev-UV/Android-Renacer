@@ -1,5 +1,7 @@
 package com.example.gestrenacer.models
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.firebase.Timestamp
 import java.io.Serializable
 
@@ -27,10 +29,20 @@ data class User(
     var imageId: String?,
     var imageUrl: String?,
     var correo: String
-): Serializable {
+): Serializable, Parcelable{
     constructor(): this("", "", "", "", "", "",
         "", "", "", "", "",
         "","",false, "Feligrés", "", "",
         null, "", null, "",
         "", "")
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(nombre)
+        dest.writeString(apellido)
+        dest.writeString(rol)
+    }
 }
