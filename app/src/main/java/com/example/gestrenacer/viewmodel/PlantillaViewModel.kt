@@ -24,7 +24,7 @@ class PlantillaViewModel @Inject constructor(
     private val _guardado = MutableLiveData<Int>(0)
     val guardado: LiveData<Int> = _guardado
 
-    private val _exito = MutableLiveData(true)
+    private val _exito = MutableLiveData(false)
     val exito:LiveData<Boolean> = _exito
 
     private val _progresState = MutableLiveData(false)

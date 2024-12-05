@@ -231,7 +231,6 @@ class SmsFragment : Fragment() {
                 val existeGrupo = groupViewModel.listaGroups.value?.filter { x ->
                     x.nombre == binding.groupsAutoCompleteTv.text.toString()
                 } as List<Group>
-
                 enviarSms(existeGrupo, smsViewModel.grupoActivado.value as Boolean)
             }
         }
